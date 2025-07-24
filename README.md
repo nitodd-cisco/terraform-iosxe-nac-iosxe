@@ -122,6 +122,11 @@ module "iosxe" {
 | [iosxe_interface_switchport.ethernet_switchport](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/interface_switchport) | resource |
 | [iosxe_interface_vlan.interface_vlan](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/interface_vlan) | resource |
 | [iosxe_line.line](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/line) | resource |
+| [iosxe_logging.logging](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/logging) | resource |
+| [iosxe_logging_ipv4_host_transport.logging_ipv4_host_transport](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/logging_ipv4_host_transport) | resource |
+| [iosxe_logging_ipv4_host_vrf_transport.logging_ipv4_host_vrf_transport](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/logging_ipv4_host_vrf_transport) | resource |
+| [iosxe_logging_ipv6_host_transport.logging_ipv6_host_transport](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/logging_ipv6_host_transport) | resource |
+| [iosxe_logging_ipv6_host_vrf_transport.logging_ipv6_host_vrf_transport](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/logging_ipv6_host_vrf_transport) | resource |
 | [iosxe_msdp.msdp](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/msdp) | resource |
 | [iosxe_msdp_vrf.msdp_vrf](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/msdp_vrf) | resource |
 | [iosxe_pim.pim](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs/resources/pim) | resource |
