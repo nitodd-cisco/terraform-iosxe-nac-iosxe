@@ -741,7 +741,7 @@ locals {
         description                    = try(nve.description, local.defaults.iosxe.configuration.interfaces.nves.description, null)
         shutdown                       = try(nve.shutdown, local.defaults.iosxe.configuration.interfaces.nves.name.shutdown, null)
         host_reachability_protocol_bgp = try(nve.host_reachability_protocol_bgp, local.defaults.iosxe.configuration.interfaces.nves.name.host_reachability_protocol_bgp, null)
-        source_interface_loopback      = try(nve.source_interface_loopback, local.defaults.iosxe.configuration.interfaces.nves.name.source_interface_loopback, null)
+        source_interface_loopback      = try(nve.source_interface_type, local.defaults.iosxe.configuration.interfaces.nves.name.source_interface_type, null) == "Loopback" ? try(nve.source_interface_id, local.defaults.iosxe.configuration.interfaces.nves.name.source_interface_id, null) : null
 
         # Lists
         vni_vrfs = [for vni_vrf in try(nve.vni_vrfs, []) : {
