@@ -8,14 +8,14 @@ locals {
         stream                  = try(sub.stream, local.defaults.iosxe.configuration.mdt_subscriptions.stream, null)
         encoding                = try(sub.encoding, local.defaults.iosxe.configuration.mdt_subscriptions.encoding, null)
         source_vrf              = try(sub.source_vrf, local.defaults.iosxe.configuration.mdt_subscriptions.source_vrf, null)
-        source_address          = try(sub.source_address, local.defaults.iosxe.configuration.mdt_subscriptions.source_address, null)
+        source_address          = try(sub.source_ip, local.defaults.iosxe.configuration.mdt_subscriptions.source_ip, null)
         update_policy_periodic  = try(sub.update_policy_periodic, local.defaults.iosxe.configuration.mdt_subscriptions.update_policy_periodic, null)
         update_policy_on_change = try(sub.update_policy_on_change, local.defaults.iosxe.configuration.mdt_subscriptions.update_policy_on_change, null)
         filter_xpath            = try(sub.filter_xpath, local.defaults.iosxe.configuration.mdt_subscriptions.filter_xpath, null)
 
         receivers = [
           for r in try(sub.receivers, local.defaults.iosxe.configuration.mdt_subscriptions.receivers, []) : {
-            address  = try(r.address, local.defaults.iosxe.configuration.mdt_subscriptions.receivers.address, null)
+            address  = try(r.ip, local.defaults.iosxe.configuration.mdt_subscriptions.receivers.ip, null)
             port     = try(r.port, local.defaults.iosxe.configuration.mdt_subscriptions.receivers.port, null)
             protocol = try(r.protocol, local.defaults.iosxe.configuration.mdt_subscriptions.receivers.protocol, null)
           }
