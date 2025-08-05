@@ -7,8 +7,8 @@ locals {
 
         name                                                                = profile.name
         set_transform_set                                                   = try(profile.set_transform_set, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_transform_set, null)
-        set_isakmp_profile_ikev2_profile_ikev2_profile_case_ikev2_profile   = try(profile.set_isakmp_profile_ikev2_profile_ikev2_profile_case_ikev2_profile, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_isakmp_profile_ikev2_profile_ikev2_profile_case_ikev2_profile, null)
-        set_isakmp_profile_ikev2_profile_isakmp_profile_case_isakmp_profile = try(profile.set_isakmp_profile_ikev2_profile_isakmp_profile_case_isakmp_profile, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_isakmp_profile_ikev2_profile_isakmp_profile_case_isakmp_profile, null)
+        set_ikev2_profile_ikev2_profile_case_ikev2_profile                  = try(profile.set_ikev2_profile, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_ikev2_profile, null)
+        set_isakmp_profile_ikev2_profile_isakmp_profile_case_isakmp_profile = try(profile.set_isakmp_profile, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_isakmp_profile, null)
       }
     ]
   ])
