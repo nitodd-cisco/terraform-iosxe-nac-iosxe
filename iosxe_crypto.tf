@@ -5,22 +5,22 @@ locals {
         key    = format("%s%s", device.name, profile.name)
         device = device.name
 
-        name                                                                = profile.name
-        set_transform_set                                                   = try(profile.set_transform_set, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_transform_set, null)
-        set_ikev2_profile_ikev2_profile_case_ikev2_profile                  = try(profile.set_ikev2_profile, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_ikev2_profile, null)
-        set_isakmp_profile_ikev2_profile_isakmp_profile_case_isakmp_profile = try(profile.set_isakmp_profile, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_isakmp_profile, null)
+        name               = profile.name
+        set_transform_set  = try(profile.set_transform_set, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_transform_set, null)
+        set_ikev2_profile  = try(profile.set_ikev2_profile, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_ikev2_profile, null)
+        set_isakmp_profile = try(profile.set_isakmp_profile, local.defaults.iosxe.configuration.crypto.ipsec_profiles.set_isakmp_profile, null)
       }
     ]
   ])
 }
 
 resource "iosxe_crypto_ipsec_profile" "crypto_ipsec_profile" {
-  for_each                                                            = { for e in local.ipsec_profiles : e.key => e }
-  device                                                              = each.value.device
-  name                                                                = each.value.name
-  set_transform_set                                                   = each.value.set_transform_set
-  set_isakmp_profile_ikev2_profile_ikev2_profile_case_ikev2_profile   = each.value.set_isakmp_profile_ikev2_profile_ikev2_profile_case_ikev2_profile
-  set_isakmp_profile_ikev2_profile_isakmp_profile_case_isakmp_profile = each.value.set_isakmp_profile_ikev2_profile_isakmp_profile_case_isakmp_profile
+  for_each           = { for e in local.ipsec_profiles : e.key => e }
+  device             = each.value.device
+  name               = each.value.name
+  set_transform_set  = each.value.set_transform_set
+  set_ikev2_profile  = each.value.set_ikev2_profile
+  set_isakmp_profile = each.value.set_isakmp_profile
 }
 
 locals {
