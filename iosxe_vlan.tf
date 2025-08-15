@@ -69,7 +69,7 @@ locals {
         name               = try(amap.name, local.defaults.iosxe.configuration.vlan.access_maps.name, null)
         sequence           = try(amap.sequence, local.defaults.iosxe.configuration.vlan.access_maps.sequence, null)
         action             = try(amap.action, local.defaults.iosxe.configuration.vlan.access_maps.action, null)
-        match_ip_address   = try(amap.match_ip_addresses, local.defaults.iosxe.configuration.vlan.access_maps.match_ip_addresses, null)
+        match_ip_address   = try(amap.match_ipv4_addresses, local.defaults.iosxe.configuration.vlan.access_maps.match_ipv4_addresses, null)
         match_ipv6_address = try(amap.match_ipv6_addresses, local.defaults.iosxe.configuration.vlan.access_maps.match_ipv6_addresses, null)
       }
     ]
