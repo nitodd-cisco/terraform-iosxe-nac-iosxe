@@ -4,7 +4,7 @@ resource "iosxe_vtp" "vtp" {
 
   domain                   = try(local.device_config[each.value.name].vtp.domain, local.defaults.iosxe.configuration.vtp.domain, null)
   file                     = try(local.device_config[each.value.name].vtp.file, local.defaults.iosxe.configuration.vtp.file, null)
-  interface                = try(local.device_config[each.value.name].vtp.interface, local.defaults.iosxe.configuration.vtp.interface, null)
+  interface                = try("${try(local.device_config[each.value.name].vtp.interface_type, local.defaults.iosxe.configuration.vtp.interface_type, null)}${try(local.device_config[each.value.name].vtp.interface_id, local.defaults.iosxe.configuration.vtp.interface_id, null)}", null)
   interface_only           = try(local.device_config[each.value.name].vtp.interface_only, local.defaults.iosxe.configuration.vtp.interface_only, null)
   mode_client_mst          = try(local.device_config[each.value.name].vtp.mode == "client" && local.device_config[each.value.name].vtp.mode_instance == "mst", local.defaults.iosxe.configuration.vtp.mode == "client" && local.defaults.iosxe.configuration.vtp.mode_instance == "mst", null)
   mode_client_unknown      = try(local.device_config[each.value.name].vtp.mode == "client" && local.device_config[each.value.name].vtp.mode_instance == "unknown", local.defaults.iosxe.configuration.vtp.mode == "client" && local.defaults.iosxe.configuration.vtp.mode_instance == "unknown", null)
