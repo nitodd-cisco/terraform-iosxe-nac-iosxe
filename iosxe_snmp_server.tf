@@ -143,13 +143,13 @@ resource "iosxe_snmp_server" "snmp_server" {
   }]
   hosts = [for host in try(local.device_config[each.value.name].snmp_server.hosts, []) : {
     ip_address        = host.ip
-    community_or_user = try(host.community_or_user, local.defaults.iosxe.configuration.snmp_server.hosts.community_or_user, null)
+    community_or_user = try(host.user, host.community, local.defaults.iosxe.configuration.snmp_server.hosts.user, local.defaults.iosxe.configuration.snmp_server.hosts.community, null)
     encryption        = try(host.encryption, local.defaults.iosxe.configuration.snmp_server.hosts.encryption, null)
     version           = try(host.version, local.defaults.iosxe.configuration.snmp_server.hosts.version, null)
   }]
   snmp_communities = [for e in try(local.device_config[each.value.name].snmp_server.snmp_communities, []) : {
     name             = e.name
-    access_list_name = try(e.acl, local.defaults.iosxe.configuration.snmp_server.snmp_communities.acl, null)
+    access_list_name = try(e.ipv4_acl, local.defaults.iosxe.configuration.snmp_server.snmp_communities.ipv4_acl, null)
     ipv6             = try(e.ipv6_acl, local.defaults.iosxe.configuration.snmp_server.snmp_communities.ipv6_acl, null)
     permission       = try(e.permission, local.defaults.iosxe.configuration.snmp_server.snmp_communities.permission, null)
     view             = try(e.view, local.defaults.iosxe.configuration.snmp_server.snmp_communities.view, null)
@@ -168,7 +168,7 @@ locals {
         key    = format("%s/%s", device.name, group.name)
         device = device.name
         name   = group.name
-        v3_security = [for e in try(group.v3_securities, []) : {
+        v3_security = [for e in try(group.v3_security_levels, []) : {
           security_level      = e.security_level
           context_node        = try(e.context_node, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.context_node, null)
           match_node          = try(e.match_node, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.match_node, null)
