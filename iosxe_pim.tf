@@ -4,7 +4,7 @@ resource "iosxe_pim" "pim" {
 
   autorp                 = try(local.device_config[each.value.name].pim.autorp, local.defaults.iosxe.configuration.pim.autorp, null)
   autorp_listener        = try(local.device_config[each.value.name].pim.autorp_listener, local.defaults.iosxe.configuration.pim.autorp_listener, null)
-  bsr_candidate_loopback = try(local.device_config[each.value.name].pim.bsr_candidate_loopback, local.defaults.iosxe.configuration.pim.bsr_candidate_loopback, null)
+  bsr_candidate_loopback = try(local.device_config[each.value.name].pim.bsr_candidate_interface_type, local.defaults.iosxe.configuration.pim.bsr_candidate_interface_type, null) == "Loopback" ? try(local.device_config[each.value.name].pim.bsr_candidate_interface_id, local.defaults.iosxe.configuration.pim.bsr_candidate_interface_id, null) : null
   bsr_candidate_mask     = try(local.device_config[each.value.name].pim.bsr_candidate_mask, local.defaults.iosxe.configuration.pim.bsr_candidate_mask, null)
   bsr_candidate_priority = try(local.device_config[each.value.name].pim.bsr_candidate_priority, local.defaults.iosxe.configuration.pim.bsr_candidate_priority, null)
   ssm_range              = try(local.device_config[each.value.name].pim.ssm_range, local.defaults.iosxe.configuration.pim.ssm_range, null)
