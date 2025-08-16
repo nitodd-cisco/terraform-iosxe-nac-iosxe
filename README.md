@@ -100,6 +100,7 @@ module "iosxe" {
 | [iosxe_crypto_ikev2_proposal.crypto_ikev2_proposal](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/crypto_ikev2_proposal) | resource |
 | [iosxe_crypto_ipsec_profile.crypto_ipsec_profile](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/crypto_ipsec_profile) | resource |
 | [iosxe_crypto_ipsec_transform_set.crypto_ipsec_transform_set](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/crypto_ipsec_transform_set) | resource |
+| [iosxe_crypto_pki.crypto_pki](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/crypto_pki) | resource |
 | [iosxe_cts.cts](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/cts) | resource |
 | [iosxe_dhcp.dhcp](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/dhcp) | resource |
 | [iosxe_dot1x.dot1x](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/dot1x) | resource |
