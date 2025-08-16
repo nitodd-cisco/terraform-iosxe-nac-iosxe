@@ -93,7 +93,7 @@ locals {
       for filter in try(local.device_config[device.name].vlan.filters, []) : {
         key        = format("%s/%s", device.name, filter.word)
         device     = device.name
-        word       = try(filter.word, local.defaults.iosxe.configuration.vlan.filters.word, null)
+        word       = try(filter.name, local.defaults.iosxe.configuration.vlan.filters.name, null)
         vlan_lists = try(filter.vlan_lists, local.defaults.iosxe.configuration.vlan.filters.vlan_lists, null)
       }
     ]
