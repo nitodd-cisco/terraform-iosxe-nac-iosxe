@@ -84,7 +84,7 @@ locals {
   ])
 }
 
-resource "iosxe_vrf" "vrfs" {
+resource "iosxe_vrf" "vrf" {
   for_each = { for vrf in local.vrf_configurations : vrf.key => vrf }
 
   device      = each.value.device

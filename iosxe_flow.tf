@@ -22,6 +22,24 @@ locals {
   ])
 }
 
+resource "iosxe_flow_exporter" "flow_exporter" {
+  for_each = { for e in local.flow_exporter : e.key => e }
+  device   = each.value.device
+
+  name                                  = each.value.name
+  description                           = each.value.description
+  destination_ip                        = each.value.destination_ip
+  export_protocol                       = each.value.export_protocol
+  option_application_attributes_timeout = each.value.option_application_attributes_timeout
+  option_application_table_timeout      = each.value.option_application_table_timeout
+  option_interface_table_timeout        = each.value.option_interface_table_timeout
+  option_sampler_table                  = each.value.option_sampler_table
+  option_vrf_table_timeout              = each.value.option_vrf_table_timeout
+  source_loopback                       = each.value.source_loopback
+  transport_udp                         = each.value.transport_udp
+  template_data_timeout                 = each.value.template_data_timeout
+}
+
 locals {
   flow_monitor = flatten([
     for device in local.devices : [
@@ -31,7 +49,7 @@ locals {
 
         name        = monitor.name
         description = try(monitor.description, local.defaults.iosxe.device_config.flow.monitors.description, null)
-        exporters = [for exporter in try(monitor.exporters, local.defaults.iosxe.device_config.flow.monitors.exporters, []) : {
+        exporters = [for exporter in try(monitor.exporters, []) : {
           name = exporter
         }]
         cache_timeout_active   = try(monitor.cache_timeout_active, local.defaults.iosxe.device_config.flow.monitors.cache_timeout_active, null)
@@ -40,6 +58,19 @@ locals {
       }
     ]
   ])
+}
+
+resource "iosxe_flow_monitor" "flow_monitor" {
+  for_each = { for e in local.flow_monitor : e.key => e }
+  device   = each.value.device
+
+  name                   = each.value.name
+  description            = each.value.description
+  exporters              = each.value.exporters
+  cache_timeout_active   = each.value.cache_timeout_active
+  cache_timeout_inactive = each.value.cache_timeout_inactive
+  record                 = each.value.record
+  depends_on             = [iosxe_flow_exporter.flow_exporter, iosxe_flow_record.flow_record]
 }
 
 locals {
@@ -88,42 +119,7 @@ locals {
   ])
 }
 
-resource "iosxe_flow_exporter" "flow_exporter" {
-  for_each = { for e in local.flow_exporter : e.key => e }
-  device   = each.value.device
-
-  name                                  = each.value.name
-  description                           = each.value.description
-  destination_ip                        = each.value.destination_ip
-  export_protocol                       = each.value.export_protocol
-  option_application_attributes_timeout = each.value.option_application_attributes_timeout
-  option_application_table_timeout      = each.value.option_application_table_timeout
-  option_interface_table_timeout        = each.value.option_interface_table_timeout
-  option_sampler_table                  = each.value.option_sampler_table
-  option_vrf_table_timeout              = each.value.option_vrf_table_timeout
-  source_loopback                       = each.value.source_loopback
-  transport_udp                         = each.value.transport_udp
-  template_data_timeout                 = each.value.template_data_timeout
-}
-
-
-
-resource "iosxe_flow_monitor" "flow_monitors" {
-  for_each = { for e in local.flow_monitor : e.key => e }
-  device   = each.value.device
-
-  name                   = each.value.name
-  description            = each.value.description
-  exporters              = each.value.exporters
-  cache_timeout_active   = each.value.cache_timeout_active
-  cache_timeout_inactive = each.value.cache_timeout_inactive
-  record                 = each.value.record
-  depends_on             = [iosxe_flow_exporter.flow_exporter, iosxe_flow_record.flow_records]
-}
-
-
-
-resource "iosxe_flow_record" "flow_records" {
+resource "iosxe_flow_record" "flow_record" {
   for_each = { for e in local.flow_record : e.key => e }
   device   = each.value.device
 

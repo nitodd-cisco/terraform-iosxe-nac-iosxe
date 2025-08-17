@@ -171,7 +171,6 @@ resource "iosxe_aaa_authorization" "aaa_authorization" {
   }]
 }
 
-
 locals {
   radius_servers = flatten([
     for device in local.devices : [
@@ -196,11 +195,9 @@ locals {
 }
 
 resource "iosxe_radius" "radius" {
-
-  for_each = {
-    for server in local.radius_servers : server.tag => server
-  }
+  for_each = { for server in local.radius_servers : server.tag => server }
   device                           = each.value.device_name
+
   name                             = each.value.name
   ipv4_address                     = each.value.ipv4_address
   timeout                          = each.value.timeout
@@ -215,8 +212,6 @@ resource "iosxe_radius" "radius" {
   pac_key_encryption               = each.value.pac_key_encryption
 }
 
-
-
 resource "iosxe_radius_server" "radius_server" {
   for_each = { for device in local.devices : device.name => device if try(local.device_config[device.name].aaa.radius, null) != null || try(local.defaults.iosxe.configuration.aaa.radius, null) != null }
   device   = each.value.name
@@ -225,18 +220,18 @@ resource "iosxe_radius_server" "radius_server" {
   dead_criteria_tries = try(local.device_config[each.value.name].aaa.radius.dead_criteria_tries, local.defaults.iosxe.configuration.aaa.radius.dead_criteria_tries, null)
   deadtime            = try(local.device_config[each.value.name].aaa.radius.deadtime, local.defaults.iosxe.configuration.aaa.radius.deadtime, null)
 
-  attributes = [for attr in try(local.device_config[each.value.name].aaa.radius.attributes, local.defaults.iosxe.configuration.aaa.radius.attributes, []) :
+  attributes = [for attr in try(local.device_config[each.value.name].aaa.radius.attributes, []) :
     {
-      number                 = try(attr.number, null)
-      access_request_include = try(attr.access_request_include, null)
-      send_attributes        = try(attr.send_attributes, null)
+      number                 = try(attr.number, local.defaults.iosxe.configuration.aaa.radius.attributes.number, null)
+      access_request_include = try(attr.access_request_include, local.defaults.iosxe.configuration.aaa.radius.attributes.access_request_include, null)
+      send_attributes        = try(attr.send_attributes, local.defaults.iosxe.configuration.aaa.radius.attributes.send_attributes, null)
       attribute_31_parameters = [for param in try(attr.attribute_31_parameters, []) :
         {
-          calling_station_id      = try(param.calling_station_id, null)
-          id_mac_format           = try(param.id_mac_format, null)
-          id_mac_lu_case          = try(param.id_mac_lu_case, null)
-          id_send_mac_only        = try(param.id_send_mac_only, null)
-          id_send_nas_port_detail = try(param.id_send_nas_port_detail, null)
+          calling_station_id      = try(param.calling_station_id, local.defaults.iosxe.configuration.aaa.radius.attributes.attribute_31_parameters.calling_station_id, null)
+          id_mac_format           = try(param.id_mac_format, local.defaults.iosxe.configuration.aaa.radius.attributes.attribute_31_parameters.id_mac_format, null)
+          id_mac_lu_case          = try(param.id_mac_lu_case, local.defaults.iosxe.configuration.aaa.radius.attributes.attribute_31_parameters.id_mac_lu_case, null)
+          id_send_mac_only        = try(param.id_send_mac_only, local.defaults.iosxe.configuration.aaa.radius.attributes.attribute_31_parameters.id_send_mac_only, null)
+          id_send_nas_port_detail = try(param.id_send_nas_port_detail, local.defaults.iosxe.configuration.aaa.radius.attributes.attribute_31_parameters.id_send_nas_port_detail, null)
         }
       ]
     }
@@ -260,10 +255,9 @@ locals {
 }
 
 resource "iosxe_tacacs_server" "tacacs_server" {
-  for_each = {
-    for server in local.tacacs_servers : server.tag => server
-  }
+  for_each = { for server in local.tacacs_servers : server.tag => server }
   device       = each.value.device_name
+
   name         = each.value.name
   address_ipv4 = each.value.address_ipv4
   timeout      = each.value.timeout
@@ -290,10 +284,9 @@ locals {
 }
 
 resource "iosxe_username" "username" {
-  for_each = {
-    for username in local.usernames : username.tag => username
-  }
+  for_each = { for username in local.usernames : username.tag => username }
   device              = each.value.device_name
+  
   name                = each.value.name
   privilege           = each.value.privilege
   description         = each.value.description

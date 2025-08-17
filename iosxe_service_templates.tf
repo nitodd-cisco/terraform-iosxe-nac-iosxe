@@ -47,7 +47,7 @@ locals {
   ])
 }
 
-resource "iosxe_service_template" "service_templates" {
+resource "iosxe_service_template" "service_template" {
   for_each = { for e in local.service_template_name : e.key => e }
   device   = each.value.device
 

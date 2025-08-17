@@ -48,7 +48,7 @@ locals {
   ])
 }
 
-resource "iosxe_vlan_configuration" "vlan_vn_config" {
+resource "iosxe_vlan_configuration" "vlan_configuration" {
   for_each = { for e in local.vlan_config : e.key => e }
   device   = each.value.device
 
@@ -76,7 +76,7 @@ locals {
   ])
 }
 
-resource "iosxe_vlan_access_map" "vlan_access_maps" {
+resource "iosxe_vlan_access_map" "vlan_access_map" {
   for_each = { for e in local.vlan_access_maps : e.key => e }
   device   = each.value.device
 

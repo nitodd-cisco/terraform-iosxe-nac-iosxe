@@ -180,10 +180,8 @@ locals {
 
 resource "iosxe_interface_ethernet" "ethernet" {
   for_each = { for v in local.interfaces_ethernets : v.key => v }
-
-  depends_on = [iosxe_vrf.vrfs]
-
   device                                     = each.value.device
+
   type                                       = each.value.type
   name                                       = each.value.id
   media_type                                 = each.value.media_type
@@ -279,6 +277,8 @@ resource "iosxe_interface_ethernet" "ethernet" {
   dot1x_timeout_tx_period                    = each.value.dot1x_timeout_tx_period
   dot1x_max_reauth_req                       = each.value.dot1x_max_reauth_req
   dot1x_max_req                              = each.value.dot1x_max_req
+
+  depends_on = [iosxe_vrf.vrf]
 }
 
 resource "iosxe_interface_switchport" "ethernet_switchport" {
@@ -341,7 +341,7 @@ resource "iosxe_interface_ospf" "ethernet_ospf" {
   depends_on = [
     iosxe_interface_ethernet.ethernet,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -360,7 +360,7 @@ resource "iosxe_interface_ospfv3" "ethernet_ospfv3" {
   depends_on = [
     iosxe_interface_ethernet.ethernet,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -470,10 +470,8 @@ locals {
 
 resource "iosxe_interface_loopback" "loopback" {
   for_each = { for v in local.interfaces_loopbacks : v.key => v }
-
-  depends_on = [iosxe_vrf.vrfs]
-
   device                          = each.value.device
+
   name                            = each.value.id
   description                     = each.value.description
   shutdown                        = each.value.shutdown
@@ -495,6 +493,8 @@ resource "iosxe_interface_loopback" "loopback" {
   ipv6_mtu                        = each.value.ipv6_mtu
   ipv6_nd_ra_suppress_all         = each.value.ipv6_nd_ra_suppress_all
   arp_timeout                     = each.value.arp_timeout
+
+  depends_on = [iosxe_vrf.vrf]
 }
 
 resource "iosxe_interface_mpls" "loopback_mpls" {
@@ -533,7 +533,7 @@ resource "iosxe_interface_ospf" "loopback_ospf" {
   depends_on = [
     iosxe_interface_loopback.loopback,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -552,7 +552,7 @@ resource "iosxe_interface_ospfv3" "loopback_ospfv3" {
   depends_on = [
     iosxe_interface_loopback.loopback,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -672,12 +672,10 @@ locals {
   ])
 }
 
-resource "iosxe_interface_vlan" "interface_vlan" {
+resource "iosxe_interface_vlan" "vlan" {
   for_each = { for v in local.interfaces_vlans : v.key => v }
-
-  depends_on = [iosxe_vrf.vrfs]
-
   device                          = each.value.device
+
   name                            = each.value.id
   description                     = each.value.description
   shutdown                        = each.value.shutdown
@@ -710,6 +708,8 @@ resource "iosxe_interface_vlan" "interface_vlan" {
   bfd_interval_multiplier         = each.value.bfd_interval_multiplier
   bfd_echo                        = each.value.bfd_echo
   load_interval                   = each.value.load_interval
+
+  depends_on = [iosxe_vrf.vrf]
 }
 
 resource "iosxe_interface_mpls" "vlan_mpls" {
@@ -722,7 +722,7 @@ resource "iosxe_interface_mpls" "vlan_mpls" {
   mtu    = each.value.mpls_mtu
 
   depends_on = [
-    iosxe_interface_vlan.interface_vlan
+    iosxe_interface_vlan.vlan
   ]
 }
 
@@ -746,9 +746,9 @@ resource "iosxe_interface_ospf" "vlan_ospf" {
   message_digest_keys              = each.value.ospf_message_digest_keys
 
   depends_on = [
-    iosxe_interface_vlan.interface_vlan,
+    iosxe_interface_vlan.vlan,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -765,9 +765,9 @@ resource "iosxe_interface_ospfv3" "vlan_ospfv3" {
   cost                             = each.value.ospfv3_cost
 
   depends_on = [
-    iosxe_interface_vlan.interface_vlan,
+    iosxe_interface_vlan.vlan,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -787,7 +787,7 @@ resource "iosxe_interface_pim" "vlan_pim" {
   dr_priority       = each.value.pim_dr_priority
 
   depends_on = [
-    iosxe_interface_vlan.interface_vlan
+    iosxe_interface_vlan.vlan
   ]
 }
 
@@ -1005,7 +1005,7 @@ resource "iosxe_interface_ospf" "port_channel_ospf" {
   depends_on = [
     iosxe_interface_port_channel.port_channel,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -1156,10 +1156,8 @@ locals {
 
 resource "iosxe_interface_port_channel_subinterface" "port_channel_subinterface" {
   for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v }
-
-  depends_on = [iosxe_vrf.vrfs]
-
   device                          = each.value.device
+
   name                            = each.value.name
   encapsulation_dot1q_vlan_id     = each.value.encapsulation_dot1q_vlan_id
   description                     = each.value.description
@@ -1205,6 +1203,8 @@ resource "iosxe_interface_port_channel_subinterface" "port_channel_subinterface"
   trust_device                    = each.value.trust_device
   ip_arp_inspection_trust         = each.value.ip_arp_inspection_trust
   ip_arp_inspection_limit_rate    = each.value.ip_arp_inspection_limit_rate
+
+  depends_on = [iosxe_vrf.vrf]
 }
 
 resource "iosxe_interface_mpls" "port_channel_subinterface_mpls" {
@@ -1243,7 +1243,7 @@ resource "iosxe_interface_ospf" "port_channel_subinterface_ospf" {
   depends_on = [
     iosxe_interface_port_channel_subinterface.port_channel_subinterface,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -1262,7 +1262,7 @@ resource "iosxe_interface_ospfv3" "port_channel_subinterface_ospfv3" {
   depends_on = [
     iosxe_interface_port_channel_subinterface.port_channel_subinterface,
     iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
+    iosxe_ospf_vrf.ospf_vrf
   ]
 }
 
@@ -1286,7 +1286,7 @@ resource "iosxe_interface_pim" "port_channel_subinterface_pim" {
   ]
 }
 
-##### NVES #####
+##### NVE #####
 
 locals {
   nves = flatten([
@@ -1318,7 +1318,7 @@ locals {
   ])
 }
 
-resource "iosxe_interface_nve" "nves" {
+resource "iosxe_interface_nve" "nve" {
   for_each = { for e in local.nves : e.key => e }
   device   = each.value.device
 

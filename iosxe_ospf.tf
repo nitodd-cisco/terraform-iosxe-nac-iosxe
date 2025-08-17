@@ -136,7 +136,7 @@ resource "iosxe_ospf" "ospf" {
   areas                                = each.value.areas
 }
 
-resource "iosxe_ospf_vrf" "ospf" {
+resource "iosxe_ospf_vrf" "ospf_vrf" {
   for_each = { for o in local.ospf_configurations_with_vrf : o.key => o }
   device   = each.value.device
 
@@ -161,5 +161,5 @@ resource "iosxe_ospf_vrf" "ospf" {
   summary_address                      = each.value.summary_address
   areas                                = each.value.areas
 
-  depends_on = [iosxe_vrf.vrfs]
+  depends_on = [iosxe_vrf.vrf]
 }

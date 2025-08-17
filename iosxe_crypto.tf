@@ -2,7 +2,7 @@ locals {
   ipsec_profiles = flatten([
     for device in local.devices : [
       for profile in try(local.device_config[device.name].crypto.ipsec_profiles, []) : {
-        key    = format("%s%s", device.name, profile.name)
+        key    = format("%s/%s", device.name, profile.name)
         device = device.name
 
         name               = profile.name
@@ -18,6 +18,7 @@ resource "iosxe_crypto_ipsec_profile" "crypto_ipsec_profile" {
   for_each           = { for e in local.ipsec_profiles : e.key => e }
   device             = each.value.device
   name               = each.value.name
+
   set_transform_set  = each.value.set_transform_set
   set_ikev2_profile  = each.value.set_ikev2_profile
   set_isakmp_profile = each.value.set_isakmp_profile
@@ -27,12 +28,12 @@ locals {
   ipsec_transform_sets = flatten([
     for device in local.devices : [
       for transform_set in try(local.device_config[device.name].crypto.ipsec_transform_sets, []) : {
-        key    = format("%s%s", device.name, transform_set.name)
+        key    = format("%s/%s", device.name, transform_set.name)
         device = device.name
 
         name        = transform_set.name
-        esp         = transform_set.esp
-        esp_hmac    = transform_set.esp_hmac
+        esp         = try(transform_set.esp, local.defaults.iosxe.configuration.crypto.ipsec_transform_sets.esp, null)
+        esp_hmac    = try(transform_set.esp_hmac, local.defaults.iosxe.configuration.crypto.ipsec_transform_sets.esp_hmac, null)
         mode_tunnel = try(transform_set.mode_tunnel, local.defaults.iosxe.configuration.crypto.ipsec_transform_sets.mode_tunnel, null)
       }
     ]
@@ -42,6 +43,7 @@ locals {
 resource "iosxe_crypto_ipsec_transform_set" "crypto_ipsec_transform_set" {
   for_each    = { for e in local.ipsec_transform_sets : e.key => e }
   device      = each.value.device
+
   name        = each.value.name
   esp         = each.value.esp
   esp_hmac    = each.value.esp_hmac
@@ -62,7 +64,7 @@ locals {
   ikev2_profiles = flatten([
     for device in local.devices : [
       for profile in try(local.device_config[device.name].crypto.ikev2.profiles, []) : {
-        key    = format("%s%s", device.name, profile.name)
+        key    = format("%s/%s", device.name, profile.name)
         device = device.name
 
         name                            = profile.name
@@ -95,6 +97,7 @@ locals {
 resource "iosxe_crypto_ikev2_profile" "crypto_ikev2_profile" {
   for_each                             = { for e in local.ikev2_profiles : e.key => e }
   device                               = each.value.device
+
   name                                 = each.value.name
   authentication_local_pre_share       = each.value.authentication_local_pre_share
   authentication_remote_pre_share      = each.value.authentication_remote_pre_share
@@ -120,7 +123,7 @@ locals {
   ikev2_keyrings = flatten([
     for device in local.devices : [
       for keyring in try(local.device_config[device.name].crypto.ikev2.keyrings, []) : {
-        key    = format("%s%s", device.name, keyring.name)
+        key    = format("%s/%s", device.name, keyring.name)
         device = device.name
 
         name = keyring.name
@@ -160,12 +163,12 @@ locals {
   ikev2_policies = flatten([
     for device in local.devices : [
       for policy in try(local.device_config[device.name].crypto.ikev2.policies, []) : {
-        key    = format("%s%s", device.name, policy.name)
+        key    = format("%s/%s", device.name, policy.name)
         device = device.name
 
         name = policy.name
         proposals = [for e in try(policy.proposals, []) : {
-          proposals = e.proposals
+          proposals = e
         }]
         match_address_local_ip = try(policy.match_address_local_ip, local.defaults.iosxe.configuration.crypto.ikev2.policies.match_address_local_ip, null)
         match_fvrf             = try(policy.match_fvrf, local.defaults.iosxe.configuration.crypto.ikev2.policies.match_fvrf, null)
@@ -179,6 +182,7 @@ locals {
 resource "iosxe_crypto_ikev2_policy" "crypto_ikev2_policy" {
   for_each               = { for e in local.ikev2_policies : e.key => e }
   device                 = each.value.device
+
   name                   = each.value.name
   proposals              = each.value.proposals
   match_address_local_ip = each.value.match_address_local_ip
@@ -191,7 +195,7 @@ locals {
   ikev2_proposals = flatten([
     for device in local.devices : [
       for proposal in try(local.device_config[device.name].crypto.ikev2.proposals, []) : {
-        key    = format("%s%s", device.name, proposal.name)
+        key    = format("%s/%s", device.name, proposal.name)
         device = device.name
 
         name                   = proposal.name
@@ -228,6 +232,7 @@ locals {
 resource "iosxe_crypto_ikev2_proposal" "crypto_ikev2_proposal" {
   for_each               = { for e in local.ikev2_proposals : e.key => e }
   device                 = each.value.device
+
   name                   = each.value.name
   encryption_aes_cbc_128 = each.value.encryption_aes_cbc_128
   encryption_aes_cbc_192 = each.value.encryption_aes_cbc_192
@@ -257,7 +262,7 @@ resource "iosxe_crypto_ikev2_proposal" "crypto_ikev2_proposal" {
 }
 
 resource "iosxe_crypto_pki" "crypto_pki" {
-  for_each = { for device in local.devices : device.name => device if try(local.device_config[device.name].crypto.pki, null) != null || try(local.defaults.iosxe.configuration.crypto.pki, null) != null }
+  for_each = { for device in local.devices : device.name => device if length(try(local.device_config[device.name].crypto.pki.trustpoints, [])) > 0 }
   device   = each.value.name
 
   trustpoints = [for tp in try(local.device_config[each.value.name].crypto.pki.trustpoints, []) : {

@@ -24,7 +24,7 @@ locals {
     ]
   ])
 }
-resource "iosxe_mdt_subscription" "mdt_subscriptions" {
+resource "iosxe_mdt_subscription" "mdt_subscription" {
   for_each = { for e in local.mdt_subscriptions : e.key => e }
 
   device                  = each.value.device

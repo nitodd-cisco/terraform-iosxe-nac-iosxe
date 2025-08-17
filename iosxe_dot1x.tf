@@ -22,5 +22,4 @@ resource "iosxe_dot1x" "dot1x" {
       anonymous_id   = try(cred.anonymous_id, local.defaults.iosxe.configuration.dot1x.credentials.anonymous_id, null)
     }
   ]
-
 }
