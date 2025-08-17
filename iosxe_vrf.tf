@@ -6,7 +6,7 @@ locals {
         device      = device.name
         name        = vrf.name
         description = try(vrf.description, local.defaults.iosxe.configuration.vrfs.description, null)
-        rd          = try(vrf.route_destinguisher, local.defaults.iosxe.configuration.vrfs.route_destinguisher, null)
+        rd          = try(vrf.route_distinguisher, local.defaults.iosxe.configuration.vrfs.route_distinguisher, null)
 
         address_family_ipv4 = try(vrf.address_family_ipv4, local.defaults.iosxe.configuration.vrfs.address_family_ipv4, null)
         address_family_ipv6 = try(vrf.address_family_ipv6, local.defaults.iosxe.configuration.vrfs.address_family_ipv6, null)
