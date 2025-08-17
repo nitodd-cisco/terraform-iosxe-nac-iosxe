@@ -1207,84 +1207,84 @@ resource "iosxe_interface_port_channel_subinterface" "port_channel_subinterface"
   ip_arp_inspection_limit_rate    = each.value.ip_arp_inspection_limit_rate
 }
 
-resource "iosxe_interface_mpls" "port_channel_subinterface_mpls" {
-  for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v if v.mpls_ip == true || v.mpls_mtu != null }
+# resource "iosxe_interface_mpls" "port_channel_subinterface_mpls" {
+#   for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v if v.mpls_ip == true || v.mpls_mtu != null }
 
-  device = each.value.device
-  type   = "Port-channel-subinterface/Port-channel"
-  name   = each.value.name
-  ip     = each.value.mpls_ip
-  mtu    = each.value.mpls_mtu
+#   device = each.value.device
+#   type   = "Port-channel-subinterface/Port-channel"
+#   name   = each.value.name
+#   ip     = each.value.mpls_ip
+#   mtu    = each.value.mpls_mtu
 
-  depends_on = [
-    iosxe_interface_port_channel_subinterface.port_channel_subinterface
-  ]
-}
+#   depends_on = [
+#     iosxe_interface_port_channel_subinterface.port_channel_subinterface
+#   ]
+# }
 
-resource "iosxe_interface_ospf" "port_channel_subinterface_ospf" {
-  for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v if v.ospf }
+# resource "iosxe_interface_ospf" "port_channel_subinterface_ospf" {
+#   for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v if v.ospf }
 
-  device                           = each.value.device
-  type                             = "Port-channel-subinterface/Port-channel"
-  name                             = each.value.name
-  cost                             = each.value.ospf_cost
-  dead_interval                    = each.value.ospf_dead_interval
-  hello_interval                   = each.value.ospf_hello_interval
-  mtu_ignore                       = each.value.ospf_mtu_ignore
-  network_type_broadcast           = each.value.ospf_network_type_broadcast
-  network_type_non_broadcast       = each.value.ospf_network_type_non_broadcast
-  network_type_point_to_multipoint = each.value.ospf_network_type_point_to_multipoint
-  network_type_point_to_point      = each.value.ospf_network_type_point_to_point
-  priority                         = each.value.ospf_priority
-  ttl_security_hops                = each.value.ospf_ttl_security_hops
-  process_ids                      = each.value.ospf_process_ids
-  message_digest_keys              = each.value.ospf_message_digest_keys
+#   device                           = each.value.device
+#   type                             = "Port-channel-subinterface/Port-channel"
+#   name                             = each.value.name
+#   cost                             = each.value.ospf_cost
+#   dead_interval                    = each.value.ospf_dead_interval
+#   hello_interval                   = each.value.ospf_hello_interval
+#   mtu_ignore                       = each.value.ospf_mtu_ignore
+#   network_type_broadcast           = each.value.ospf_network_type_broadcast
+#   network_type_non_broadcast       = each.value.ospf_network_type_non_broadcast
+#   network_type_point_to_multipoint = each.value.ospf_network_type_point_to_multipoint
+#   network_type_point_to_point      = each.value.ospf_network_type_point_to_point
+#   priority                         = each.value.ospf_priority
+#   ttl_security_hops                = each.value.ospf_ttl_security_hops
+#   process_ids                      = each.value.ospf_process_ids
+#   message_digest_keys              = each.value.ospf_message_digest_keys
 
-  depends_on = [
-    iosxe_interface_port_channel_subinterface.port_channel_subinterface,
-    iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
-  ]
-}
+#   depends_on = [
+#     iosxe_interface_port_channel_subinterface.port_channel_subinterface,
+#     iosxe_ospf.ospf,
+#     iosxe_ospf_vrf.ospf
+#   ]
+# }
 
-resource "iosxe_interface_ospfv3" "port_channel_subinterface_ospfv3" {
-  for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v if v.ospfv3 }
+# resource "iosxe_interface_ospfv3" "port_channel_subinterface_ospfv3" {
+#   for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v if v.ospfv3 }
 
-  device                           = each.value.device
-  type                             = "Port-channel-subinterface/Port-channel"
-  name                             = each.value.name
-  network_type_broadcast           = each.value.ospfv3_network_type_broadcast
-  network_type_non_broadcast       = each.value.ospfv3_network_type_non_broadcast
-  network_type_point_to_multipoint = each.value.ospfv3_network_type_point_to_multipoint
-  network_type_point_to_point      = each.value.ospfv3_network_type_point_to_point
-  cost                             = each.value.ospfv3_cost
+#   device                           = each.value.device
+#   type                             = "Port-channel-subinterface/Port-channel"
+#   name                             = each.value.name
+#   network_type_broadcast           = each.value.ospfv3_network_type_broadcast
+#   network_type_non_broadcast       = each.value.ospfv3_network_type_non_broadcast
+#   network_type_point_to_multipoint = each.value.ospfv3_network_type_point_to_multipoint
+#   network_type_point_to_point      = each.value.ospfv3_network_type_point_to_point
+#   cost                             = each.value.ospfv3_cost
 
-  depends_on = [
-    iosxe_interface_port_channel_subinterface.port_channel_subinterface,
-    iosxe_ospf.ospf,
-    iosxe_ospf_vrf.ospf
-  ]
-}
+#   depends_on = [
+#     iosxe_interface_port_channel_subinterface.port_channel_subinterface,
+#     iosxe_ospf.ospf,
+#     iosxe_ospf_vrf.ospf
+#   ]
+# }
 
-resource "iosxe_interface_pim" "port_channel_subinterface_pim" {
-  for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v if v.pim }
+# resource "iosxe_interface_pim" "port_channel_subinterface_pim" {
+#   for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v if v.pim }
 
-  device            = each.value.device
-  type              = "Port-channel-subinterface/Port-channel"
-  name              = each.value.name
-  passive           = each.value.pim_passive
-  dense_mode        = each.value.pim_dense_mode
-  sparse_mode       = each.value.pim_sparse_mode
-  sparse_dense_mode = each.value.pim_sparse_dense_mode
-  bfd               = each.value.pim_bfd
-  border            = each.value.pim_border
-  bsr_border        = each.value.pim_bsr_border
-  dr_priority       = each.value.pim_dr_priority
+#   device            = each.value.device
+#   type              = "Port-channel-subinterface/Port-channel"
+#   name              = each.value.name
+#   passive           = each.value.pim_passive
+#   dense_mode        = each.value.pim_dense_mode
+#   sparse_mode       = each.value.pim_sparse_mode
+#   sparse_dense_mode = each.value.pim_sparse_dense_mode
+#   bfd               = each.value.pim_bfd
+#   border            = each.value.pim_border
+#   bsr_border        = each.value.pim_bsr_border
+#   dr_priority       = each.value.pim_dr_priority
 
-  depends_on = [
-    iosxe_interface_port_channel_subinterface.port_channel_subinterface
-  ]
-}
+#   depends_on = [
+#     iosxe_interface_port_channel_subinterface.port_channel_subinterface
+#   ]
+# }
 
 ##### NVES #####
 
