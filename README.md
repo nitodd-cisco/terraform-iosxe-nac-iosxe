@@ -130,6 +130,7 @@ module "iosxe" {
 | [iosxe_interface_vlan.interface_vlan](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/interface_vlan) | resource |
 | [iosxe_license.license](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/license) | resource |
 | [iosxe_line.line](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/line) | resource |
+| [iosxe_lldp.lldp](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/lldp) | resource |
 | [iosxe_logging.logging](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/logging) | resource |
 | [iosxe_mdt_subscription.mdt_subscriptions](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/mdt_subscription) | resource |
 | [iosxe_msdp.msdp](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/msdp) | resource |
