@@ -847,7 +847,7 @@ locals {
         arp_timeout                      = try(int.arp_timeout, local.defaults.iosxe.devices.configuration.interfaces.port_channels.arp_timeout, null)
         load_interval                    = try(int.load_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.load_interval, null)
         snmp_trap_link_status            = try(int.snmp_trap_link_status, local.defaults.iosxe.devices.configuration.interfaces.port_channels.snmp_trap_link_status, null)
-        logging_event_link_status_enable = try(int.logging_event_link_status_enable, local.defaults.iosxe.devices.configuration.interfaces.port_channels.logging_event_link_status_enable, null)
+        logging_event_link_status_enable = try(int.logging_event_link_status, local.defaults.iosxe.devices.configuration.interfaces.port_channels.logging_event_link_status, null)
         device_tracking                  = try(int.device_tracking, local.defaults.iosxe.devices.configuration.interfaces.port_channels.device_tracking, null)
         device_tracking_attached_policies = [for policy in try(int.device_tracking_attached_policies, []) : {
           name = policy
