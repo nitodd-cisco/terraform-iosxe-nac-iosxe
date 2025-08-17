@@ -586,6 +586,7 @@ locals {
         type                           = try(int.type, local.defaults.iosxe.devices.configuration.interfaces.vlans.type, null)
         description                    = try(int.description, local.defaults.iosxe.devices.configuration.interfaces.vlans.description, null)
         shutdown                       = try(int.shutdown, local.defaults.iosxe.devices.configuration.interfaces.vlans.shutdown, false)
+        autostate                      = try(int.autostate, local.defaults.iosxe.devices.configuration.interfaces.vlans.autostate, null)
         vrf_forwarding                 = try(int.vrf_forwarding, local.defaults.iosxe.devices.configuration.interfaces.vlans.vrf_forwarding, null)
         ipv4_address                   = try(int.ipv4.address, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.address, null)
         ipv4_address_mask              = try(int.ipv4.address_mask, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.address_mask, null)
@@ -623,7 +624,6 @@ locals {
         bfd_interval_min_rx                   = try(int.bfd.interval_min_rx, local.defaults.iosxe.devices.configuration.interfaces.vlans.bfd.interval_min_rx, null)
         bfd_interval_multiplier               = try(int.bfd.interval_multiplier, local.defaults.iosxe.devices.configuration.interfaces.vlans.bfd.interval_multiplier, null)
         bfd_echo                              = try(int.bfd.echo, local.defaults.iosxe.devices.configuration.interfaces.vlans.bfd.echo, null)
-        arp_timeout                           = try(int.arp_timeout, local.defaults.iosxe.devices.configuration.interfaces.vlans.arp_timeout, null)
         load_interval                         = try(int.load_interval, local.defaults.iosxe.devices.configuration.interfaces.vlans.load_interval, null)
         snmp_trap_link_status                 = try(int.snmp_trap_link_status, local.defaults.iosxe.devices.configuration.interfaces.vlans.snmp_trap_link_status, null)
         logging_event_link_status_enable      = try(int.logging_event_link_status, local.defaults.iosxe.devices.configuration.interfaces.vlans.logging_event_link_status, null)
@@ -679,6 +679,7 @@ resource "iosxe_interface_vlan" "interface_vlan" {
   name                            = each.value.id
   description                     = each.value.description
   shutdown                        = each.value.shutdown
+  autostate                       = each.value.autostate
   vrf_forwarding                  = each.value.vrf_forwarding
   ipv4_address                    = each.value.ipv4_address
   ipv4_address_mask               = each.value.ipv4_address_mask
