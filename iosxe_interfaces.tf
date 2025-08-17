@@ -492,6 +492,7 @@ resource "iosxe_interface_loopback" "loopback" {
   ipv6_address_dhcp               = each.value.ipv6_address_dhcp
   ipv6_mtu                        = each.value.ipv6_mtu
   ipv6_nd_ra_suppress_all         = each.value.ipv6_nd_ra_suppress_all
+  arp_timeout                     = each.value.arp_timeout
 }
 
 resource "iosxe_interface_mpls" "loopback_mpls" {
