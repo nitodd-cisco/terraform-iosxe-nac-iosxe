@@ -15,9 +15,9 @@ locals {
 }
 
 resource "iosxe_crypto_ipsec_profile" "crypto_ipsec_profile" {
-  for_each           = { for e in local.ipsec_profiles : e.key => e }
-  device             = each.value.device
-  name               = each.value.name
+  for_each = { for e in local.ipsec_profiles : e.key => e }
+  device   = each.value.device
+  name     = each.value.name
 
   set_transform_set  = each.value.set_transform_set
   set_ikev2_profile  = each.value.set_ikev2_profile
@@ -41,8 +41,8 @@ locals {
 }
 
 resource "iosxe_crypto_ipsec_transform_set" "crypto_ipsec_transform_set" {
-  for_each    = { for e in local.ipsec_transform_sets : e.key => e }
-  device      = each.value.device
+  for_each = { for e in local.ipsec_transform_sets : e.key => e }
+  device   = each.value.device
 
   name        = each.value.name
   esp         = each.value.esp
@@ -95,8 +95,8 @@ locals {
 }
 
 resource "iosxe_crypto_ikev2_profile" "crypto_ikev2_profile" {
-  for_each                             = { for e in local.ikev2_profiles : e.key => e }
-  device                               = each.value.device
+  for_each = { for e in local.ikev2_profiles : e.key => e }
+  device   = each.value.device
 
   name                                 = each.value.name
   authentication_local_pre_share       = each.value.authentication_local_pre_share
@@ -180,8 +180,8 @@ locals {
 }
 
 resource "iosxe_crypto_ikev2_policy" "crypto_ikev2_policy" {
-  for_each               = { for e in local.ikev2_policies : e.key => e }
-  device                 = each.value.device
+  for_each = { for e in local.ikev2_policies : e.key => e }
+  device   = each.value.device
 
   name                   = each.value.name
   proposals              = each.value.proposals
@@ -230,8 +230,8 @@ locals {
 }
 
 resource "iosxe_crypto_ikev2_proposal" "crypto_ikev2_proposal" {
-  for_each               = { for e in local.ikev2_proposals : e.key => e }
-  device                 = each.value.device
+  for_each = { for e in local.ikev2_proposals : e.key => e }
+  device   = each.value.device
 
   name                   = each.value.name
   encryption_aes_cbc_128 = each.value.encryption_aes_cbc_128

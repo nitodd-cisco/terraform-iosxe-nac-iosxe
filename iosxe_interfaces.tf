@@ -180,7 +180,7 @@ locals {
 
 resource "iosxe_interface_ethernet" "ethernet" {
   for_each = { for v in local.interfaces_ethernets : v.key => v }
-  device                                     = each.value.device
+  device   = each.value.device
 
   type                                       = each.value.type
   name                                       = each.value.id
@@ -470,7 +470,7 @@ locals {
 
 resource "iosxe_interface_loopback" "loopback" {
   for_each = { for v in local.interfaces_loopbacks : v.key => v }
-  device                          = each.value.device
+  device   = each.value.device
 
   name                            = each.value.id
   description                     = each.value.description
@@ -674,7 +674,7 @@ locals {
 
 resource "iosxe_interface_vlan" "vlan" {
   for_each = { for v in local.interfaces_vlans : v.key => v }
-  device                          = each.value.device
+  device   = each.value.device
 
   name                            = each.value.id
   description                     = each.value.description
@@ -1156,7 +1156,7 @@ locals {
 
 resource "iosxe_interface_port_channel_subinterface" "port_channel_subinterface" {
   for_each = { for v in local.interfaces_port_channel_subinterfaces : v.key => v }
-  device                          = each.value.device
+  device   = each.value.device
 
   name                            = each.value.name
   encapsulation_dot1q_vlan_id     = each.value.encapsulation_dot1q_vlan_id

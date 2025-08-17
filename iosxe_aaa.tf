@@ -196,7 +196,7 @@ locals {
 
 resource "iosxe_radius" "radius" {
   for_each = { for server in local.radius_servers : server.tag => server }
-  device                           = each.value.device_name
+  device   = each.value.device_name
 
   name                             = each.value.name
   ipv4_address                     = each.value.ipv4_address
@@ -256,7 +256,7 @@ locals {
 
 resource "iosxe_tacacs_server" "tacacs_server" {
   for_each = { for server in local.tacacs_servers : server.tag => server }
-  device       = each.value.device_name
+  device   = each.value.device_name
 
   name         = each.value.name
   address_ipv4 = each.value.address_ipv4
@@ -285,8 +285,8 @@ locals {
 
 resource "iosxe_username" "username" {
   for_each = { for username in local.usernames : username.tag => username }
-  device              = each.value.device_name
-  
+  device   = each.value.device_name
+
   name                = each.value.name
   privilege           = each.value.privilege
   description         = each.value.description
