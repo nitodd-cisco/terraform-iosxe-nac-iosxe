@@ -147,6 +147,7 @@ module "iosxe" {
 | [iosxe_snmp_server.snmp_server](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/snmp_server) | resource |
 | [iosxe_snmp_server_group.snmp_server_group](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/snmp_server_group) | resource |
 | [iosxe_snmp_server_user.snmp_server_user](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/snmp_server_user) | resource |
+| [iosxe_spanning_tree.spanning_tree](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/spanning_tree) | resource |
 | [iosxe_static_route.static_routes](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/static_route) | resource |
 | [iosxe_static_route_vrf.static_routes_vrf](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/static_route_vrf) | resource |
 | [iosxe_system.system](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.0/docs/resources/system) | resource |
