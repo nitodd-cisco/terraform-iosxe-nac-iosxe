@@ -20,7 +20,9 @@ locals {
         shutdown                             = try(ospf.shutdown, local.defaults.iosxe.configuration.routing.ospf_processes.shutdown, null)
         passive_interface_default            = try(ospf.passive_interface_default, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interface_default, null)
         auto_cost_reference_bandwidth        = try(ospf.auto_cost_reference_bandwidth, local.defaults.iosxe.configuration.routing.ospf_processes.auto_cost_reference_bandwidth, null)
-        # passive_interface                    = tolist([for p in try(ospf.passive_interface, try(local.defaults.iosxe.configuration.routing.ospf_processes.passive_interface, [])) : tostring(p)])
+        passive_interface = [for pi in try(ospf.passive_interfaces, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces, []) :
+          format("%s%s", try(pi.interface_type, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_type), try(pi.interface_id, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_id))
+        if try(pi.interface_type, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_type, null) != null && try(pi.interface_id, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_id, null) != null]
 
         neighbor = [for neighbor in try(ospf.neighbors, []) : {
           ip       = try(neighbor.ip, null)
@@ -40,7 +42,7 @@ locals {
         }]
 
         areas = [for area in try(ospf.areas, []) : {
-          area_id                                        = try(area.area, null)
+          area_id                                        = try(area.id, null)
           authentication_message_digest                  = try(area.authentication_message_digest, local.defaults.iosxe.configuration.routing.ospf_processes.areas.authentication_message_digest, null)
           nssa                                           = try(area.nssa, local.defaults.iosxe.configuration.routing.ospf_processes.areas.nssa, null)
           nssa_default_information_originate             = try(area.nssa_default_information_originate, local.defaults.iosxe.configuration.routing.ospf_processes.areas.nssa_default_information_originate, null)
@@ -73,7 +75,9 @@ locals {
         shutdown                             = try(ospf.shutdown, local.defaults.iosxe.configuration.routing.ospf_processes.shutdown, null)
         passive_interface_default            = try(ospf.passive_interface_default, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interface_default, null)
         auto_cost_reference_bandwidth        = try(ospf.auto_cost_reference_bandwidth, local.defaults.iosxe.configuration.routing.ospf_processes.auto_cost_reference_bandwidth, null)
-        # passive_interface                    = tolist([for p in try(ospf.passive_interface, try(local.defaults.iosxe.configuration.routing.ospf_processes.passive_interface, [])) : tostring(p)])
+        passive_interface = [for pi in try(ospf.passive_interfaces, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces, []) :
+          format("%s%s", try(pi.interface_type, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_type), try(pi.interface_id, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_id))
+        if try(pi.interface_type, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_type, null) != null && try(pi.interface_id, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_id, null) != null]
 
         neighbors = [for neighbor in try(ospf.neighbors, []) : {
           ip       = try(neighbor.ip, null)
@@ -93,7 +97,7 @@ locals {
         }]
 
         areas = [for area in try(ospf.areas, []) : {
-          area_id                                        = try(area.area, null)
+          area_id                                        = try(area.id, null)
           authentication_message_digest                  = try(area.authentication_message_digest, local.defaults.iosxe.configuration.routing.ospf_processes.areas.authentication_message_digest, null)
           nssa                                           = try(area.nssa, local.defaults.iosxe.configuration.routing.ospf_processes.areas.nssa, null)
           nssa_default_information_originate             = try(area.nssa_default_information_originate, local.defaults.iosxe.configuration.routing.ospf_processes.areas.nssa_default_information_originate, null)
@@ -107,12 +111,10 @@ locals {
   ])
 }
 
-
 resource "iosxe_ospf" "ospf" {
   for_each = { for o in local.ospf_configurations_without_vrf : o.key => o }
+  device   = each.value.device
 
-
-  device                               = each.value.device
   process_id                           = each.value.process_id
   router_id                            = each.value.router_id
   shutdown                             = each.value.shutdown
@@ -127,20 +129,17 @@ resource "iosxe_ospf" "ospf" {
   default_information_originate_always = each.value.default_information_originate_always
   passive_interface_default            = each.value.passive_interface_default
   auto_cost_reference_bandwidth        = each.value.auto_cost_reference_bandwidth
-  # passive_interface                    = each.value.passive_interface
-
-  neighbors         = each.value.neighbors
-  networks          = each.value.networks
-  summary_addresses = each.value.summary_addresses
-  areas             = each.value.areas
+  passive_interface                    = each.value.passive_interface
+  neighbors                            = each.value.neighbors
+  networks                             = each.value.networks
+  summary_addresses                    = each.value.summary_addresses
+  areas                                = each.value.areas
 }
 
 resource "iosxe_ospf_vrf" "ospf" {
   for_each = { for o in local.ospf_configurations_with_vrf : o.key => o }
+  device   = each.value.device
 
-  depends_on = [iosxe_vrf.vrfs]
-
-  device                               = each.value.device
   vrf                                  = each.value.vrf
   process_id                           = each.value.process_id
   router_id                            = each.value.router_id
@@ -156,10 +155,11 @@ resource "iosxe_ospf_vrf" "ospf" {
   default_information_originate_always = each.value.default_information_originate_always
   passive_interface_default            = each.value.passive_interface_default
   auto_cost_reference_bandwidth        = each.value.auto_cost_reference_bandwidth
-  # passive_interface                    = each.value.passive_interface
+  passive_interface                    = each.value.passive_interface
+  neighbor                             = each.value.neighbor
+  network                              = each.value.network
+  summary_address                      = each.value.summary_address
+  areas                                = each.value.areas
 
-  neighbor        = each.value.neighbor
-  network         = each.value.network
-  summary_address = each.value.summary_address
-  areas           = each.value.areas
+  depends_on = [iosxe_vrf.vrfs]
 }
