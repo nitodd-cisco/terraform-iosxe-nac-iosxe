@@ -37,8 +37,8 @@ resource "iosxe_system" "system" {
   ip_forward_protocol_nd             = try(local.device_config[each.value.name].system.ip_forward_protocol_nd, local.defaults.iosxe.configuration.system.ip_forward_protocol_nd, null)
   ip_scp_server_enable               = try(local.device_config[each.value.name].system.ip_scp_server_enable, local.defaults.iosxe.configuration.system.ip_scp_server_enable, null)
   # SSH configuration
-  # ip_ssh_authentication_retries      = try(local.device_config[each.value.name].system.ssh.authentication_retries, local.defaults.iosxe.configuration.system.ssh.authentication_retries, null)
-  # ip_ssh_time_out                    = try(local.device_config[each.value.name].system.ssh.time_out, local.defaults.iosxe.configuration.system.ssh.time_out, null)
+  ip_ssh_authentication_retries       = try(local.device_config[each.value.name].system.ssh.authentication_retries, local.defaults.iosxe.configuration.system.ssh.authentication_retries, null)
+  ip_ssh_time_out                     = try(local.device_config[each.value.name].system.ssh.time_out, local.defaults.iosxe.configuration.system.ssh.time_out, null)
   ip_ssh_version                      = try(local.device_config[each.value.name].system.ssh.version, local.defaults.iosxe.configuration.system.ssh.version, null)
   memory_free_low_watermark_processor = try(local.device_config[each.value.name].system.memory_free_low_watermark_processor, local.defaults.iosxe.configuration.system.memory_free_low_watermark_processor, null)
   redundancy                          = try(local.device_config[each.value.name].system.redundancy, local.defaults.iosxe.configuration.system.redundancy, null)
