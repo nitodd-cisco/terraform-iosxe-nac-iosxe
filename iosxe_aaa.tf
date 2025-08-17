@@ -270,3 +270,35 @@ resource "iosxe_tacacs_server" "tacacs_server" {
   encryption   = each.value.encryption
   key          = each.value.key
 }
+
+locals {
+  usernames = flatten([
+    for device in local.devices : [
+      for username in try(local.device_config[device.name].aaa.usernames, []) : {
+        device_name         = device.name
+        name                = try(username.name, null)
+        privilege           = try(username.privilege, local.defaults.iosxe.configuration.aaa.usernames.privilege, null)
+        description         = try(username.description, local.defaults.iosxe.configuration.aaa.usernames.description, null)
+        password_encryption = try(username.password_encryption, local.defaults.iosxe.configuration.aaa.usernames.password_encryption, null)
+        password            = try(username.password, local.defaults.iosxe.configuration.aaa.usernames.password, null)
+        secret_encryption   = try(username.secret_encryption, local.defaults.iosxe.configuration.aaa.usernames.secret_encryption, null)
+        secret              = try(username.secret, local.defaults.iosxe.configuration.aaa.usernames.secret, null)
+        tag                 = format("%s/%s", device.name, try(username.name, null))
+      }
+    ]
+  ])
+}
+
+resource "iosxe_username" "username" {
+  for_each = {
+    for username in local.usernames : username.tag => username
+  }
+  device              = each.value.device_name
+  name                = each.value.name
+  privilege           = each.value.privilege
+  description         = each.value.description
+  password_encryption = each.value.password_encryption
+  password            = each.value.password
+  secret_encryption   = each.value.secret_encryption
+  secret              = each.value.secret
+}
