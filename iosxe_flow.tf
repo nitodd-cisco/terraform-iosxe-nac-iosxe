@@ -49,7 +49,7 @@ locals {
 
         name        = monitor.name
         description = try(monitor.description, local.defaults.iosxe.device_config.flow.monitors.description, null)
-        exporters = [for exporter in try(monitor.exporters, []) : {
+        exporters = try(length(monitor.exporters) == 0, true) ? null : [for exporter in monitor.exporters : {
           name = exporter
         }]
         cache_timeout_active   = try(monitor.cache_timeout_active, local.defaults.iosxe.device_config.flow.monitors.cache_timeout_active, null)

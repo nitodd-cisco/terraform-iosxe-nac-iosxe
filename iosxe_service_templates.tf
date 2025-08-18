@@ -27,17 +27,17 @@ locals {
         mdns_service_policy        = try(service_template.mdns_service_policy, local.defaults.iosxe.configuration.service_template.name.mdns_service_policy, null)
 
         # Lists
-        access_groups = [for group_name in try(service_template.access_groups, []) : {
+        access_groups = try(length(service_template.access_groups) == 0, true) ? null : [for group_name in service_template.access_groups : {
           name = group_name
           }
         ]
 
-        interface_templates = [for template_name in try(service_template.interface_templates, []) : {
+        interface_templates = try(length(service_template.interface_templates) == 0, true) ? null : [for template_name in service_template.interface_templates : {
           name = template_name
           }
         ]
 
-        tags = [for tag_name in try(service_template.tags, []) : {
+        tags = try(length(service_template.tags) == 0, true) ? null : [for tag_name in service_template.tags : {
           name = tag_name
           }
         ]

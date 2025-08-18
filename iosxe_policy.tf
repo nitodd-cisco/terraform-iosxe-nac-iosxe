@@ -11,7 +11,7 @@ locals {
         match_authorization_status_authorized   = try(class_map.match.authorization_status_authorized, local.defaults.iosxe.configuration.class_maps.match.authorization_status_authorized, null)
         match_result_type_aaa_timeout           = try(class_map.match.result_type_aaa_timeout, local.defaults.iosxe.configuration.class_maps.match.result_type_aaa_timeout, null)
         match_authorization_status_unauthorized = try(class_map.match.authorization_status_unauthorized, local.defaults.iosxe.configuration.class_maps.match.authorization_status_unauthorized, null)
-        match_activated_service_templates = [for template in try(class_map.match.activated_service_templates, []) : {
+        match_activated_service_templates = try(length(class_map.match.activated_service_templates) == 0, true) ? null : [for template in class_map.match.activated_service_templates : {
           service_name = try(template.service_name, local.defaults.iosxe.configuration.class_maps.match.activated_service_templates.service_name, null)
         }]
         match_authorizing_method_priority_greater_than = try(class_map.match.authorizing_method_priority_greater_than, local.defaults.iosxe.configuration.class_maps.match.authorizing_method_priority_greater_than, null)
@@ -61,9 +61,9 @@ locals {
         type        = try(policy_map.type, local.defaults.iosxe.configuration.policy_maps.type, null)
         subscriber  = try(policy_map.subscriber, local.defaults.iosxe.configuration.policy_maps.subscriber, null)
         description = try(policy_map.description, local.defaults.iosxe.configuration.policy_maps.description, null)
-        classes = [for class in try(policy_map.classes, []) : {
+        classes = try(length(policy_map.classes) == 0, true) ? null : [for class in policy_map.classes : {
           name = try(class.name, local.defaults.iosxe.configuration.policy_maps.classes.name, null)
-          actions = [for action in try(class.actions, []) : {
+          actions = try(length(class.actions) == 0, true) ? null : [for action in class.actions : {
             type                                      = try(action.type, local.defaults.iosxe.configuration.policy_maps.classes.actions.type, null)
             bandwidth_bits                            = try(action.bandwidth_bits, local.defaults.iosxe.configuration.policy_maps.classes.actions.bandwidth_bits, null)
             bandwidth_percent                         = try(action.bandwidth_percent, local.defaults.iosxe.configuration.policy_maps.classes.actions.bandwidth_percent, null)
@@ -108,11 +108,11 @@ locals {
           name       = try(policy_map.name, local.defaults.iosxe.configuration.policy_maps.name, null)
           event_type = try(event.event_type, local.defaults.iosxe.configuration.policy_maps.events.event_type, null)
           match_type = try(event.match_type, local.defaults.iosxe.configuration.policy_maps.events.match_type, null)
-          class_numbers = [for class in try(event.classes, []) : {
+          class_numbers = try(length(event.classes) == 0, true) ? null : [for class in event.classes : {
             number         = try(class.number, local.defaults.iosxe.configuration.policy_maps.events.classes.number, null)
             class          = try(class.class, local.defaults.iosxe.configuration.policy_maps.events.classes.class, null)
             execution_type = try(class.execution_type, local.defaults.iosxe.configuration.policy_maps.events.classes.execution_type, null)
-            action_numbers = [for action in try(class.actions, []) : {
+            action_numbers = try(length(class.actions) == 0, true) ? null : [for action in class.actions : {
               number                                            = try(action.number, local.defaults.iosxe.configuration.policy_maps.events.actions.number, null)
               pause_reauthentication                            = try(action.pause_reauthentication, local.defaults.iosxe.configuration.policy_maps.events.actions.pause_reauthentication, null)
               authorize                                         = try(action.authorize, local.defaults.iosxe.configuration.policy_maps.events.actions.authorize, null)

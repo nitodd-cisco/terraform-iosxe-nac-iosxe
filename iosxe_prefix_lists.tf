@@ -5,7 +5,7 @@ locals {
         key    = format("%s/%s", device.name, prefix_list.name)
         device = device.name
 
-        prefixes = [for e in try(prefix_list.seqs, []) : {
+        prefixes = try(length(prefix_list.seqs) == 0, true) ? null : [for e in prefix_list.seqs : {
           name   = try(prefix_list.name, local.defaults.iosxe.configuration.prefix_lists.name, null)
           seq    = try(e.seq, local.defaults.iosxe.configuration.prefix_lists.seqs.seq, null)
           action = try(e.action, local.defaults.iosxe.configuration.prefix_lists.seqs.action, null)

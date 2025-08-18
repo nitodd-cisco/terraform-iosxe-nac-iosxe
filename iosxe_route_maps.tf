@@ -6,7 +6,7 @@ locals {
         device = device.name
 
         name = route_map.name
-        entries = [for e in try(route_map.entries, []) : {
+        entries = try(length(route_map.entries) == 0, true) ? null : [for e in route_map.entries : {
           seq                              = try(e.seq, local.defaults.iosxe.configuration.route_maps.entries.seq, null)
           operation                        = try(e.operation, local.defaults.iosxe.configuration.route_maps.entries.operation, null)
           description                      = try(e.description, local.defaults.iosxe.configuration.route_maps.entries.description, null)
@@ -47,7 +47,7 @@ locals {
           set_as_path_prepend_as           = try(e.set.as_path_prepend_as, local.defaults.iosxe.configuration.route_maps.entries.set.as_path_prepend_as, null)
           set_as_path_prepend_last_as      = try(e.set.as_path_prepend_last_as, local.defaults.iosxe.configuration.route_maps.entries.set.as_path_prepend_last_as, null)
           set_as_path_replace_any          = try(e.set.as_path_replace_any, local.defaults.iosxe.configuration.route_maps.entries.set.as_path_replace_any, null)
-          set_as_path_replace_as = [for as in try(e.set.as_path_replace_as, []) : {
+          set_as_path_replace_as = try(length(e.set.as_path_replace_as) == 0, true) ? null : [for as in e.set.as_path_replace_as : {
             as_number = as
           }]
           set_as_path_tag                            = try(e.set.as_path_tag, local.defaults.iosxe.configuration.route_maps.entries.set.as_path_tag, null)

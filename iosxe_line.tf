@@ -2,7 +2,7 @@ resource "iosxe_line" "line" {
   for_each = { for device in local.devices : device.name => device if try(local.device_config[device.name].line, null) != null || try(local.defaults.iosxe.configuration.line, null) != null }
   device   = each.value.name
 
-  console = [for c in try(local.device_config[each.value.name].line.consoles, []) : {
+  console = try(length(local.device_config[each.value.name].line.consoles) == 0, true) ? null : [for c in local.device_config[each.value.name].line.consoles : {
     first                = "0"
     exec_timeout_minutes = try(c.exec_timeout_minutes, local.defaults.iosxe.configuration.line.consoles.exec_timeout_minutes, null)
     exec_timeout_seconds = try(c.exec_timeout_seconds, local.defaults.iosxe.configuration.line.consoles.exec_timeout_seconds, null)
@@ -15,9 +15,9 @@ resource "iosxe_line" "line" {
     stopbits             = try(c.stopbits, local.defaults.iosxe.configuration.line.consoles.stopbits, null)
   }]
 
-  vty = [for v in try(local.device_config[each.value.name].line.vtys, []) : {
+  vty = try(length(local.device_config[each.value.name].line.vtys) == 0, true) ? null : [for v in local.device_config[each.value.name].line.vtys : {
     first = v.number_from
-    access_classes = [for a in try(v.access_classes, []) : {
+    access_classes = try(length(v.access_classes) == 0, true) ? null : [for a in v.access_classes : {
       access_list = a.access_list
       direction   = a.direction
       vrf_also    = try(a.vrf_also, local.defaults.iosxe.configuration.line.vtys.access_classes.vrf_also, null)

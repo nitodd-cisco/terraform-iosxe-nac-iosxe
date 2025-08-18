@@ -82,7 +82,7 @@ locals {
         match_address_local_ip          = try(profile.match_address_local_ip, local.defaults.iosxe.configuration.crypto.ikev2.profiles.match_address_local_ip, null)
         match_fvrf                      = try(profile.match_fvrf, local.defaults.iosxe.configuration.crypto.ikev2.profiles.match_fvrf, null)
         match_fvrf_any                  = try(profile.match_fvrf_any, local.defaults.iosxe.configuration.crypto.ikev2.profiles.match_fvrf_any, null)
-        match_identity_remote_ipv4_addresses = [for e in try(profile.match_identity_remote_ipv4_addresses, []) : {
+        match_identity_remote_ipv4_addresses = try(length(profile.match_identity_remote_ipv4_addresses) == 0, true) ? null : [for e in profile.match_identity_remote_ipv4_addresses : {
           address = e.address
           mask    = try(e.mask, local.defaults.iosxe.configuration.crypto.ikev2.profiles.match_identity_remote_ipv4_addresses.mask, null)
         }]
@@ -127,7 +127,7 @@ locals {
         device = device.name
 
         name = keyring.name
-        peers = [for e in try(keyring.peers, []) : {
+        peers = try(length(keyring.peers) == 0, true) ? null : [for e in keyring.peers : {
           name                             = e.name
           description                      = try(e.description, local.defaults.iosxe.configuration.crypto.ikev2.keyrings.peers.description, null)
           hostname                         = try(e.hostname, local.defaults.iosxe.configuration.crypto.ikev2.keyrings.peers.hostname, null)
@@ -167,7 +167,7 @@ locals {
         device = device.name
 
         name = policy.name
-        proposals = [for e in try(policy.proposals, []) : {
+        proposals = try(length(policy.proposals) == 0, true) ? null : [for e in policy.proposals : {
           proposals = e
         }]
         match_address_local_ip = try(policy.match_address_local_ip, local.defaults.iosxe.configuration.crypto.ikev2.policies.match_address_local_ip, null)
@@ -265,7 +265,7 @@ resource "iosxe_crypto_pki" "crypto_pki" {
   for_each = { for device in local.devices : device.name => device if length(try(local.device_config[device.name].crypto.pki.trustpoints, [])) > 0 }
   device   = each.value.name
 
-  trustpoints = [for tp in try(local.device_config[each.value.name].crypto.pki.trustpoints, []) : {
+  trustpoints = try(length(local.device_config[each.value.name].crypto.pki.trustpoints) == 0, true) ? null : [for tp in local.device_config[each.value.name].crypto.pki.trustpoints : {
     id                    = tp.id
     enrollment_mode_ra    = try(tp.enrollment_mode_ra, local.defaults.iosxe.configuration.crypto.pki.trustpoints.enrollment_mode_ra, null)
     enrollment_pkcs12     = try(tp.enrollment_pkcs12, local.defaults.iosxe.configuration.crypto.pki.trustpoints.enrollment_pkcs12, null)

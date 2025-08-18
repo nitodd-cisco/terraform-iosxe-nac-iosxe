@@ -199,23 +199,23 @@ resource "iosxe_snmp_server" "snmp_server" {
   source_interface_traps_ten_gigabit_ethernet        = try(local.device_config[each.value.name].snmp_server.source_interface_traps_type, local.defaults.iosxe.configuration.snmp_server.source_interface_traps_type, null) == "TenGigabitEthernet" ? try(local.device_config[each.value.name].snmp_server.source_interface_traps_id, local.defaults.iosxe.configuration.snmp_server.source_interface_traps_id, null) : null
   source_interface_traps_vlan                        = try(local.device_config[each.value.name].snmp_server.source_interface_traps_type, local.defaults.iosxe.configuration.snmp_server.source_interface_traps_type, null) == "Vlan" ? try(local.device_config[each.value.name].snmp_server.source_interface_traps_id, local.defaults.iosxe.configuration.snmp_server.source_interface_traps_id, null) : null
   system_shutdown                                    = try(local.device_config[each.value.name].snmp_server.system_shutdown, local.defaults.iosxe.configuration.snmp_server.system_shutdown, null)
-  contexts = [for context in try(local.device_config[each.value.name].snmp_server.contexts, []) : {
+  contexts = try(length(local.device_config[each.value.name].snmp_server.contexts) == 0, true) ? null : [for context in local.device_config[each.value.name].snmp_server.contexts : {
     name = context
   }]
-  hosts = [for host in try(local.device_config[each.value.name].snmp_server.hosts, []) : {
+  hosts = try(length(local.device_config[each.value.name].snmp_server.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].snmp_server.hosts : {
     ip_address        = try(host.ip, local.defaults.iosxe.configuration.snmp_server.hosts.ip, null)
     community_or_user = try(host.user, host.community, local.defaults.iosxe.configuration.snmp_server.hosts.user, local.defaults.iosxe.configuration.snmp_server.hosts.community, null)
     encryption        = try(host.encryption, local.defaults.iosxe.configuration.snmp_server.hosts.encryption, null)
     version           = try(host.version, local.defaults.iosxe.configuration.snmp_server.hosts.version, null)
   }]
-  snmp_communities = [for e in try(local.device_config[each.value.name].snmp_server.snmp_communities, []) : {
+  snmp_communities = try(length(local.device_config[each.value.name].snmp_server.snmp_communities) == 0, true) ? null : [for e in local.device_config[each.value.name].snmp_server.snmp_communities : {
     name             = try(e.name, local.defaults.iosxe.configuration.snmp_server.snmp_communities.name, null)
     access_list_name = try(e.ipv4_acl, local.defaults.iosxe.configuration.snmp_server.snmp_communities.ipv4_acl, null)
     ipv6             = try(e.ipv6_acl, local.defaults.iosxe.configuration.snmp_server.snmp_communities.ipv6_acl, null)
     permission       = try(e.permission, local.defaults.iosxe.configuration.snmp_server.snmp_communities.permission, null)
     view             = try(e.view, local.defaults.iosxe.configuration.snmp_server.snmp_communities.view, null)
   }]
-  views = [for e in try(local.device_config[each.value.name].snmp_server.views, []) : {
+  views = try(length(local.device_config[each.value.name].snmp_server.views) == 0, true) ? null : [for e in local.device_config[each.value.name].snmp_server.views : {
     name    = try(e.name, local.defaults.iosxe.configuration.snmp_server.views.name, null)
     mib     = try(e.mib, local.defaults.iosxe.configuration.snmp_server.views.mib, null)
     inc_exl = try(e.scope, local.defaults.iosxe.configuration.snmp_server.views.scope, null)
@@ -229,7 +229,7 @@ locals {
         key    = format("%s/%s", device.name, group.name)
         device = device.name
         name   = group.name
-        v3_security = [for e in try(group.v3_security_levels, []) : {
+        v3_security = try(length(group.v3_security_levels) == 0, true) ? null : [for e in group.v3_security_levels : {
           security_level      = try(e.security_level, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.security_level, null)
           context_node        = try(e.context_node, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.context_node, null)
           match_node          = try(e.match_node, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.match_node, null)

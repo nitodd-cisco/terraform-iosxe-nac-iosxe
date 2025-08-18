@@ -91,35 +91,35 @@ resource "iosxe_system" "system" {
   # Simple list attributes
   ip_name_servers = try(local.device_config[each.value.name].system.ip_name_servers, local.defaults.iosxe.configuration.system.ip_name_servers, null)
 
-  multicast_routing_vrfs = [
-    for mrv in try(local.device_config[each.value.name].system.multicast_routing_vrfs, []) : {
+  multicast_routing_vrfs = try(length(local.device_config[each.value.name].system.multicast_routing_vrfs) == 0, true) ? null : [
+    for mrv in local.device_config[each.value.name].system.multicast_routing_vrfs : {
       vrf         = try(mrv.vrf, local.defaults.iosxe.configuration.system.multicast_routing_vrfs.vrf, null)
       distributed = try(mrv.distributed, local.defaults.iosxe.configuration.system.multicast_routing_vrfs.distributed, null)
     }
   ]
 
   # Nested list structures
-  boot_system_bootfiles = [
-    for bootfile in try(local.device_config[each.value.name].system.boot_system_bootfiles, []) : {
+  boot_system_bootfiles = try(length(local.device_config[each.value.name].system.boot_system_bootfiles) == 0, true) ? null : [
+    for bootfile in local.device_config[each.value.name].system.boot_system_bootfiles : {
       path = bootfile
     }
   ]
 
-  boot_system_flash_files = [
-    for flashfile in try(local.device_config[each.value.name].system.boot_system_flash_files, []) : {
+  boot_system_flash_files = try(length(local.device_config[each.value.name].system.boot_system_flash_files) == 0, true) ? null : [
+    for flashfile in local.device_config[each.value.name].system.boot_system_flash_files : {
       path = flashfile
     }
   ]
 
-  ip_name_servers_vrf = [
-    for vrf in try(local.device_config[each.value.name].system.ip_name_servers_vrf, []) : {
+  ip_name_servers_vrf = try(length(local.device_config[each.value.name].system.ip_name_servers_vrf) == 0, true) ? null : [
+    for vrf in local.device_config[each.value.name].system.ip_name_servers_vrf : {
       vrf     = try(vrf.vrf, local.defaults.iosxe.configuration.system.ip_name_servers_vrf.vrf, null)
       servers = try(vrf.servers, local.defaults.iosxe.configuration.system.ip_name_servers_vrf.servers, null)
     }
   ]
 
-  pnp_profiles = [
-    for profile in try(local.device_config[each.value.name].system.pnp_profiles, []) : {
+  pnp_profiles = try(length(local.device_config[each.value.name].system.pnp_profiles) == 0, true) ? null : [
+    for profile in local.device_config[each.value.name].system.pnp_profiles : {
       name                              = try(profile.name, local.defaults.iosxe.configuration.system.pnp_profiles.name, null)
       transport_https_ipv4_ipv4_address = try(profile.transport_https_ipv4_ipv4_address, local.defaults.iosxe.configuration.system.pnp_profiles.transport_https_ipv4_ipv4_address, null)
       transport_https_ipv4_port         = try(profile.transport_https_ipv4_port, local.defaults.iosxe.configuration.system.pnp_profiles.transport_https_ipv4_port, null)
@@ -141,8 +141,8 @@ resource "iosxe_system" "system" {
   ip_http_server                                  = try(local.device_config[each.value.name].system.http.server, local.defaults.iosxe.configuration.system.http.server, null)
   ip_http_tls_version                             = try(local.device_config[each.value.name].system.http.tls_version, local.defaults.iosxe.configuration.system.http.tls_version, null)
 
-  ip_http_authentication_aaa_command_authorization = [
-    for cmd in try(local.device_config[each.value.name].system.http.authentication_aaa_command_authorizations, []) : {
+  ip_http_authentication_aaa_command_authorization = try(length(local.device_config[each.value.name].system.http.authentication_aaa_command_authorizations) == 0, true) ? null : [
+    for cmd in local.device_config[each.value.name].system.http.authentication_aaa_command_authorizations : {
       level = try(cmd.level, local.defaults.iosxe.configuration.system.http.authentication_aaa_command_authorizations.level, null)
       name  = try(cmd.name, local.defaults.iosxe.configuration.system.http.authentication_aaa_command_authorizations.name, null)
     }

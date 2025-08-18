@@ -5,7 +5,7 @@ locals {
         key    = format("%s/%s", device.name, acl.name)
         device = device.name
         name   = try(acl.name, null)
-        entries = [for e in try(acl.entries, []) : {
+        entries = try(length(acl.entries) == 0, true) ? null : [for e in acl.entries : {
           sequence           = try(e.sequence, local.defaults.iosxe.configuration.access_lists.standard.entries.sequence, null)
           remark             = try(e.remark, local.defaults.iosxe.configuration.access_lists.standard.entries.remark, null)
           deny_prefix        = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "deny" ? try(e.prefix, null) : null
@@ -39,7 +39,7 @@ locals {
         key    = format("%s/%s", device.name, acl.name)
         device = device.name
         name   = try(acl.name, null)
-        entries = [for e in try(acl.entries, []) : {
+        entries = try(length(acl.entries) == 0, true) ? null : [for e in acl.entries : {
           sequence                      = try(e.sequence, local.defaults.iosxe.configuration.access_lists.extended.entries.sequence, null)
           remark                        = try(e.remark, local.defaults.iosxe.configuration.access_lists.extended.entries.remark, null)
           ace_rule_action               = try(e.action, local.defaults.iosxe.configuration.access_lists.extended.entries.action)
@@ -99,7 +99,7 @@ locals {
         key    = format("%s/%s", device.name, acl.number)
         device = device.name
         name   = try(acl.number, null)
-        entries = [for e in try(acl.entries, []) : {
+        entries = try(length(acl.entries) == 0, true) ? null : [for e in acl.entries : {
           action = try(e.action, local.defaults.iosxe.configuration.access_lists.as_path.entries.action, null)
           regex  = try(e.regex, local.defaults.iosxe.configuration.access_lists.as_path.entries.regex, null)
         }]

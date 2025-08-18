@@ -21,7 +21,7 @@ locals {
         ip_arp_inspection_limit_rate   = try(int.ipv4.arp_inspection_limit_rate, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.arp_inspection_limit_rate, null)
         ip_dhcp_snooping_trust         = try(int.ipv4.dhcp_snooping_trust, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.dhcp_snooping_trust, null)
         ip_dhcp_relay_source_interface = try("${try(int.ipv4.dhcp_relay_source_interface_type, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.dhcp_relay_source_interface_type)}${try(int.ipv4.dhcp_relay_source_interface_id, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.dhcp_relay_source_interface_id)}", null)
-        helper_addresses = [for ha in try(int.ipv4.helper_addresses, []) : {
+        helper_addresses = try(length(int.ipv4.helper_addresses) == 0, true) ? null : [for ha in int.ipv4.helper_addresses : {
           address = try(ha.address, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.helper_addresses.address, null)
           global  = try(ha.global, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.helper_addresses.global, null)
           vrf     = try(ha.vrf, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.helper_addresses.vrf, null)

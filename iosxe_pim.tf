@@ -15,7 +15,7 @@ resource "iosxe_pim" "pim" {
   rp_address_bidir                  = try(local.device_config[each.value.name].pim.rp_address_bidir, local.defaults.iosxe.configuration.pim.rp_address_bidir, null)
 
   # Lists
-  rp_addresses = [for rp_address in try(local.device_config[each.value.name].pim.rp_addresses, []) : {
+  rp_addresses = try(length(local.device_config[each.value.name].pim.rp_addresses) == 0, true) ? null : [for rp_address in local.device_config[each.value.name].pim.rp_addresses : {
     access_list = try(rp_address.access_list, local.defaults.iosxe.configuration.pim.rp_addresses.access_list, null)
     rp_address  = try(rp_address.rp_address, local.defaults.iosxe.configuration.pim.rp_addresses.rp_address, null)
     override    = try(rp_address.override, local.defaults.iosxe.configuration.pim.rp_addresses.override, null)
@@ -23,7 +23,7 @@ resource "iosxe_pim" "pim" {
     }
   ]
 
-  rp_candidates = [for rp_candidate in try(local.device_config[each.value.name].pim.rp_candidates, []) : {
+  rp_candidates = try(length(local.device_config[each.value.name].pim.rp_candidates) == 0, true) ? null : [for rp_candidate in local.device_config[each.value.name].pim.rp_candidates : {
     interface  = try(rp_candidate.interface, local.defaults.iosxe.configuration.pim.rp_candidates.interface, null)
     group_list = try(rp_candidate.group_list, local.defaults.iosxe.configuration.pim.rp_candidates.group_list, null)
     interval   = try(rp_candidate.interval, local.defaults.iosxe.configuration.pim.rp_candidates.interval, null)
@@ -52,13 +52,13 @@ locals {
         rp_address                        = try(vrf.rp_address, local.defaults.iosxe.configuration.pim.vrfs.rp_address, null)
         rp_address_override               = try(vrf.rp_address_override, local.defaults.iosxe.configuration.pim.vrfs.rp_address_override, null)
         rp_address_bidir                  = try(vrf.rp_address_bidir, local.defaults.iosxe.configuration.pim.vrfs.rp_address_bidir, null)
-        rp_addresses = [for rp_address in try(vrf.rp_addresses, []) : {
+        rp_addresses = try(length(vrf.rp_addresses) == 0, true) ? null : [for rp_address in vrf.rp_addresses : {
           access_list = try(rp_address.access_list, local.defaults.iosxe.configuration.pim.vrfs.rp_addresses.access_list, null)
           rp_address  = try(rp_address.rp_address, local.defaults.iosxe.configuration.pim.vrfs.rp_addresses.rp_address, null)
           override    = try(rp_address.override, local.defaults.iosxe.configuration.pim.vrfs.rp_addresses.override, null)
           bidir       = try(rp_address.bidir, local.defaults.iosxe.configuration.pim.vrfs.rp_addresses.bidir, null)
         }]
-        rp_candidates = [for rp_candidate in try(vrf.rp_candidates, []) : {
+        rp_candidates = try(length(vrf.rp_candidates) == 0, true) ? null : [for rp_candidate in vrf.rp_candidates : {
           interface  = try(rp_candidate.interface, local.defaults.iosxe.configuration.pim.vrfs.rp_candidates.interface, null)
           group_list = try(rp_candidate.group_list, local.defaults.iosxe.configuration.pim.vrfs.rp_candidates.group_list, null)
           interval   = try(rp_candidate.interval, local.defaults.iosxe.configuration.pim.vrfs.rp_candidates.interval, null)

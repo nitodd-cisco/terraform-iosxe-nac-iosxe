@@ -22,7 +22,7 @@ locals {
         switchport_port_security_aging_time            = try(template.switchport.port_security_aging_time, local.defaults.iosxe.configuration.templates.switchport.port_security_aging_time, null)
         switchport_port_security_aging_type            = try(template.switchport.port_security_aging_type, local.defaults.iosxe.configuration.templates.switchport.port_security_aging_type, null)
         switchport_port_security_aging_type_inactivity = try(template.switchport.port_security_aging_type_inactivity, local.defaults.iosxe.configuration.templates.switchport.port_security_aging_type_inactivity, null)
-        switchport_port_security_maximum_range = [for range in try(template.switchport.port_security_maximum_ranges, []) : {
+        switchport_port_security_maximum_range = try(length(template.switchport.port_security_maximum_ranges) == 0, true) ? null : [for range in template.switchport.port_security_maximum_ranges : {
           range       = try(range.range, local.defaults.iosxe.configuration.templates.switchport.port_security_maximum_ranges.range, null)
           vlan        = try(range.vlan, local.defaults.iosxe.configuration.templates.switchport.port_security_maximum_ranges.vlans, null)
           vlan_access = try(range.vlan_access, local.defaults.iosxe.configuration.templates.switchport.port_security_maximum_ranges.vlan_access, null)
@@ -82,7 +82,7 @@ locals {
         subscriber_aging_inactivity_timer_value = try(template.subscriber_aging_inactivity_timer_value, local.defaults.iosxe.configuration.templates.subscriber_aging_inactivity_timer_value, null)
         subscriber_aging_probe                  = try(template.subscriber_aging_probe, local.defaults.iosxe.configuration.templates.subscriber_aging_probe, null)
         device_tracking                         = try(template.device_tracking, local.defaults.iosxe.configuration.templates.device_tracking, null)
-        device_tracking_attach_policy = [for policy in try(template.device_tracking_attached_policies, []) : {
+        device_tracking_attach_policy = try(length(template.device_tracking_attached_policies) == 0, true) ? null : [for policy in template.device_tracking_attached_policies : {
           policy_name = try(policy.name, local.defaults.iosxe.configuration.templates.device_tracking_attached_policies.name, null)
           vlan_range  = try(policy.vlan_range, local.defaults.iosxe.configuration.templates.device_tracking_attached_policies.vlan_range, null)
         }]
