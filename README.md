@@ -90,6 +90,7 @@ module "iosxe" {
 | [iosxe_bgp_neighbor.bgp_neighbor](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.1/docs/resources/bgp_neighbor) | resource |
 | [iosxe_cdp.cdp](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.1/docs/resources/cdp) | resource |
 | [iosxe_class_map.class_map](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.1/docs/resources/class_map) | resource |
+| [iosxe_cli.cli](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.1/docs/resources/cli) | resource |
 | [iosxe_clock.clock](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.1/docs/resources/clock) | resource |
 | [iosxe_community_list_expanded.community_list_expanded](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.1/docs/resources/community_list_expanded) | resource |
 | [iosxe_community_list_standard.community_list_standard](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.7.1/docs/resources/community_list_standard) | resource |

@@ -31,9 +31,25 @@ provider "iosxe" {
   devices = local.provider_devices
 }
 
-resource "iosxe_save_config" "save_config" {
-  for_each = { for device in local.devices : device.name => device if var.save_config }
-  device   = each.key
+locals {
+  cli_snippets = flatten([
+    for device in local.devices : [
+      for cli in try(local.device_config[device.name].extensions.cli_snippets, []) : {
+        key    = format("%s/%s", device.name, try(cli.name, null))
+        device = device.name
+        name   = try(cli.name, local.defaults.iosxe.configuration.extensions.cli_snippets.name, null)
+        cli    = cli.content
+      }
+    ]
+  ])
+}
+
+resource "iosxe_cli" "cli" {
+  for_each = { for e in local.cli_snippets : e.key => e }
+  device   = each.value.device
+
+  cli = each.value.cli
+
   depends_on = [
     iosxe_aaa.aaa,
     iosxe_aaa_accounting.aaa_accounting,
@@ -146,5 +162,14 @@ resource "iosxe_save_config" "save_config" {
     iosxe_vlan_group.vlan_group,
     iosxe_vrf.vrf,
     iosxe_vtp.vtp
+  ]
+}
+
+resource "iosxe_save_config" "save_config" {
+  for_each = { for device in local.devices : device.name => device if var.save_config }
+  device   = each.key
+
+  depends_on = [
+    iosxe_cli.cli
   ]
 }
