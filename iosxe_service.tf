@@ -26,5 +26,4 @@ resource "iosxe_service" "service" {
   compress_config                         = try(local.device_config[each.value.name].service.compress_config, local.defaults.iosxe.configuration.service.compress_config, null)
   sequence_numbers                        = try(local.device_config[each.value.name].service.sequence_numbers, local.defaults.iosxe.configuration.service.sequence_numbers, null)
   call_home                               = try(local.device_config[each.value.name].service.call_home, local.defaults.iosxe.configuration.service.call_home, null)
-
 }

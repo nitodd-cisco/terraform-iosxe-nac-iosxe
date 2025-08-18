@@ -14,7 +14,7 @@ locals {
         filter_xpath            = try(sub.filter_xpath, local.defaults.iosxe.configuration.mdt_subscriptions.filter_xpath, null)
 
         receivers = [
-          for r in try(sub.receivers, local.defaults.iosxe.configuration.mdt_subscriptions.receivers, []) : {
+          for r in try(sub.receivers, []) : {
             address  = try(r.ip, local.defaults.iosxe.configuration.mdt_subscriptions.receivers.ip, null)
             port     = try(r.port, local.defaults.iosxe.configuration.mdt_subscriptions.receivers.port, null)
             protocol = try(r.protocol, local.defaults.iosxe.configuration.mdt_subscriptions.receivers.protocol, null)

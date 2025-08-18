@@ -20,29 +20,29 @@ locals {
         shutdown                             = try(ospf.shutdown, local.defaults.iosxe.configuration.routing.ospf_processes.shutdown, null)
         passive_interface_default            = try(ospf.passive_interface_default, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interface_default, null)
         auto_cost_reference_bandwidth        = try(ospf.auto_cost_reference_bandwidth, local.defaults.iosxe.configuration.routing.ospf_processes.auto_cost_reference_bandwidth, null)
-        passive_interface = [for pi in try(ospf.passive_interfaces, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces, []) :
+        passive_interface = [for pi in try(ospf.passive_interfaces, []) :
           format("%s%s", try(pi.interface_type, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_type), try(pi.interface_id, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_id))
         if try(pi.interface_type, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_type, null) != null && try(pi.interface_id, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_id, null) != null]
 
         neighbor = [for neighbor in try(ospf.neighbors, []) : {
-          ip       = try(neighbor.ip, null)
+          ip       = try(neighbor.ip, local.defaults.iosxe.configuration.routing.ospf_processes.neighbors.ip, null)
           priority = try(neighbor.priority, local.defaults.iosxe.configuration.routing.ospf_processes.neighbors.priority, null)
           cost     = try(neighbor.cost, local.defaults.iosxe.configuration.routing.ospf_processes.neighbors.cost, null)
         }]
 
         network = [for network in try(ospf.networks, []) : {
-          ip       = try(network.ip, null)
+          ip       = try(network.ip, local.defaults.iosxe.configuration.routing.ospf_processes.networks.ip, null)
           wildcard = try(network.wildcard, local.defaults.iosxe.configuration.routing.ospf_processes.networks.wildcard, null)
           area     = try(network.area, local.defaults.iosxe.configuration.routing.ospf_processes.networks.area, null)
         }]
 
         summary_address = [for summary in try(ospf.summary_addresses, []) : {
-          ip   = try(summary.ip, null)
+          ip   = try(summary.ip, local.defaults.iosxe.configuration.routing.ospf_processes.summary_addresses.ip, null)
           mask = try(summary.mask, local.defaults.iosxe.configuration.routing.ospf_processes.summary_addresses.mask, null)
         }]
 
         areas = [for area in try(ospf.areas, []) : {
-          area_id                                        = try(area.id, null)
+          area_id                                        = try(area.id, local.defaults.iosxe.configuration.routing.ospf_processes.areas.id, null)
           authentication_message_digest                  = try(area.authentication_message_digest, local.defaults.iosxe.configuration.routing.ospf_processes.areas.authentication_message_digest, null)
           nssa                                           = try(area.nssa, local.defaults.iosxe.configuration.routing.ospf_processes.areas.nssa, null)
           nssa_default_information_originate             = try(area.nssa_default_information_originate, local.defaults.iosxe.configuration.routing.ospf_processes.areas.nssa_default_information_originate, null)
@@ -75,29 +75,29 @@ locals {
         shutdown                             = try(ospf.shutdown, local.defaults.iosxe.configuration.routing.ospf_processes.shutdown, null)
         passive_interface_default            = try(ospf.passive_interface_default, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interface_default, null)
         auto_cost_reference_bandwidth        = try(ospf.auto_cost_reference_bandwidth, local.defaults.iosxe.configuration.routing.ospf_processes.auto_cost_reference_bandwidth, null)
-        passive_interface = [for pi in try(ospf.passive_interfaces, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces, []) :
+        passive_interface = [for pi in try(ospf.passive_interfaces, []) :
           format("%s%s", try(pi.interface_type, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_type), try(pi.interface_id, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_id))
         if try(pi.interface_type, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_type, null) != null && try(pi.interface_id, local.defaults.iosxe.configuration.routing.ospf_processes.passive_interfaces.interface_id, null) != null]
 
         neighbors = [for neighbor in try(ospf.neighbors, []) : {
-          ip       = try(neighbor.ip, null)
+          ip       = try(neighbor.ip, local.defaults.iosxe.configuration.routing.ospf_processes.neighbors.ip, null)
           priority = try(neighbor.priority, local.defaults.iosxe.configuration.routing.ospf_processes.neighbors.priority, null)
           cost     = try(neighbor.cost, local.defaults.iosxe.configuration.routing.ospf_processes.neighbors.cost, null)
         }]
 
         networks = [for network in try(ospf.networks, []) : {
-          ip       = try(network.ip, null)
+          ip       = try(network.ip, local.defaults.iosxe.configuration.routing.ospf_processes.networks.ip, null)
           wildcard = try(network.wildcard, local.defaults.iosxe.configuration.routing.ospf_processes.networks.wildcard, null)
           area     = try(network.area, local.defaults.iosxe.configuration.routing.ospf_processes.networks.area, null)
         }]
 
         summary_addresses = [for summary in try(ospf.summary_addresses, []) : {
-          ip   = try(summary.ip, null)
+          ip   = try(summary.ip, local.defaults.iosxe.configuration.routing.ospf_processes.summary_addresses.ip, null)
           mask = try(summary.mask, local.defaults.iosxe.configuration.routing.ospf_processes.summary_addresses.mask, null)
         }]
 
         areas = [for area in try(ospf.areas, []) : {
-          area_id                                        = try(area.id, null)
+          area_id                                        = try(area.id, local.defaults.iosxe.configuration.routing.ospf_processes.areas.id, null)
           authentication_message_digest                  = try(area.authentication_message_digest, local.defaults.iosxe.configuration.routing.ospf_processes.areas.authentication_message_digest, null)
           nssa                                           = try(area.nssa, local.defaults.iosxe.configuration.routing.ospf_processes.areas.nssa, null)
           nssa_default_information_originate             = try(area.nssa_default_information_originate, local.defaults.iosxe.configuration.routing.ospf_processes.areas.nssa_default_information_originate, null)

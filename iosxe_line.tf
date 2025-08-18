@@ -30,7 +30,7 @@ resource "iosxe_line" "line" {
     password_level               = try(v.password_level, local.defaults.iosxe.configuration.line.vtys.password_level, null)
     password_type                = try(v.password_type, local.defaults.iosxe.configuration.line.vtys.password_type, null)
     password                     = try(v.password, local.defaults.iosxe.configuration.line.vtys.password, null)
-    last                         = try(v.number_to, local.defaults.iosxe.configuration.line.vtys.number_to, null)
+    last                         = try(v.number_to, v.number_from, null)
     login_authentication         = try(v.login_authentication, local.defaults.iosxe.configuration.line.vtys.login_authentication, null)
     transport_preferred_protocol = try(v.transport_preferred_protocol, local.defaults.iosxe.configuration.line.vtys.transport_preferred_protocol, null)
     transport_input_all          = try(v.transport_input_all, local.defaults.iosxe.configuration.line.vtys.transport_input_all, null)

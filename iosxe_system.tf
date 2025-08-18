@@ -93,8 +93,8 @@ resource "iosxe_system" "system" {
 
   multicast_routing_vrfs = [
     for mrv in try(local.device_config[each.value.name].system.multicast_routing_vrfs, []) : {
-      vrf         = mrv.vrf
-      distributed = try(mrv.distributed, null)
+      vrf         = try(mrv.vrf, local.defaults.iosxe.configuration.system.multicast_routing_vrfs.vrf, null)
+      distributed = try(mrv.distributed, local.defaults.iosxe.configuration.system.multicast_routing_vrfs.distributed, null)
     }
   ]
 
@@ -113,14 +113,14 @@ resource "iosxe_system" "system" {
 
   ip_name_servers_vrf = [
     for vrf in try(local.device_config[each.value.name].system.ip_name_servers_vrf, []) : {
-      vrf     = vrf.vrf
+      vrf     = try(vrf.vrf, local.defaults.iosxe.configuration.system.ip_name_servers_vrf.vrf, null)
       servers = try(vrf.servers, local.defaults.iosxe.configuration.system.ip_name_servers_vrf.servers, null)
     }
   ]
 
   pnp_profiles = [
     for profile in try(local.device_config[each.value.name].system.pnp_profiles, []) : {
-      name                              = profile.name
+      name                              = try(profile.name, local.defaults.iosxe.configuration.system.pnp_profiles.name, null)
       transport_https_ipv4_ipv4_address = try(profile.transport_https_ipv4_ipv4_address, local.defaults.iosxe.configuration.system.pnp_profiles.transport_https_ipv4_ipv4_address, null)
       transport_https_ipv4_port         = try(profile.transport_https_ipv4_port, local.defaults.iosxe.configuration.system.pnp_profiles.transport_https_ipv4_port, null)
     }
@@ -143,9 +143,8 @@ resource "iosxe_system" "system" {
 
   ip_http_authentication_aaa_command_authorization = [
     for cmd in try(local.device_config[each.value.name].system.http.authentication_aaa_command_authorizations, []) : {
-      level = cmd.level
-      name  = try(cmd.name, null)
+      level = try(cmd.level, local.defaults.iosxe.configuration.system.http.authentication_aaa_command_authorizations.level, null)
+      name  = try(cmd.name, local.defaults.iosxe.configuration.system.http.authentication_aaa_command_authorizations.name, null)
     }
   ]
 }
-

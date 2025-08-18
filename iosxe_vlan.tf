@@ -18,7 +18,6 @@ locals {
 }
 
 resource "iosxe_vlan" "vlan" {
-
   for_each = { for e in local.vlans : e.key => e }
   device   = each.value.device
 
@@ -57,7 +56,6 @@ resource "iosxe_vlan_configuration" "vlan_configuration" {
   access_vfi        = each.value.access_vfi
   evpn_instance     = each.value.evpn_instance
   evpn_instance_vni = each.value.evpn_instance_vni
-
 }
 
 locals {

@@ -39,7 +39,7 @@ locals {
       for vrf in try(local.device_config[device.name].pim.vrfs, []) : {
         key                               = format("%s/%s", device.name, vrf.vrf)
         device                            = device.name
-        vrf                               = try(vrf.vrf, null)
+        vrf                               = try(vrf.vrf, local.defaults.iosxe.configuration.pim.vrfs.vrf, null)
         autorp                            = try(vrf.autorp, local.defaults.iosxe.configuration.pim.vrfs.autorp, null)
         autorp_listener                   = try(vrf.autorp_listener, local.defaults.iosxe.configuration.pim.vrfs.autorp_listener, null)
         bsr_candidate_loopback            = try(vrf.bsr_candidate_interface_type, local.defaults.iosxe.configuration.pim.vrfs.bsr_candidate_interface_type, null) == "Loopback" ? try(vrf.bsr_candidate_interface_id, local.defaults.iosxe.configuration.pim.vrfs.bsr_candidate_interface_id, null) : null

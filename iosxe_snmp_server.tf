@@ -203,21 +203,21 @@ resource "iosxe_snmp_server" "snmp_server" {
     name = context
   }]
   hosts = [for host in try(local.device_config[each.value.name].snmp_server.hosts, []) : {
-    ip_address        = host.ip
+    ip_address        = try(host.ip, local.defaults.iosxe.configuration.snmp_server.hosts.ip, null)
     community_or_user = try(host.user, host.community, local.defaults.iosxe.configuration.snmp_server.hosts.user, local.defaults.iosxe.configuration.snmp_server.hosts.community, null)
     encryption        = try(host.encryption, local.defaults.iosxe.configuration.snmp_server.hosts.encryption, null)
     version           = try(host.version, local.defaults.iosxe.configuration.snmp_server.hosts.version, null)
   }]
   snmp_communities = [for e in try(local.device_config[each.value.name].snmp_server.snmp_communities, []) : {
-    name             = e.name
+    name             = try(e.name, local.defaults.iosxe.configuration.snmp_server.snmp_communities.name, null)
     access_list_name = try(e.ipv4_acl, local.defaults.iosxe.configuration.snmp_server.snmp_communities.ipv4_acl, null)
     ipv6             = try(e.ipv6_acl, local.defaults.iosxe.configuration.snmp_server.snmp_communities.ipv6_acl, null)
     permission       = try(e.permission, local.defaults.iosxe.configuration.snmp_server.snmp_communities.permission, null)
     view             = try(e.view, local.defaults.iosxe.configuration.snmp_server.snmp_communities.view, null)
   }]
   views = [for e in try(local.device_config[each.value.name].snmp_server.views, []) : {
-    name    = e.name
-    mib     = e.mib
+    name    = try(e.name, local.defaults.iosxe.configuration.snmp_server.views.name, null)
+    mib     = try(e.mib, local.defaults.iosxe.configuration.snmp_server.views.mib, null)
     inc_exl = try(e.scope, local.defaults.iosxe.configuration.snmp_server.views.scope, null)
   }]
 }
@@ -230,7 +230,7 @@ locals {
         device = device.name
         name   = group.name
         v3_security = [for e in try(group.v3_security_levels, []) : {
-          security_level      = e.security_level
+          security_level      = try(e.security_level, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.security_level, null)
           context_node        = try(e.context_node, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.context_node, null)
           match_node          = try(e.match_node, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.match_node, null)
           read_node           = try(e.read_node, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.read_node, null)
@@ -259,12 +259,12 @@ locals {
       for user in try(local.device_config[device.name].snmp_server.users, []) : {
         key      = format("%s/%s", device.name, user.name)
         device   = device.name
-        username = user.name
-        grpname  = user.group
+        username = try(user.name, local.defaults.iosxe.configuration.snmp_server.users.name, null)
+        grpname  = try(user.group, local.defaults.iosxe.configuration.snmp_server.users.group, null)
 
         # Authentication settings
-        v3_auth_algorithm = user.v3_authentication.algorithm
-        v3_auth_password  = user.v3_authentication.password
+        v3_auth_algorithm = try(user.v3_authentication.algorithm, local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.algorithm, null)
+        v3_auth_password  = try(user.v3_authentication.password, local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.password, null)
 
         # Authentication access settings
         v3_auth_access_ipv6_acl = try(user.v3_authentication.access.ipv6_acl,

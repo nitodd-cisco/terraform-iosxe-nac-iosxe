@@ -22,7 +22,7 @@ locals {
         switchport_port_security_aging_time            = try(template.switchport.port_security_aging_time, local.defaults.iosxe.configuration.templates.switchport.port_security_aging_time, null)
         switchport_port_security_aging_type            = try(template.switchport.port_security_aging_type, local.defaults.iosxe.configuration.templates.switchport.port_security_aging_type, null)
         switchport_port_security_aging_type_inactivity = try(template.switchport.port_security_aging_type_inactivity, local.defaults.iosxe.configuration.templates.switchport.port_security_aging_type_inactivity, null)
-        switchport_port_security_maximum_range = [for range in try(template.switchport.port_security_maximum_ranges, local.defaults.iosxe.configuration.templates.switchport.port_security_maximum_ranges, []) : {
+        switchport_port_security_maximum_range = [for range in try(template.switchport.port_security_maximum_ranges, []) : {
           range       = try(range.range, local.defaults.iosxe.configuration.templates.switchport.port_security_maximum_ranges.range, null)
           vlan        = try(range.vlan, local.defaults.iosxe.configuration.templates.switchport.port_security_maximum_ranges.vlans, null)
           vlan_access = try(range.vlan_access, local.defaults.iosxe.configuration.templates.switchport.port_security_maximum_ranges.vlan_access, null)
@@ -82,9 +82,9 @@ locals {
         subscriber_aging_inactivity_timer_value = try(template.subscriber_aging_inactivity_timer_value, local.defaults.iosxe.configuration.templates.subscriber_aging_inactivity_timer_value, null)
         subscriber_aging_probe                  = try(template.subscriber_aging_probe, local.defaults.iosxe.configuration.templates.subscriber_aging_probe, null)
         device_tracking                         = try(template.device_tracking, local.defaults.iosxe.configuration.templates.device_tracking, null)
-        device_tracking_attach_policy = [for policy in try(template.device_tracking_attached_policies, local.defaults.iosxe.configuration.templates.device_tracking_attached_policies, []) : {
-          policy_name = try(policy.name, null)
-          vlan_range  = try(policy.vlan_range, null)
+        device_tracking_attach_policy = [for policy in try(template.device_tracking_attached_policies, []) : {
+          policy_name = try(policy.name, local.defaults.iosxe.configuration.templates.device_tracking_attached_policies.name, null)
+          vlan_range  = try(policy.vlan_range, local.defaults.iosxe.configuration.templates.device_tracking_attached_policies.vlan_range, null)
         }]
         device_tracking_vlan_range       = try(template.device_tracking_vlan_range, local.defaults.iosxe.configuration.templates.device_tracking_vlan_range, null)
         cts_manual                       = try(template.network_access_control.cts_manual, local.defaults.iosxe.configuration.templates.network_access_control.cts_manual, null)
@@ -98,31 +98,27 @@ locals {
 }
 
 resource "iosxe_template" "template" {
-  for_each                                       = { for e in local.templates : e.key => e }
-  device                                         = each.value.device
-  template_name                                  = each.value.name
-  dot1x_pae                                      = each.value.dot1x_pae
-  dot1x_max_reauth_req                           = each.value.dot1x_max_reauth_req
-  dot1x_max_req                                  = each.value.dot1x_max_req
-  dot1x_timeout_tx_period                        = each.value.dot1x_timeout_tx_period
-  service_policy_type_control_subscriber         = each.value.service_policy_type_control_subscriber
-  service_policy_input                           = each.value.service_policy_input
-  service_policy_output                          = each.value.service_policy_output
-  source_template                                = each.value.source_template
-  switchport_mode_trunk                          = each.value.switchport_mode_trunk
-  switchport_mode_access                         = each.value.switchport_mode_access
-  switchport_nonegotiate                         = each.value.switchport_nonegotiate
-  switchport_block_unicast                       = each.value.switchport_block_unicast
-  switchport_port_security                       = each.value.switchport_port_security
-  switchport_port_security_aging_static          = each.value.switchport_port_security_aging_static
-  switchport_port_security_aging_time            = each.value.switchport_port_security_aging_time
-  switchport_port_security_aging_type            = each.value.switchport_port_security_aging_type
-  switchport_port_security_aging_type_inactivity = each.value.switchport_port_security_aging_type_inactivity
-  switchport_port_security_maximum_range = [for range in each.value.switchport_port_security_maximum_range : {
-    range       = range.range
-    vlan        = range.vlan
-    vlan_access = range.vlan_access
-  }]
+  for_each                                                 = { for e in local.templates : e.key => e }
+  device                                                   = each.value.device
+  template_name                                            = each.value.name
+  dot1x_pae                                                = each.value.dot1x_pae
+  dot1x_max_reauth_req                                     = each.value.dot1x_max_reauth_req
+  dot1x_max_req                                            = each.value.dot1x_max_req
+  dot1x_timeout_tx_period                                  = each.value.dot1x_timeout_tx_period
+  service_policy_type_control_subscriber                   = each.value.service_policy_type_control_subscriber
+  service_policy_input                                     = each.value.service_policy_input
+  service_policy_output                                    = each.value.service_policy_output
+  source_template                                          = each.value.source_template
+  switchport_mode_trunk                                    = each.value.switchport_mode_trunk
+  switchport_mode_access                                   = each.value.switchport_mode_access
+  switchport_nonegotiate                                   = each.value.switchport_nonegotiate
+  switchport_block_unicast                                 = each.value.switchport_block_unicast
+  switchport_port_security                                 = each.value.switchport_port_security
+  switchport_port_security_aging_static                    = each.value.switchport_port_security_aging_static
+  switchport_port_security_aging_time                      = each.value.switchport_port_security_aging_time
+  switchport_port_security_aging_type                      = each.value.switchport_port_security_aging_type
+  switchport_port_security_aging_type_inactivity           = each.value.switchport_port_security_aging_type_inactivity
+  switchport_port_security_maximum_range                   = each.value.switchport_port_security_maximum_range
   switchport_port_security_violation_protect               = each.value.switchport_port_security_violation_protect
   switchport_port_security_violation_restrict              = each.value.switchport_port_security_violation_restrict
   switchport_port_security_violation_shutdown              = each.value.switchport_port_security_violation_shutdown
@@ -164,22 +160,16 @@ resource "iosxe_template" "template" {
   load_interval                                            = each.value.load_interval
   ip_dhcp_snooping_limit_rate                              = each.value.ip_dhcp_snooping_limit_rate
   ip_dhcp_snooping_trust                                   = each.value.ip_dhcp_snooping_trust
-  ip_access_group = [for access_group in each.value.ip_access_group : {
-    direction   = access_group.direction
-    access_list = access_group.access_list
-  }]
-  subscriber_aging_inactivity_timer_probe = each.value.subscriber_aging_inactivity_timer_probe
-  subscriber_aging_inactivity_timer_value = each.value.subscriber_aging_inactivity_timer_value
-  subscriber_aging_probe                  = each.value.subscriber_aging_probe
-  device_tracking                         = each.value.device_tracking
-  device_tracking_attach_policy = [for policy in each.value.device_tracking_attach_policy : {
-    policy_name = policy.policy_name
-    vlan_range  = policy.vlan_range
-  }]
-  device_tracking_vlan_range       = each.value.device_tracking_vlan_range
-  cts_manual                       = each.value.cts_manual
-  cts_manual_policy_static_sgt     = each.value.cts_manual_policy_static_sgt
-  cts_manual_policy_static_trusted = each.value.cts_manual_policy_static_trusted
-  cts_manual_propagate_sgt         = each.value.cts_manual_propagate_sgt
-  cts_role_based_enforcement       = each.value.cts_role_based_enforcement
+  ip_access_group                                          = each.value.ip_access_group
+  subscriber_aging_inactivity_timer_probe                  = each.value.subscriber_aging_inactivity_timer_probe
+  subscriber_aging_inactivity_timer_value                  = each.value.subscriber_aging_inactivity_timer_value
+  subscriber_aging_probe                                   = each.value.subscriber_aging_probe
+  device_tracking                                          = each.value.device_tracking
+  device_tracking_attach_policy                            = each.value.device_tracking_attach_policy
+  device_tracking_vlan_range                               = each.value.device_tracking_vlan_range
+  cts_manual                                               = each.value.cts_manual
+  cts_manual_policy_static_sgt                             = each.value.cts_manual_policy_static_sgt
+  cts_manual_policy_static_trusted                         = each.value.cts_manual_policy_static_trusted
+  cts_manual_propagate_sgt                                 = each.value.cts_manual_propagate_sgt
+  cts_role_based_enforcement                               = each.value.cts_role_based_enforcement
 }

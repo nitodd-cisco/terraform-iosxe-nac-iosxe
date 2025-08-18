@@ -9,8 +9,8 @@ resource "iosxe_lldp" "lldp" {
   ipv6_management_addresses = try(local.device_config[each.value.name].lldp.ipv6_management_addresses, local.defaults.iosxe.configuration.lldp.ipv6_management_addresses, null)
   management_vlan           = try(local.device_config[each.value.name].lldp.management_vlan, local.defaults.iosxe.configuration.lldp.management_vlan, null)
 
-  system_names = [for e in try(local.device_config[each.value.name].lldp.system_names, local.defaults.iosxe.configuration.lldp.system_names, []) : {
-    switch_id = try(e.switch_id, null)
-    name      = try(e.name, null)
+  system_names = [for e in try(local.device_config[each.value.name].lldp.system_names, []) : {
+    switch_id = try(e.switch_id, local.defaults.iosxe.configuration.lldp.system_names.switch_id, null)
+    name      = try(e.name, local.defaults.iosxe.configuration.lldp.system_names.name, null)
   }]
 }
