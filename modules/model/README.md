@@ -48,6 +48,7 @@ module "model" {
 |------|-------------|
 | <a name="output_default_values"></a> [default\_values](#output\_default\_values) | All default values. |
 | <a name="output_model"></a> [model](#output\_model) | Full devices model. |
+| <a name="output_devices"></a> [devices](#output\_devices) | List of all devices. |
 
 ## Resources
 

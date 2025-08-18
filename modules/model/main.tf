@@ -6,8 +6,14 @@ locals {
   interface_groups        = try(local.iosxe.interface_groups, [])
   configuration_templates = try(local.iosxe.configuration_templates, [])
 
+  all_devices = [for device in local.devices : {
+    name    = device.name
+    url     = device.url
+    managed = try(device.managed, local.defaults.iosxe.devices.managed, true)
+  }]
+
   managed_devices = [
-    for device in local.devices : device if(length(var.managed_devices) == 0 || contains(var.managed_devices, device.name)) && (length(var.managed_device_groups) == 0 || anytrue([for dg in local.device_groups : contains(try(device.device_groups, []), dg.name)]) || anytrue([for dg in local.device_groups : contains(try(dg.devices, []), device.name)]))
+    for device in local.devices : device if(length(var.managed_devices) == 0 || contains(var.managed_devices, device.name)) && (length(var.managed_device_groups) == 0 || anytrue([for dg in local.device_groups : contains(try(device.device_groups, []), dg.name) && contains(var.managed_device_groups, dg.name)]) || anytrue([for dg in local.device_groups : contains(try(dg.devices, []), device.name) && contains(var.managed_device_groups, dg.name)]))
   ]
 
   device_variables = { for device in local.managed_devices :

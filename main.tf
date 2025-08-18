@@ -20,11 +20,7 @@ locals {
     device.name => try(device.configuration, {})
   }
 
-  provider_devices = [for device in try(local.iosxe.devices, []) : {
-    name    = device.name
-    url     = device.url
-    managed = try(device.managed, local.defaults.iosxe.devices.managed, true)
-  }]
+  provider_devices = module.model.devices
 }
 
 provider "iosxe" {
