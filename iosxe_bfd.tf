@@ -32,9 +32,9 @@ resource "iosxe_bfd" "bfd" {
 
   ipv6_with_both_vrfs = try(length(local.device_config[each.value.name].bfd.ipv6_maps) == 0, true) ? null : [for e in local.device_config[each.value.name].bfd.ipv6_maps : {
     dst_vrf       = try(e.destination_vrf, local.defaults.iosxe.configuration.bfd.ipv6_maps.destination_vrf, null)
-    dest_ip       = try(e.destination_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.destination_prefix, null)
+    dest_ipv6     = try(e.destination_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.destination_prefix, null)
     src_vrf       = try(e.source_vrf, local.defaults.iosxe.configuration.bfd.ipv6_maps.source_vrf, null)
-    src_ip        = try(e.source_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.source_prefix, null)
+    src_ipv6      = try(e.source_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.source_prefix, null)
     template_name = e.template
   } if try(e.source_vrf, null) != null && try(e.destination_vrf, null) != null]
 
@@ -45,9 +45,9 @@ resource "iosxe_bfd" "bfd" {
   } if try(e.source_vrf, null) == null && try(e.destination_vrf, null) == null]
 
   ipv6_with_src_vrfs = try(length(local.device_config[each.value.name].bfd.ipv6_maps) == 0, true) ? null : [for e in local.device_config[each.value.name].bfd.ipv6_maps : {
-    dest_ip       = try(e.destination_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.destination_prefix, null)
+    dest_ipv6     = try(e.destination_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.destination_prefix, null)
     src_vrf       = try(e.source_vrf, local.defaults.iosxe.configuration.bfd.ipv6_maps.source_vrf, null)
-    src_ip        = try(e.source_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.source_prefix, null)
+    src_ipv6      = try(e.source_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.source_prefix, null)
     template_name = e.template
   } if try(e.source_vrf, null) != null && try(e.destination_vrf, null) == null]
 
