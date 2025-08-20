@@ -37,4 +37,9 @@ resource "iosxe_line" "line" {
     transport_input_none         = try(v.transport_input_none, local.defaults.iosxe.configuration.line.vtys.transport_input_none, null)
     transport_input              = try(v.transport_input, local.defaults.iosxe.configuration.line.vtys.transport_input, null)
   }]
+
+  depends_on = [
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended
+  ]
 }

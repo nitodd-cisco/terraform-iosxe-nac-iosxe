@@ -100,4 +100,12 @@ resource "iosxe_route_map" "route_map" {
 
   name    = each.value.name
   entries = each.value.entries
+
+  depends_on = [
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended,
+    iosxe_prefix_list.prefix_list,
+    iosxe_community_list_standard.community_list_standard,
+    iosxe_community_list_expanded.community_list_expanded
+  ]
 }

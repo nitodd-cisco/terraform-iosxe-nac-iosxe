@@ -96,6 +96,10 @@ resource "iosxe_policy_map" "policy_map" {
   subscriber  = each.value.subscriber
   description = each.value.description
   classes     = each.value.classes
+
+  depends_on = [
+    iosxe_class_map.class_map
+  ]
 }
 
 locals {
@@ -164,4 +168,8 @@ resource "iosxe_policy_map_event" "policy_map_event" {
   event_type    = each.value.event_type
   match_type    = each.value.match_type
   class_numbers = each.value.class_numbers
+
+  depends_on = [
+    iosxe_policy_map.policy_map
+  ]
 }

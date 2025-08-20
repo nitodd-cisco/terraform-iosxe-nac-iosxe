@@ -279,7 +279,12 @@ resource "iosxe_interface_ethernet" "ethernet" {
   dot1x_max_reauth_req                       = each.value.dot1x_max_reauth_req
   dot1x_max_req                              = each.value.dot1x_max_req
 
-  depends_on = [iosxe_vrf.vrf]
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended,
+    iosxe_policy_map.policy_map
+  ]
 }
 
 resource "iosxe_interface_switchport" "ethernet_switchport" {
@@ -496,7 +501,12 @@ resource "iosxe_interface_loopback" "loopback" {
   ipv6_nd_ra_suppress_all         = each.value.ipv6_nd_ra_suppress_all
   arp_timeout                     = each.value.arp_timeout
 
-  depends_on = [iosxe_vrf.vrf]
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended,
+    iosxe_policy_map.policy_map
+  ]
 }
 
 resource "iosxe_interface_mpls" "loopback_mpls" {
@@ -712,7 +722,12 @@ resource "iosxe_interface_vlan" "vlan" {
   bfd_echo                        = each.value.bfd_echo
   load_interval                   = each.value.load_interval
 
-  depends_on = [iosxe_vrf.vrf]
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended,
+    iosxe_policy_map.policy_map
+  ]
 }
 
 resource "iosxe_interface_mpls" "vlan_mpls" {
@@ -1208,7 +1223,12 @@ resource "iosxe_interface_port_channel_subinterface" "port_channel_subinterface"
   ip_arp_inspection_trust         = each.value.ip_arp_inspection_trust
   ip_arp_inspection_limit_rate    = each.value.ip_arp_inspection_limit_rate
 
-  depends_on = [iosxe_vrf.vrf]
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended,
+    iosxe_policy_map.policy_map
+  ]
 }
 
 resource "iosxe_interface_mpls" "port_channel_subinterface_mpls" {

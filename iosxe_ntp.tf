@@ -65,4 +65,15 @@ resource "iosxe_ntp" "ntp" {
   trusted_keys = try(length(local.device_config[each.value.name].ntp.authentication_keys) == 0, true) ? null : [for e in local.device_config[each.value.name].ntp.authentication_keys : {
     number = try(e.number, local.defaults.iosxe.configuration.ntp.ntp_authentication_keys.number, null)
   } if try(e.trusted, null) != null && try(e.trusted, null) == true && try(tonumber(e.number), null) > 0 && try(tonumber(e.number), null) < 65536]
+
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_interface_ethernet.ethernet,
+    iosxe_interface_loopback.loopback,
+    iosxe_interface_vlan.vlan,
+    iosxe_interface_port_channel.port_channel,
+    iosxe_interface_port_channel_subinterface.port_channel_subinterface,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended
+  ]
 }

@@ -172,4 +172,11 @@ resource "iosxe_template" "template" {
   cts_manual_policy_static_trusted                         = each.value.cts_manual_policy_static_trusted
   cts_manual_propagate_sgt                                 = each.value.cts_manual_propagate_sgt
   cts_role_based_enforcement                               = each.value.cts_role_based_enforcement
+
+  depends_on = [
+    iosxe_vlan.vlan,
+    iosxe_policy_map.policy_map,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended
+  ]
 }

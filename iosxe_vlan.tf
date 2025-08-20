@@ -83,6 +83,11 @@ resource "iosxe_vlan_access_map" "vlan_access_map" {
   action             = each.value.action
   match_ip_address   = each.value.match_ip_address
   match_ipv6_address = each.value.match_ipv6_address
+
+  depends_on = [
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended
+  ]
 }
 
 locals {

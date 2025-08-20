@@ -13,6 +13,10 @@ resource "iosxe_msdp" "msdp" {
     remote_as               = try(peer.remote_as, local.defaults.iosxe.configuration.msdp.peers.remote_as, null)
     connect_source_loopback = try(peer.connect_source_interface_type, local.defaults.iosxe.configuration.msdp.peers.connect_source_interface_type, null) == "Loopback" ? try(peer.connect_source_interface_id, local.defaults.iosxe.configuration.msdp.peers.connect_source_interface_id, null) : null
   }]
+
+  depends_on = [
+    iosxe_interface_loopback.loopback
+  ]
 }
 
 locals {
@@ -46,4 +50,9 @@ resource "iosxe_msdp_vrf" "msdp_vrf" {
   originator_id = each.value.originator_id
   passwords     = each.value.passwords
   peers         = each.value.peers
+
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_interface_loopback.loopback
+  ]
 }

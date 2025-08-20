@@ -76,4 +76,10 @@ resource "iosxe_service_template" "service_template" {
   access_groups       = each.value.access_groups
   interface_templates = each.value.interface_templates
   tags                = each.value.tags
+
+  depends_on = [
+    iosxe_vlan.vlan,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended
+  ]
 }

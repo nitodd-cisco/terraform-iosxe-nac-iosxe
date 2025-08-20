@@ -6,6 +6,10 @@ resource "iosxe_bgp" "bgp" {
   default_ipv4_unicast = try(local.device_config[each.value.name].routing.bgp.default_ipv4_unicast, local.defaults.iosxe.configuration.routing.bgp.default_ipv4_unicast, null)
   log_neighbor_changes = try(local.device_config[each.value.name].routing.bgp.log_neighbor_changes, local.defaults.iosxe.configuration.routing.bgp.log_neighbor_changes, null)
   router_id_loopback   = try(local.device_config[each.value.name].routing.bgp.router_id_loopback, local.defaults.iosxe.configuration.routing.bgp.router_id_loopback, null)
+
+  depends_on = [
+    iosxe_interface_loopback.loopback
+  ]
 }
 
 locals {

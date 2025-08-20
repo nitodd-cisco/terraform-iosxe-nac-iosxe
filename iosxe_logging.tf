@@ -139,4 +139,13 @@ resource "iosxe_logging" "logging" {
     length(try(host.transport_tcp_ports, local.defaults.iosxe.configuration.logging.hosts.transport_tcp_ports, [])) > 0 ||
     length(try(host.transport_tls_ports, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports, [])) > 0
   )]
+
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_interface_ethernet.ethernet,
+    iosxe_interface_loopback.loopback,
+    iosxe_interface_vlan.vlan,
+    iosxe_interface_port_channel.port_channel,
+    iosxe_interface_port_channel_subinterface.port_channel_subinterface
+  ]
 }

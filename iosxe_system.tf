@@ -147,4 +147,14 @@ resource "iosxe_system" "system" {
       name  = try(cmd.name, local.defaults.iosxe.configuration.system.http.authentication_aaa_command_authorizations.name, null)
     }
   ]
+
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_interface_ethernet.ethernet,
+    iosxe_interface_loopback.loopback,
+    iosxe_interface_vlan.vlan,
+    iosxe_interface_port_channel.port_channel,
+    iosxe_interface_port_channel_subinterface.port_channel_subinterface,
+    iosxe_policy_map.policy_map
+  ]
 }

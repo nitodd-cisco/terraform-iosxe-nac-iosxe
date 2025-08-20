@@ -22,4 +22,8 @@ resource "iosxe_arp" "arp" {
   inspection_log_buffer_logs_entries  = try(local.device_config[each.value.name].arp.inspection_log_buffer_logs_entries, local.defaults.iosxe.configuration.arp.inspection_log_buffer_logs_entries, null)
   inspection_log_buffer_logs_interval = try(local.device_config[each.value.name].arp.inspection_log_buffer_logs_interval, local.defaults.iosxe.configuration.arp.inspection_log_buffer_logs_interval, null)
   inspection_vlan                     = try(local.device_config[each.value.name].arp.inspection_vlan, local.defaults.iosxe.configuration.arp.inspection_vlan, null)
+
+  depends_on = [
+    iosxe_vlan.vlan,
+  ]
 }

@@ -40,6 +40,16 @@ resource "iosxe_aaa" "aaa" {
       name = s
     }]
   }]
+
+  depends_on = [
+    iosxe_interface_ethernet.ethernet,
+    iosxe_interface_loopback.loopback,
+    iosxe_interface_port_channel.port_channel,
+    iosxe_interface_port_channel_subinterface.port_channel_subinterface,
+    iosxe_interface_vlan.vlan,
+    iosxe_radius.radius,
+    iosxe_tacacs_server.tacacs_server
+  ]
 }
 
 resource "iosxe_aaa_accounting" "aaa_accounting" {
@@ -70,6 +80,10 @@ resource "iosxe_aaa_accounting" "aaa_accounting" {
     start_stop_group2 = try(e.start_stop_groups[1], local.defaults.iosxe.configuration.aaa.accounting.networks.start_stop_groups[1], null)
   }]
   system_guarantee_first = try(local.device_config[each.value.name].aaa.accounting.system_guarantee_first, local.defaults.iosxe.configuration.aaa.accounting.system_guarantee_first, null)
+
+  depends_on = [
+    iosxe_aaa.aaa,
+  ]
 }
 
 resource "iosxe_aaa_authentication" "aaa_authentication" {
@@ -128,6 +142,10 @@ resource "iosxe_aaa_authentication" "aaa_authentication" {
   dot1x_default_a3_local = try(local.device_config[each.value.name].aaa.authentication.dot1x_defaults[2], local.defaults.iosxe.configuration.aaa.authentication.dot1x_defaults[2], null) == "local" ? true : false
   dot1x_default_a4_group = try(!contains(["local"], try(local.device_config[each.value.name].aaa.authentication.dot1x_defaults[3], local.defaults.iosxe.configuration.aaa.authentication.dot1x_defaults[3])), false) ? try(local.device_config[each.value.name].aaa.authentication.dot1x_defaults[3], local.defaults.iosxe.configuration.aaa.authentication.dot1x_defaults[3]) : null
   dot1x_default_a4_local = try(local.device_config[each.value.name].aaa.authentication.dot1x_defaults[3], local.defaults.iosxe.configuration.aaa.authentication.dot1x_defaults[3], null) == "local" ? true : false
+
+  depends_on = [
+    iosxe_aaa.aaa,
+  ]
 }
 
 resource "iosxe_aaa_authorization" "aaa_authorization" {
@@ -169,6 +187,10 @@ resource "iosxe_aaa_authorization" "aaa_authorization" {
     a4_local = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.networks.methods[3], null) == "local" ? true : false
     a4_group = try(!contains(["local"], try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.networks.methods[3])), false) ? try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.networks.methods[3]) : null
   }]
+
+  depends_on = [
+    iosxe_aaa.aaa,
+  ]
 }
 
 locals {

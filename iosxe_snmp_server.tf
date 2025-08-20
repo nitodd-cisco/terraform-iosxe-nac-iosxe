@@ -220,6 +220,16 @@ resource "iosxe_snmp_server" "snmp_server" {
     mib     = try(e.mib, local.defaults.iosxe.configuration.snmp_server.views.mib, null)
     inc_exl = try(e.scope, local.defaults.iosxe.configuration.snmp_server.views.scope, null)
   }]
+
+  depends_on = [
+    iosxe_interface_ethernet.ethernet,
+    iosxe_interface_loopback.loopback,
+    iosxe_interface_vlan.vlan,
+    iosxe_interface_port_channel.port_channel,
+    iosxe_interface_port_channel_subinterface.port_channel_subinterface,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended
+  ]
 }
 
 locals {

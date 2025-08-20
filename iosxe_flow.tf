@@ -38,6 +38,10 @@ resource "iosxe_flow_exporter" "flow_exporter" {
   source_loopback                       = each.value.source_loopback
   transport_udp                         = each.value.transport_udp
   template_data_timeout                 = each.value.template_data_timeout
+
+  depends_on = [
+    iosxe_interface_loopback.loopback
+  ]
 }
 
 locals {
@@ -70,7 +74,11 @@ resource "iosxe_flow_monitor" "flow_monitor" {
   cache_timeout_active   = each.value.cache_timeout_active
   cache_timeout_inactive = each.value.cache_timeout_inactive
   record                 = each.value.record
-  depends_on             = [iosxe_flow_exporter.flow_exporter, iosxe_flow_record.flow_record]
+
+  depends_on = [
+    iosxe_flow_exporter.flow_exporter,
+    iosxe_flow_record.flow_record
+  ]
 }
 
 locals {
