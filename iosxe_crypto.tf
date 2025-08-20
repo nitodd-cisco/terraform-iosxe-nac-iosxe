@@ -22,6 +22,11 @@ resource "iosxe_crypto_ipsec_profile" "crypto_ipsec_profile" {
   set_transform_set  = each.value.set_transform_set
   set_ikev2_profile  = each.value.set_ikev2_profile
   set_isakmp_profile = each.value.set_isakmp_profile
+
+  depends_on = [
+    iosxe_crypto_ikev2_profile.crypto_ikev2_profile,
+    iosxe_crypto_ipsec_transform_set.crypto_ipsec_transform_set
+  ]
 }
 
 locals {
@@ -117,6 +122,11 @@ resource "iosxe_crypto_ikev2_profile" "crypto_ikev2_profile" {
   match_identity_remote_ipv6_prefixes  = each.value.match_identity_remote_ipv6_prefixes
   match_identity_remote_keys           = each.value.match_identity_remote_keys
   match_inbound_only                   = each.value.match_inbound_only
+
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_crypto_ikev2_keyring.crypto_ikev2_keyring
+  ]
 }
 
 locals {
@@ -189,6 +199,11 @@ resource "iosxe_crypto_ikev2_policy" "crypto_ikev2_policy" {
   match_fvrf             = each.value.match_fvrf
   match_fvrf_any         = each.value.match_fvrf_any
   match_inbound_only     = each.value.match_inbound_only
+
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_crypto_ikev2_proposal.crypto_ikev2_proposal
+  ]
 }
 
 locals {
