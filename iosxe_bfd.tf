@@ -28,7 +28,7 @@ resource "iosxe_bfd" "bfd" {
     dest_ip       = try(e.destination_prefix, local.defaults.iosxe.configuration.bfd.ipv4_maps.destination_prefix, null)
     src_ip        = try(e.source_prefix, local.defaults.iosxe.configuration.bfd.ipv4_maps.source_prefix, null)
     template_name = e.template
-  }]
+  } if try(e.destination_vrf, null) != null && try(e.source_vrf, null) == null]
 
   ipv6_with_both_vrfs = try(length(local.device_config[each.value.name].bfd.ipv6_maps) == 0, true) ? null : [for e in local.device_config[each.value.name].bfd.ipv6_maps : {
     dst_vrf       = try(e.destination_vrf, local.defaults.iosxe.configuration.bfd.ipv6_maps.destination_vrf, null)
@@ -56,7 +56,7 @@ resource "iosxe_bfd" "bfd" {
     dest_ipv6     = try(e.destination_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.destination_prefix, null)
     src_ipv6      = try(e.source_prefix, local.defaults.iosxe.configuration.bfd.ipv6_maps.source_prefix, null)
     template_name = e.template
-  }]
+  } if try(e.destination_vrf, null) != null && try(e.source_vrf, null) == null]
 
   slow_timers = try(local.device_config[each.value.name].bfd.slow_timers, local.defaults.iosxe.configuration.bfd.slow_timers, null)
 }
@@ -70,8 +70,8 @@ locals {
         name                                     = try(template.name, local.defaults.iosxe.configuration.bfd.single_hop_templates.name, null)
         authentication_md5_keychain              = try(template.authentication_md5_keychain, local.defaults.iosxe.configuration.bfd.single_hop_templates.authentication_md5_keychain, null)
         authentication_meticulous_md5_keychain   = try(template.authentication_meticulous_md5_keychain, local.defaults.iosxe.configuration.bfd.single_hop_templates.authentication_meticulous_md5_keychain, null)
-        authentication_meticulous_sha_1_keychain = try(template.authentication_meticulous_sha1_keychain, local.defaults.iosxe.configuration.bfd.single_hop_templates.authentication_meticulous_sha1_keychain, null)
-        authentication_sha_1_keychain            = try(template.authentication_sha1_keychain, local.defaults.iosxe.configuration.bfd.single_hop_templates.authentication_sha1_keychain, null)
+        authentication_meticulous_sha_1_keychain = try(template.authentication_meticulous_sha_1_keychain, local.defaults.iosxe.configuration.bfd.single_hop_templates.authentication_meticulous_sha_1_keychain, null)
+        authentication_sha_1_keychain            = try(template.authentication_sha_1_keychain, local.defaults.iosxe.configuration.bfd.single_hop_templates.authentication_sha_1_keychain, null)
         interval_milliseconds_min_tx             = try(template.interval_milliseconds_min_tx, local.defaults.iosxe.configuration.bfd.single_hop_templates.interval_milliseconds_min_tx, null)
         interval_milliseconds_min_rx             = try(template.interval_milliseconds_min_rx, local.defaults.iosxe.configuration.bfd.single_hop_templates.interval_milliseconds_min_rx, null)
         interval_milliseconds_both               = try(template.interval_milliseconds_both, local.defaults.iosxe.configuration.bfd.single_hop_templates.interval_milliseconds_both, null)
@@ -119,8 +119,8 @@ locals {
         name                                    = try(template.name, local.defaults.iosxe.configuration.bfd.multi_hop_templates.name, null)
         authentication_md5_keychain             = try(template.authentication_md5_keychain, local.defaults.iosxe.configuration.bfd.multi_hop_templates.authentication_md5_keychain, null)
         authentication_meticulous_md5_keychain  = try(template.authentication_meticulous_md5_keychain, local.defaults.iosxe.configuration.bfd.multi_hop_templates.authentication_meticulous_md5_keychain, null)
-        authentication_meticulous_sha_1keychain = try(template.authentication_meticulous_sha1_keychain, local.defaults.iosxe.configuration.bfd.multi_hop_templates.authentication_meticulous_sha1_keychain, null)
-        authentication_sha_1_keychain           = try(template.authentication_sha1_keychain, local.defaults.iosxe.configuration.bfd.multi_hop_templates.authentication_sha1_keychain, null)
+        authentication_meticulous_sha1_keychain = try(template.authentication_meticulous_sha1_keychain, local.defaults.iosxe.configuration.bfd.multi_hop_templates.authentication_meticulous_sha1_keychain, null)
+        authentication_sha_1_keychain           = try(template.authentication_sha_1_keychain, local.defaults.iosxe.configuration.bfd.multi_hop_templates.authentication_sha_1_keychain, null)
         interval_milliseconds_both              = try(template.interval_milliseconds_both, local.defaults.iosxe.configuration.bfd.multi_hop_templates.interval_milliseconds_both, null)
         interval_milliseconds_min_tx            = try(template.interval_milliseconds_min_tx, local.defaults.iosxe.configuration.bfd.multi_hop_templates.interval_milliseconds_min_tx, null)
         interval_milliseconds_min_rx            = try(template.interval_milliseconds_min_rx, local.defaults.iosxe.configuration.bfd.multi_hop_templates.interval_milliseconds_min_rx, null)
@@ -149,7 +149,7 @@ resource "iosxe_bfd_template_multi_hop" "bfd_template_multi_hop" {
   name                                    = each.value.name
   authentication_md5_keychain             = each.value.authentication_md5_keychain
   authentication_meticulous_md5_keychain  = each.value.authentication_meticulous_md5_keychain
-  authentication_meticulous_sha_1keychain = each.value.authentication_meticulous_sha_1keychain
+  authentication_meticulous_sha1_keychain = each.value.authentication_meticulous_sha1_keychain
   authentication_sha_1_keychain           = each.value.authentication_sha_1_keychain
   interval_milliseconds_both              = each.value.interval_milliseconds_both
   interval_milliseconds_min_tx            = each.value.interval_milliseconds_min_tx
