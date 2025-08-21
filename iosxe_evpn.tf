@@ -29,10 +29,10 @@ locals {
         device = device.name
 
         evpn_instance_num                    = try(instance.number, local.defaults.iosxe.configuration.evpn.instances.number, null)
-        vlan_based_replication_type_ingress  = try(contains(instance.vlan_based.replication_type, "ingress"), contains(local.defaults.iosxe.configuration.evpn.instances.vlan_based.replication_type, "ingress"), null)
-        vlan_based_replication_type_static   = try(contains(instance.vlan_based.replication_type, "static"), contains(local.defaults.iosxe.configuration.evpn.instances.vlan_based.replication_type, "static"), null)
-        vlan_based_replication_type_p2mp     = try(contains(instance.vlan_based.replication_type, "p2mp"), contains(local.defaults.iosxe.configuration.evpn.instances.vlan_based.replication_type, "p2mp"), null)
-        vlan_based_replication_type_mp2mp    = try(contains(instance.vlan_based.replication_type, "mp2mp"), contains(local.defaults.iosxe.configuration.evpn.instances.vlan_based.replication_type, "mp2mp"), null)
+        vlan_based_replication_type_ingress  = try(instance.vlan_based.replication_type == "ingress", local.defaults.iosxe.configuration.evpn.instances.vlan_based.replication_type == "ingress", null)
+        vlan_based_replication_type_static   = try(instance.vlan_based.replication_type == "static", local.defaults.iosxe.configuration.evpn.instances.vlan_based.replication_type == "static", null)
+        vlan_based_replication_type_p2mp     = try(instance.vlan_based.replication_type == "p2mp", local.defaults.iosxe.configuration.evpn.instances.vlan_based.replication_type == "p2mp", null)
+        vlan_based_replication_type_mp2mp    = try(instance.vlan_based.replication_type == "mp2mp", local.defaults.iosxe.configuration.evpn.instances.vlan_based.replication_type == "mp2mp", null)
         vlan_based_encapsulation             = try(instance.vlan_based.encapsulation, local.defaults.iosxe.configuration.evpn.instances.vlan_based.encapsulation, null)
         vlan_based_auto_route_target         = try(instance.vlan_based.auto_route_target, local.defaults.iosxe.configuration.evpn.instances.vlan_based.auto_route_target, null)
         vlan_based_rd                        = try(instance.vlan_based.rd, local.defaults.iosxe.configuration.evpn.instances.vlan_based.rd, null)
