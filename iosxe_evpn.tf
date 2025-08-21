@@ -1,10 +1,10 @@
 resource "iosxe_evpn" "evpn" {
   for_each                  = { for device in local.devices : device.name => device if try(local.device_config[device.name].evpn, null) != null || try(local.defaults.iosxe.configuration.evpn, null) != null }
   device                    = each.value.name
-  replication_type_ingress  = try(contains(local.device_config[each.value.name].evpn.replication_type, "ingress"), contains(local.defaults.iosxe.configuration.evpn.replication_type, "ingress"), null)
-  replication_type_static   = try(contains(local.device_config[each.value.name].evpn.replication_type, "static"), contains(local.defaults.iosxe.configuration.evpn.replication_type, "static"), null)
-  replication_type_p2mp     = try(contains(local.device_config[each.value.name].evpn.replication_type, "p2mp"), contains(local.defaults.iosxe.configuration.evpn.replication_type, "p2mp"), null)
-  replication_type_mp2mp    = try(contains(local.device_config[each.value.name].evpn.replication_type, "mp2mp"), contains(local.defaults.iosxe.configuration.evpn.replication_type, "mp2mp"), null)
+  replication_type_ingress  = try(local.device_config[each.value.name].evpn.replication_type == "ingress", local.defaults.iosxe.configuration.evpn.replication_type == "ingress", null)
+  replication_type_static   = try(local.device_config[each.value.name].evpn.replication_type == "static", local.defaults.iosxe.configuration.evpn.replication_type == "static", null)
+  replication_type_p2mp     = try(local.device_config[each.value.name].evpn.replication_type == "p2mp", local.defaults.iosxe.configuration.evpn.replication_type == "p2mp", null)
+  replication_type_mp2mp    = try(local.device_config[each.value.name].evpn.replication_type == "mp2mp", local.defaults.iosxe.configuration.evpn.replication_type == "mp2mp", null)
   mac_duplication_limit     = try(local.device_config[each.value.name].evpn.mac_duplication_limit, local.defaults.iosxe.configuration.evpn.mac_duplication_limit, null)
   mac_duplication_time      = try(local.device_config[each.value.name].evpn.mac_duplication_time, local.defaults.iosxe.configuration.evpn.mac_duplication_time, null)
   ip_duplication_limit      = try(local.device_config[each.value.name].evpn.ip_duplication_limit, local.defaults.iosxe.configuration.evpn.ip_duplication_limit, null)
