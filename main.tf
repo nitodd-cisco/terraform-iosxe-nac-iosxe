@@ -110,6 +110,7 @@ resource "iosxe_cli" "cli" {
     iosxe_interface_ospfv3.vlan_ospfv3,
     iosxe_interface_pim.vlan_pim,
     iosxe_interface_port_channel.port_channel,
+    iosxe_interface_switchport.port_channel_switchport,
     iosxe_interface_mpls.port_channel_mpls,
     iosxe_interface_ospf.port_channel_ospf,
     iosxe_interface_ospfv3.port_channel_ospfv3,

@@ -870,22 +870,34 @@ locals {
         device_tracking_attached_policies = [for policy in try(int.device_tracking_attached_policies, []) : {
           name = policy
         }]
-        switchport                            = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) != null ? true : false
-        mpls                                  = try(int.mpls.ip, int.mpls.mtu, local.defaults.iosxe.devices.configuration.interfaces.port_channels.mpls.ip, local.defaults.iosxe.devices.configuration.interfaces.port_channels.mpls.mtu, null) != null ? true : false
-        mpls_ip                               = try(int.mpls.ip, local.defaults.iosxe.devices.configuration.interfaces.port_channels.mpls.ip, null)
-        mpls_mtu                              = try(int.mpls.mtu, local.defaults.iosxe.devices.configuration.interfaces.port_channels.mpls.mtu, null)
-        ospf                                  = try(int.ospf.cost, int.ospf.dead_interval, int.ospf.hello_interval, int.ospf.mtu_ignore, int.ospf.network_type, int.ospf.priority, int.ospf.ttl_security_hops, int.ospf.process_ids, int.ospf.message_digest_keys, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.cost, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.dead_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.hello_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.mtu_ignore, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.process_ids, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.message_digest_keys, null) != null ? true : false
-        ospf_cost                             = try(int.ospf.cost, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.cost, null)
-        ospf_dead_interval                    = try(int.ospf.dead_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.dead_interval, null)
-        ospf_hello_interval                   = try(int.ospf.hello_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.hello_interval, null)
-        ospf_mtu_ignore                       = try(int.ospf.mtu_ignore, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.mtu_ignore, null)
-        ospf_network_type                     = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null)
-        ospf_network_type_broadcast           = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "broadcast" ? true : false
-        ospf_network_type_non_broadcast       = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "non-broadcast" ? true : false
-        ospf_network_type_point_to_multipoint = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "point-to-multipoint" ? true : false
-        ospf_network_type_point_to_point      = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "point-to-point" ? true : false
-        ospf_priority                         = try(int.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.priority, null)
-        ospf_ttl_security_hops                = try(int.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.ttl_security_hops, null)
+        switchport                               = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) != null ? true : false
+        switchport_access_vlan                   = try(int.switchport.access_vlan, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.access_vlan, null)
+        switchport_mode_access                   = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) == "access" ? true : null
+        switchport_mode_trunk                    = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) == "trunk" ? true : null
+        switchport_mode_dot1q_tunnel             = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) == "dot1q-tunnel" ? true : null
+        switchport_mode_private_vlan_trunk       = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) == "private-vlan-trunk" ? true : null
+        switchport_mode_private_vlan_host        = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) == "private-vlan-host" ? true : null
+        switchport_mode_private_vlan_promiscuous = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) == "private-vlan-promiscuous" ? true : null
+        switchport_nonegotiate                   = try(int.switchport.nonegotiate, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.nonegotiate, null)
+        switchport_trunk_allowed_vlans           = try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_allowed_vlans, null)
+        switchport_trunk_native_vlan_tag         = try(int.switchport.trunk_native_vlan_tag, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_native_vlan_tag, null)
+        switchport_trunk_native_vlan             = try(int.switchport.trunk_native_vlan_id, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_native_vlan_id, null)
+        switchport_host                          = try(int.switchport.host, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.host, null)
+        mpls                                     = try(int.mpls.ip, int.mpls.mtu, local.defaults.iosxe.devices.configuration.interfaces.port_channels.mpls.ip, local.defaults.iosxe.devices.configuration.interfaces.port_channels.mpls.mtu, null) != null ? true : false
+        mpls_ip                                  = try(int.mpls.ip, local.defaults.iosxe.devices.configuration.interfaces.port_channels.mpls.ip, null)
+        mpls_mtu                                 = try(int.mpls.mtu, local.defaults.iosxe.devices.configuration.interfaces.port_channels.mpls.mtu, null)
+        ospf                                     = try(int.ospf.cost, int.ospf.dead_interval, int.ospf.hello_interval, int.ospf.mtu_ignore, int.ospf.network_type, int.ospf.priority, int.ospf.ttl_security_hops, int.ospf.process_ids, int.ospf.message_digest_keys, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.cost, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.dead_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.hello_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.mtu_ignore, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.process_ids, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.message_digest_keys, null) != null ? true : false
+        ospf_cost                                = try(int.ospf.cost, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.cost, null)
+        ospf_dead_interval                       = try(int.ospf.dead_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.dead_interval, null)
+        ospf_hello_interval                      = try(int.ospf.hello_interval, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.hello_interval, null)
+        ospf_mtu_ignore                          = try(int.ospf.mtu_ignore, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.mtu_ignore, null)
+        ospf_network_type                        = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null)
+        ospf_network_type_broadcast              = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "broadcast" ? true : false
+        ospf_network_type_non_broadcast          = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "non-broadcast" ? true : false
+        ospf_network_type_point_to_multipoint    = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "point-to-multipoint" ? true : false
+        ospf_network_type_point_to_point         = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "point-to-point" ? true : false
+        ospf_priority                            = try(int.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.priority, null)
+        ospf_ttl_security_hops                   = try(int.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.ttl_security_hops, null)
         ospf_process_ids = [for pid in try(int.ospf.process_ids, []) : {
           id    = try(pid.id, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.process_ids.id, null)
           areas = try(pid.areas, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.process_ids.areas, null)
@@ -985,6 +997,30 @@ resource "iosxe_interface_port_channel" "port_channel" {
   auto_qos_voip_cisco_softphone    = each.value.auto_qos_voip_cisco_softphone
   auto_qos_voip_trust              = each.value.auto_qos_voip_trust
   trust_device                     = each.value.trust_device
+}
+
+resource "iosxe_interface_switchport" "port_channel_switchport" {
+  for_each = { for v in local.interfaces_port_channels : v.key => v if v.switchport == true }
+
+  device                        = each.value.device
+  type                          = "Port-channel"
+  name                          = each.value.name
+  mode_access                   = each.value.switchport_mode_access
+  mode_trunk                    = each.value.switchport_mode_trunk
+  mode_dot1q_tunnel             = each.value.switchport_mode_dot1q_tunnel
+  mode_private_vlan_trunk       = each.value.switchport_mode_private_vlan_trunk
+  mode_private_vlan_host        = each.value.switchport_mode_private_vlan_host
+  mode_private_vlan_promiscuous = each.value.switchport_mode_private_vlan_promiscuous
+  nonegotiate                   = each.value.switchport_nonegotiate
+  access_vlan                   = each.value.switchport_access_vlan
+  trunk_allowed_vlans           = each.value.switchport_trunk_allowed_vlans
+  trunk_native_vlan_tag         = each.value.switchport_trunk_native_vlan_tag
+  trunk_native_vlan             = each.value.switchport_trunk_native_vlan
+  host                          = each.value.switchport_host
+
+  depends_on = [
+    iosxe_interface_port_channel.port_channel
+  ]
 }
 
 resource "iosxe_interface_mpls" "port_channel_mpls" {
