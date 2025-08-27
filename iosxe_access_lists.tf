@@ -8,16 +8,16 @@ locals {
         entries = try(length(acl.entries) == 0, true) ? null : [for e in acl.entries : {
           sequence           = try(e.sequence, local.defaults.iosxe.configuration.access_lists.standard.entries.sequence, null)
           remark             = try(e.remark, local.defaults.iosxe.configuration.access_lists.standard.entries.remark, null)
-          deny_prefix        = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "deny" ? try(e.prefix, null) : null
-          deny_prefix_mask   = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "deny" ? try(e.prefix_mask, null) : null
-          deny_any           = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "deny" ? try(e.any, false) : null
-          deny_host          = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "deny" ? try(e.host, null) : null
-          deny_log           = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "deny" ? try(e.log, false) : null
-          permit_prefix      = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "permit" ? try(e.prefix, null) : null
-          permit_prefix_mask = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "permit" ? try(e.prefix_mask, null) : null
-          permit_any         = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "permit" ? try(e.any, false) : null
-          permit_host        = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "permit" ? try(e.host, null) : null
-          permit_log         = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action) == "permit" ? try(e.log, false) : null
+          deny_prefix        = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "deny" ? try(e.prefix, null) : null
+          deny_prefix_mask   = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "deny" ? try(e.prefix_mask, null) : null
+          deny_any           = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "deny" ? try(e.any, false) : null
+          deny_host          = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "deny" ? try(e.host, null) : null
+          deny_log           = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "deny" ? try(e.log, false) : null
+          permit_prefix      = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "permit" ? try(e.prefix, null) : null
+          permit_prefix_mask = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "permit" ? try(e.prefix_mask, null) : null
+          permit_any         = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "permit" ? try(e.any, false) : null
+          permit_host        = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "permit" ? try(e.host, null) : null
+          permit_log         = try(e.action, local.defaults.iosxe.configuration.access_lists.standard.entries.action, null) == "permit" ? try(e.log, false) : null
         }]
       }
     ]
