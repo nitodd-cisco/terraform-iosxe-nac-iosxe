@@ -26,13 +26,13 @@ locals {
         key           = format("%s/%s", device.name, vrf.vrf)
         device        = device.name
         vrf           = try(vrf.vrf, null)
-        originator_id = try(local.device_config[device.name].msdp.originator_id, local.defaults.iosxe.configuration.msdp.originator_id, null)
-        passwords = try(length(local.device_config[device.name].msdp.passwords) == 0, true) ? null : [for password in local.device_config[device.name].msdp.passwords : {
+        originator_id = try(vrf.originator_id, local.defaults.iosxe.configuration.msdp.originator_id, null)
+        passwords = try(length(vrf.passwords) == 0, true) ? null : [for password in vrf.passwords : {
           addr       = try(password.host, local.defaults.iosxe.configuration.msdp.passwords.host, null)
           encryption = try(password.encryption, local.defaults.iosxe.configuration.msdp.passwords.encryption, null)
           password   = try(password.password, local.defaults.iosxe.configuration.msdp.passwords.password, null)
         }]
-        peers = try(length(local.device_config[device.name].msdp.peers) == 0, true) ? null : [for peer in local.device_config[device.name].msdp.peers : {
+        peers = try(length(vrf.peers) == 0, true) ? null : [for peer in vrf.peers : {
           addr                    = try(peer.host, local.defaults.iosxe.configuration.msdp.peers.host, null)
           remote_as               = try(peer.remote_as, local.defaults.iosxe.configuration.msdp.peers.remote_as, null)
           connect_source_loopback = try(peer.connect_source_interface_type, local.defaults.iosxe.configuration.msdp.peers.connect_source_interface_type, null) == "Loopback" ? try(peer.connect_source_interface_id, local.defaults.iosxe.configuration.msdp.peers.connect_source_interface_id, null) : null
