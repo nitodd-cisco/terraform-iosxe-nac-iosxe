@@ -42,8 +42,8 @@ locals {
         entries = try(length(acl.entries) == 0, true) ? null : [for e in acl.entries : {
           sequence                      = try(e.sequence, local.defaults.iosxe.configuration.access_lists.extended.entries.sequence, null)
           remark                        = try(e.remark, local.defaults.iosxe.configuration.access_lists.extended.entries.remark, null)
-          ace_rule_action               = try(e.action, local.defaults.iosxe.configuration.access_lists.extended.entries.action)
-          ace_rule_protocol             = try(e.protocol, local.defaults.iosxe.configuration.access_lists.extended.entries.protocol)
+          ace_rule_action               = try(e.action, local.defaults.iosxe.configuration.access_lists.extended.entries.action, null)
+          ace_rule_protocol             = try(e.protocol, local.defaults.iosxe.configuration.access_lists.extended.entries.protocol, null)
           service_object_group          = try(e.service_object_group, local.defaults.iosxe.configuration.access_lists.extended.entries.service_object_group, null)
           source_prefix                 = try(e.source.prefix, local.defaults.iosxe.configuration.access_lists.extended.entries.source.prefix, null)
           source_prefix_mask            = try(e.source.prefix_mask, local.defaults.iosxe.configuration.access_lists.extended.entries.source.prefix_mask, null)
