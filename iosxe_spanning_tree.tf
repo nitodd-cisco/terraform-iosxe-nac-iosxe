@@ -10,6 +10,6 @@ resource "iosxe_spanning_tree" "spanning_tree" {
 
   mst_instances = try(length(local.device_config[each.value.name].spanning_tree.mst_instances) == 0, true) ? null : [for e in local.device_config[each.value.name].spanning_tree.mst_instances : {
     id       = try(e.id, local.defaults.iosxe.configuration.spanning_tree.mst_instances.id, null)
-    vlan_ids = try(e.vlan_ids, local.defaults.iosxe.configuration.spanning_tree.mst_instances.vlan_ids, null)
+    vlan_ids = try(e.vlan_ids, local.defaults.iosxe.configuration.spanning_tree.mst_instances.vlan_ids, range(1, 4094), null)
   }]
 }
