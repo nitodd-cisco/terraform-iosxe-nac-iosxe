@@ -31,6 +31,12 @@ resource "iosxe_pim" "pim" {
     bidir      = try(rp_candidate.bidir, local.defaults.iosxe.configuration.pim.rp_candidates.bidir, null)
     }
   ]
+
+  depends_on = [
+    iosxe_interface_pim.loopback_pim,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended
+  ]
 }
 
 locals {
@@ -89,4 +95,10 @@ resource "iosxe_pim_vrf" "pim_vrf" {
   rp_address_bidir                  = each.value.rp_address_bidir
   rp_addresses                      = each.value.rp_addresses
   rp_candidates                     = each.value.rp_candidates
+
+  depends_on = [
+    iosxe_interface_pim.loopback_pim,
+    iosxe_access_list_standard.access_list_standard,
+    iosxe_access_list_extended.access_list_extended
+  ]
 }
