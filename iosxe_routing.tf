@@ -77,7 +77,7 @@ resource "iosxe_static_route" "static_route" {
   next_hops_with_track = each.value.next_hops_with_track
 }
 
-resource "iosxe_static_route_vrf" "static_route_vrf" {
+resource "iosxe_static_routes_vrf" "static_routes_vrf" {
   for_each = {
     for route_vrf in local.static_routes_vrf : route_vrf.key => route_vrf
   }
