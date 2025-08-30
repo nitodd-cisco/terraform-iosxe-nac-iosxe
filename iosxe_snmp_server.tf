@@ -10,7 +10,9 @@ resource "iosxe_snmp_server" "snmp_server" {
   enable_traps                                       = try(local.device_config[each.value.name].snmp_server.enable_traps, local.defaults.iosxe.configuration.snmp_server.enable_traps, null)
   enable_traps_auth_framework_sec_violation          = try(local.device_config[each.value.name].snmp_server.traps.auth_framework_sec_violation, local.defaults.iosxe.configuration.snmp_server.traps.auth_framework_sec_violation, null)
   enable_traps_bfd                                   = try(local.device_config[each.value.name].snmp_server.traps.bfd, local.defaults.iosxe.configuration.snmp_server.traps.bfd, null)
+  enable_traps_bgp                                   = try(local.device_config[each.value.name].snmp_server.traps.bgp, local.defaults.iosxe.configuration.snmp_server.traps.bgp, null)
   enable_traps_bgp_cbgp2                             = try(local.device_config[each.value.name].snmp_server.traps.bgp_cbgp2, local.defaults.iosxe.configuration.snmp_server.traps.bgp_cbgp2, null)
+  enable_traps_cbgp2                                 = try(local.device_config[each.value.name].snmp_server.traps.cbgp2, local.defaults.iosxe.configuration.snmp_server.traps.cbgp2, null)
   enable_traps_bridge_newroot                        = try(local.device_config[each.value.name].snmp_server.traps.bridge_newroot, local.defaults.iosxe.configuration.snmp_server.traps.bridge_newroot, null)
   enable_traps_bridge_topologychange                 = try(local.device_config[each.value.name].snmp_server.traps.bridge_topologychange, local.defaults.iosxe.configuration.snmp_server.traps.bridge_topologychange, null)
   enable_traps_bulkstat_collection                   = try(local.device_config[each.value.name].snmp_server.traps.bulkstat_collection, local.defaults.iosxe.configuration.snmp_server.traps.bulkstat_collection, null)
@@ -202,12 +204,21 @@ resource "iosxe_snmp_server" "snmp_server" {
   contexts = try(length(local.device_config[each.value.name].snmp_server.contexts) == 0, true) ? null : [for context in local.device_config[each.value.name].snmp_server.contexts : {
     name = context
   }]
-  hosts = try(length(local.device_config[each.value.name].snmp_server.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].snmp_server.hosts : {
+  hosts = try(length([for host in local.device_config[each.value.name].snmp_server.hosts : host if try(host.vrf, null) == null]) == 0, true) ? null : [for host in local.device_config[each.value.name].snmp_server.hosts : {
     ip_address        = try(host.ip, local.defaults.iosxe.configuration.snmp_server.hosts.ip, null)
     community_or_user = try(host.user, host.community, local.defaults.iosxe.configuration.snmp_server.hosts.user, local.defaults.iosxe.configuration.snmp_server.hosts.community, null)
     encryption        = try(host.encryption, local.defaults.iosxe.configuration.snmp_server.hosts.encryption, null)
     version           = try(host.version, local.defaults.iosxe.configuration.snmp_server.hosts.version, null)
-  }]
+    security_level    = try(host.security_level, local.defaults.iosxe.configuration.snmp_server.hosts.security_level, null)
+  } if try(host.vrf, null) == null]
+  vrf_hosts = try(length([for host in local.device_config[each.value.name].snmp_server.hosts : host if try(host.vrf, null) != null]) == 0, true) ? null : [for host in local.device_config[each.value.name].snmp_server.hosts : {
+    ip_address        = try(host.ip, local.defaults.iosxe.configuration.snmp_server.hosts.ip, null)
+    vrf               = try(host.vrf, local.defaults.iosxe.configuration.snmp_server.hosts.vrf, null)
+    community_or_user = try(host.user, host.community, local.defaults.iosxe.configuration.snmp_server.hosts.user, local.defaults.iosxe.configuration.snmp_server.hosts.community, null)
+    encryption        = try(host.encryption, local.defaults.iosxe.configuration.snmp_server.hosts.encryption, null)
+    version           = try(host.version, local.defaults.iosxe.configuration.snmp_server.hosts.version, null)
+    security_level    = try(host.security_level, local.defaults.iosxe.configuration.snmp_server.hosts.security_level, null)
+  } if try(host.vrf, null) != null]
   snmp_communities = try(length(local.device_config[each.value.name].snmp_server.snmp_communities) == 0, true) ? null : [for e in local.device_config[each.value.name].snmp_server.snmp_communities : {
     name             = try(e.name, local.defaults.iosxe.configuration.snmp_server.snmp_communities.name, null)
     access_list_name = try(e.ipv4_acl, local.defaults.iosxe.configuration.snmp_server.snmp_communities.ipv4_acl, null)
