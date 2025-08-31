@@ -61,6 +61,15 @@ locals {
           destination_host              = try(e.destination.host, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.host, null)
           destination_object_group      = try(e.destination.object_group, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.object_group, null)
           destination_port_equal        = try(e.destination.port_type, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.port_type, null) == "equal" ? try(e.destination.port, null) : null
+          destination_port_equal_2      = try(e.destination.additional_equal_ports[0], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[0], null)
+          destination_port_equal_3      = try(e.destination.additional_equal_ports[1], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[1], null)
+          destination_port_equal_4      = try(e.destination.additional_equal_ports[2], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[2], null)
+          destination_port_equal_5      = try(e.destination.additional_equal_ports[3], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[3], null)
+          destination_port_equal_6      = try(e.destination.additional_equal_ports[4], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[4], null)
+          destination_port_equal_7      = try(e.destination.additional_equal_ports[5], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[5], null)
+          destination_port_equal_8      = try(e.destination.additional_equal_ports[6], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[6], null)
+          destination_port_equal_9      = try(e.destination.additional_equal_ports[7], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[7], null)
+          destination_port_equal_10     = try(e.destination.additional_equal_ports[8], local.defaults.iosxe.configuration.access_lists.extended.entries.destination.additional_equal_ports[8], null)
           destination_port_greater_than = try(e.destination.port_type, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.port_type, null) == "greater_than" ? try(e.destination.port, null) : null
           destination_port_lesser_than  = try(e.destination.port_type, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.port_type, null) == "lesser_than" ? try(e.destination.port, null) : null
           destination_port_range_from   = try(e.destination.port_type, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.port_type, null) == "range" ? try(e.destination.port_range_from, null) : null
@@ -76,6 +85,9 @@ locals {
           fragments                     = try(e.fragments, local.defaults.iosxe.configuration.access_lists.extended.entries.fragments, null)
           precedence                    = try(e.precedence, local.defaults.iosxe.configuration.access_lists.extended.entries.precedence, null)
           tos                           = try(e.tos, local.defaults.iosxe.configuration.access_lists.extended.entries.tos, null)
+          icmp_named_msg_type           = can(tonumber(try(e.icmp_message_type, local.defaults.iosxe.configuration.access_lists.extended.entries.icmp_message_type, ""))) ? null : try(e.icmp_message_type, local.defaults.iosxe.configuration.access_lists.extended.entries.icmp_message_type, null)
+          icmp_msg_type                 = can(tonumber(try(e.icmp_message_type, local.defaults.iosxe.configuration.access_lists.extended.entries.icmp_message_type, ""))) ? try(e.icmp_message_type, local.defaults.iosxe.configuration.access_lists.extended.entries.icmp_message_type, null) : null
+          icmp_msg_code                 = try(e.icmp_message_code, local.defaults.iosxe.configuration.access_lists.extended.entries.icmp_message_code, null)
           log                           = try(e.log, local.defaults.iosxe.configuration.access_lists.extended.entries.log, null)
           log_input                     = try(e.log_input, local.defaults.iosxe.configuration.access_lists.extended.entries.log_input, null)
         }]
