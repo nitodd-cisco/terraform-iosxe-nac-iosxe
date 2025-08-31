@@ -174,6 +174,12 @@ locals {
         dot1x_timeout_tx_period                    = try(int.network_access_control.dot1x_timeout_tx_period, local.defaults.iosxe.devices.configuration.interfaces.ethernets.network_access_control.dot1x_timeout_tx_period, null)
         dot1x_max_reauth_req                       = try(int.network_access_control.dot1x_max_reauth_req, local.defaults.iosxe.devices.configuration.interfaces.ethernets.network_access_control.dot1x_max_reauth_req, null)
         dot1x_max_req                              = try(int.network_access_control.dot1x_max_req, local.defaults.iosxe.devices.configuration.interfaces.ethernets.network_access_control.dot1x_max_req, null)
+        cdp_enable                                 = try(int.cdp, local.defaults.iosxe.devices.configuration.interfaces.ethernets.cdp, null)
+        cdp_tlv_app                                = try(int.cdp_tlv_app, local.defaults.iosxe.devices.configuration.interfaces.ethernets.cdp_tlv_app, null)
+        cdp_tlv_location                           = try(int.cdp_tlv_location, local.defaults.iosxe.devices.configuration.interfaces.ethernets.cdp_tlv_location, null)
+        cdp_tlv_server_location                    = try(int.cdp_tlv_server_location, local.defaults.iosxe.devices.configuration.interfaces.ethernets.cdp_tlv_server_location, null)
+        ip_nat_inside                              = try(int.ipv4.nat_inside, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.nat_inside, null)
+        ip_nat_outside                             = try(int.ipv4.nat_outside, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.nat_outside, null)
       }
     ]
   ])
@@ -278,6 +284,12 @@ resource "iosxe_interface_ethernet" "ethernet" {
   dot1x_timeout_tx_period                    = each.value.dot1x_timeout_tx_period
   dot1x_max_reauth_req                       = each.value.dot1x_max_reauth_req
   dot1x_max_req                              = each.value.dot1x_max_req
+  cdp_enable                                 = each.value.cdp_enable
+  cdp_tlv_app                                = each.value.cdp_tlv_app
+  cdp_tlv_location                           = each.value.cdp_tlv_location
+  cdp_tlv_server_location                    = each.value.cdp_tlv_server_location
+  ip_nat_inside                              = each.value.ip_nat_inside
+  ip_nat_outside                             = each.value.ip_nat_outside
 
   depends_on = [
     iosxe_vrf.vrf,
@@ -936,6 +948,7 @@ locals {
         auto_qos_voip_cisco_softphone           = try(int.auto_qos.voip_cisco_softphone, local.defaults.iosxe.devices.configuration.interfaces.port_channels.auto_qos.voip_cisco_softphone, null)
         auto_qos_voip_trust                     = try(int.auto_qos.voip_trust, local.defaults.iosxe.devices.configuration.interfaces.port_channels.auto_qos.voip_trust, null)
         trust_device                            = try(int.auto_qos.trust_device, local.defaults.iosxe.devices.configuration.interfaces.port_channels.auto_qos.trust_device, null)
+        negotiation_auto                        = try(int.negotiation_auto, local.defaults.iosxe.devices.configuration.interfaces.port_channels.negotiation_auto, null)
       }
     ]
   ])
@@ -997,6 +1010,7 @@ resource "iosxe_interface_port_channel" "port_channel" {
   auto_qos_voip_cisco_softphone    = each.value.auto_qos_voip_cisco_softphone
   auto_qos_voip_trust              = each.value.auto_qos_voip_trust
   trust_device                     = each.value.trust_device
+  negotiation_auto                 = each.value.negotiation_auto
 }
 
 resource "iosxe_interface_switchport" "port_channel_switchport" {
