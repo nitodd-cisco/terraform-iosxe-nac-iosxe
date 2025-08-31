@@ -3,10 +3,9 @@ resource "iosxe_aaa" "aaa" {
   device                       = each.value.name
   new_model                    = try(local.device_config[each.value.name].aaa.new_model, local.defaults.iosxe.configuration.aaa.new_model, null)
   session_id                   = try(local.device_config[each.value.name].aaa.session_id, local.defaults.iosxe.configuration.aaa.session_id, null)
-  vrf                          = try(local.device_config[each.value.name].aaa.vrf, local.defaults.iosxe.configuration.aaa.vrf, null)
-  local_authentication_type    = try(local.device_config[each.value.name].aaa.local_authentication_type, local.defaults.iosxe.configuration.aaa.local_authentication_type, null)
-  local_authorization          = try(local.device_config[each.value.name].aaa.local_authorization, local.defaults.iosxe.configuration.aaa.local_authorization, null)
-  local_auth_max_fail_attempts = try(local.device_config[each.value.name].aaa.local_auth_max_fail_attempts, local.defaults.iosxe.configuration.aaa.local_auth_max_fail_attempts, null)
+  local_authentication_type            = try(local.device_config[each.value.name].aaa.local_authentication_type, local.defaults.iosxe.configuration.aaa.local_authentication_type, null)
+  local_authorization                   = try(local.device_config[each.value.name].aaa.local_authorization, local.defaults.iosxe.configuration.aaa.local_authorization, null)
+  local_authentication_max_fail_attempts = try(local.device_config[each.value.name].aaa.local_authentication_max_fail_attempts, local.defaults.iosxe.configuration.aaa.local_authentication_max_fail_attempts, null)
   server_radius_dynamic_author = try(local.device_config[each.value.name].aaa.radius_dynamic_author, local.defaults.iosxe.configuration.aaa.radius_dynamic_author, null)
   server_radius_dynamic_author_clients = try(length(local.device_config[each.value.name].aaa.radius_dynamic_author_clients) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.radius_dynamic_author_clients : {
     ip              = try(e.ip, local.defaults.iosxe.configuration.aaa.radius_dynamic_author_clients.ip, null)
@@ -31,6 +30,7 @@ resource "iosxe_aaa" "aaa" {
   }]
   group_server_tacacsplus = try(length(local.device_config[each.value.name].aaa.tacacs_groups) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.tacacs_groups : {
     name                                                    = try(e.name, local.defaults.iosxe.configuration.aaa.tacacs_groups.name, null)
+    vrf                                                     = try(e.vrf, local.defaults.iosxe.configuration.aaa.tacacs_groups.vrf, null)
     ip_tacacs_source_interface_loopback                     = e.source_interface_type == "Loopback" ? e.source_interface_id : try(local.defaults.iosxe.configuration.aaa.tacacs_groups.ip_tacacs_source_interface_loopback, null)
     ip_tacacs_source_interface_vlan                         = e.source_interface_type == "Vlan" ? e.source_interface_id : try(local.defaults.iosxe.configuration.aaa.tacacs_groups.ip_tacacs_source_interface_vlan, null)
     ip_tacacs_source_interface_gigabit_ethernet             = e.source_interface_type == "GigabitEthernet" ? e.source_interface_id : try(local.defaults.iosxe.configuration.aaa.tacacs_groups.ip_tacacs_source_interface_gigabit_ethernet, null)
