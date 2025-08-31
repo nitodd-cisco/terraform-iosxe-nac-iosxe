@@ -74,12 +74,12 @@ locals {
           destination_port_lesser_than  = try(e.destination.port_type, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.port_type, null) == "lesser_than" ? try(e.destination.port, null) : null
           destination_port_range_from   = try(e.destination.port_type, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.port_type, null) == "range" ? try(e.destination.port_range_from, null) : null
           destination_port_range_to     = try(e.destination.port_type, local.defaults.iosxe.configuration.access_lists.extended.entries.destination.port_type, null) == "range" ? try(e.destination.port_range_to, null) : null
-          ack                           = try(e.ack, local.defaults.iosxe.configuration.access_lists.extended.entries.ack, null)
-          fin                           = try(e.fin, local.defaults.iosxe.configuration.access_lists.extended.entries.fin, null)
-          psh                           = try(e.psh, local.defaults.iosxe.configuration.access_lists.extended.entries.psh, null)
-          rst                           = try(e.rst, local.defaults.iosxe.configuration.access_lists.extended.entries.rst, null)
-          syn                           = try(e.syn, local.defaults.iosxe.configuration.access_lists.extended.entries.syn, null)
-          urg                           = try(e.urg, local.defaults.iosxe.configuration.access_lists.extended.entries.urg, null)
+          ack                           = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.extended.entries.tcp_flags, []), "ack") ? true : try(e.ack, local.defaults.iosxe.configuration.access_lists.extended.entries.ack, null)
+          fin                           = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.extended.entries.tcp_flags, []), "fin") ? true : try(e.fin, local.defaults.iosxe.configuration.access_lists.extended.entries.fin, null)
+          psh                           = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.extended.entries.tcp_flags, []), "psh") ? true : try(e.psh, local.defaults.iosxe.configuration.access_lists.extended.entries.psh, null)
+          rst                           = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.extended.entries.tcp_flags, []), "rst") ? true : try(e.rst, local.defaults.iosxe.configuration.access_lists.extended.entries.rst, null)
+          syn                           = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.extended.entries.tcp_flags, []), "syn") ? true : try(e.syn, local.defaults.iosxe.configuration.access_lists.extended.entries.syn, null)
+          urg                           = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.extended.entries.tcp_flags, []), "urg") ? true : try(e.urg, local.defaults.iosxe.configuration.access_lists.extended.entries.urg, null)
           established                   = try(e.established, local.defaults.iosxe.configuration.access_lists.extended.entries.established, null)
           dscp                          = try(e.dscp, local.defaults.iosxe.configuration.access_lists.extended.entries.dscp, null)
           fragments                     = try(e.fragments, local.defaults.iosxe.configuration.access_lists.extended.entries.fragments, null)
@@ -122,6 +122,71 @@ locals {
 
 resource "iosxe_as_path_access_list" "as_path_access_list" {
   for_each = { for e in local.as_path_access_lists : e.key => e }
+  device   = each.value.device
+
+  name    = each.value.name
+  entries = each.value.entries
+}
+
+locals {
+  role_based_access_lists = flatten([
+    for device in local.devices : [
+      for acl in try(local.device_config[device.name].access_lists.role_based, []) : {
+        key    = format("%s/%s", device.name, acl.name)
+        device = device.name
+        name   = try(acl.name, null)
+        entries = try(length(acl.entries) == 0, true) ? null : [for e in acl.entries : {
+          sequence           = try(e.sequence, local.defaults.iosxe.configuration.access_lists.role_based.entries.sequence, null)
+          remark             = try(e.remark, local.defaults.iosxe.configuration.access_lists.role_based.entries.remark, null)
+          ace_rule_action    = try(e.action, local.defaults.iosxe.configuration.access_lists.role_based.entries.action, null)
+          ace_rule_protocol  = try(e.protocol, local.defaults.iosxe.configuration.access_lists.role_based.entries.protocol, null)
+          ack                = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.role_based.entries.tcp_flags, []), "ack") ? true : try(e.ack, local.defaults.iosxe.configuration.access_lists.role_based.entries.ack, null)
+          fin                = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.role_based.entries.tcp_flags, []), "fin") ? true : try(e.fin, local.defaults.iosxe.configuration.access_lists.role_based.entries.fin, null)
+          psh                = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.role_based.entries.tcp_flags, []), "psh") ? true : try(e.psh, local.defaults.iosxe.configuration.access_lists.role_based.entries.psh, null)
+          rst                = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.role_based.entries.tcp_flags, []), "rst") ? true : try(e.rst, local.defaults.iosxe.configuration.access_lists.role_based.entries.rst, null)
+          syn                = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.role_based.entries.tcp_flags, []), "syn") ? true : try(e.syn, local.defaults.iosxe.configuration.access_lists.role_based.entries.syn, null)
+          urg                = contains(try(e.tcp_flags, local.defaults.iosxe.configuration.access_lists.role_based.entries.tcp_flags, []), "urg") ? true : try(e.urg, local.defaults.iosxe.configuration.access_lists.role_based.entries.urg, null)
+          established        = try(e.established, local.defaults.iosxe.configuration.access_lists.role_based.entries.established, null)
+          fragments          = try(e.fragments, local.defaults.iosxe.configuration.access_lists.role_based.entries.fragments, null)
+          dscp               = try(e.dscp, local.defaults.iosxe.configuration.access_lists.role_based.entries.dscp, null)
+          precedence         = try(e.precedence, local.defaults.iosxe.configuration.access_lists.role_based.entries.precedence, null)
+          tos                = try(e.tos, local.defaults.iosxe.configuration.access_lists.role_based.entries.tos, null)
+          option             = try(e.option, local.defaults.iosxe.configuration.access_lists.role_based.entries.option, null)
+          time_range         = try(e.time_range, local.defaults.iosxe.configuration.access_lists.role_based.entries.time_range, null)
+          log                = try(e.log, local.defaults.iosxe.configuration.access_lists.role_based.entries.log, null)
+          log_input          = try(e.log_input, local.defaults.iosxe.configuration.access_lists.role_based.entries.log_input, null)
+          match_all_plusack  = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "+ack") ? true : null
+          match_all_plusfin  = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "+fin") ? true : null
+          match_all_pluspsh  = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "+psh") ? true : null
+          match_all_plusrst  = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "+rst") ? true : null
+          match_all_plussyn  = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "+syn") ? true : null
+          match_all_plusurg  = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "+urg") ? true : null
+          match_all_minusack = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "-ack") ? true : null
+          match_all_minusfin = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "-fin") ? true : null
+          match_all_minuspsh = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "-psh") ? true : null
+          match_all_minusrst = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "-rst") ? true : null
+          match_all_minussyn = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "-syn") ? true : null
+          match_all_minusurg = contains(try(e.match_all, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_all, []), "-urg") ? true : null
+          match_any_plusack  = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "+ack") ? true : null
+          match_any_plusfin  = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "+fin") ? true : null
+          match_any_pluspsh  = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "+psh") ? true : null
+          match_any_plusrst  = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "+rst") ? true : null
+          match_any_plussyn  = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "+syn") ? true : null
+          match_any_plusurg  = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "+urg") ? true : null
+          match_any_minusack = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "-ack") ? true : null
+          match_any_minusfin = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "-fin") ? true : null
+          match_any_minuspsh = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "-psh") ? true : null
+          match_any_minusrst = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "-rst") ? true : null
+          match_any_minussyn = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "-syn") ? true : null
+          match_any_minusurg = contains(try(e.match_any, local.defaults.iosxe.configuration.access_lists.role_based.entries.match_any, []), "-urg") ? true : null
+        }]
+      }
+    ]
+  ])
+}
+
+resource "iosxe_access_list_role_based" "access_list_role_based" {
+  for_each = { for e in local.role_based_access_lists : e.key => e }
   device   = each.value.device
 
   name    = each.value.name

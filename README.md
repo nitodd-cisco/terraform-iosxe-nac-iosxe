@@ -70,6 +70,7 @@ module "iosxe" {
 | [iosxe_aaa_authentication.aaa_authentication](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.0/docs/resources/aaa_authentication) | resource |
 | [iosxe_aaa_authorization.aaa_authorization](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.0/docs/resources/aaa_authorization) | resource |
 | [iosxe_access_list_extended.access_list_extended](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.0/docs/resources/access_list_extended) | resource |
+| [iosxe_access_list_role_based.access_list_role_based](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.0/docs/resources/access_list_role_based) | resource |
 | [iosxe_access_list_standard.access_list_standard](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.0/docs/resources/access_list_standard) | resource |
 | [iosxe_arp.arp](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.0/docs/resources/arp) | resource |
 | [iosxe_as_path_access_list.as_path_access_list](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.0/docs/resources/as_path_access_list) | resource |
