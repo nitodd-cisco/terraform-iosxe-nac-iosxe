@@ -86,6 +86,11 @@ locals {
             shape_average_burst_size_sustained        = try(action.shape_average_burst_size_sustained, local.defaults.iosxe.configuration.policy.policy_maps.classes.actions.shape_average_burst_size_sustained, null)
             shape_average_ms                          = try(action.shape_average_ms, local.defaults.iosxe.configuration.policy.policy_maps.classes.actions.shape_average_ms, null)
             shape_average_percent                     = try(action.shape_average_percent, local.defaults.iosxe.configuration.policy.policy_maps.classes.actions.shape_average_percent, null)
+            police_target_bitrate_conform_transmit    = try(action.police_target_bitrate_conform_transmit, local.defaults.iosxe.configuration.policy.policy_maps.classes.actions.police_target_bitrate_conform_transmit, null)
+            police_target_bitrate_exceed_transmit     = try(action.police_target_bitrate_exceed_transmit, local.defaults.iosxe.configuration.policy.policy_maps.classes.actions.police_target_bitrate_exceed_transmit, null)
+            police_target_bitrate                     = try(action.police_target_bitrate, local.defaults.iosxe.configuration.policy.policy_maps.classes.actions.police_target_bitrate, null)
+            police_target_bitrate_conform_burst_byte  = try(action.police_target_bitrate_conform_burst_byte, local.defaults.iosxe.configuration.policy.policy_maps.classes.actions.police_target_bitrate_conform_burst_byte, null)
+            police_target_bitrate_excess_burst_byte   = try(action.police_target_bitrate_excess_burst_byte, local.defaults.iosxe.configuration.policy.policy_maps.classes.actions.police_target_bitrate_excess_burst_byte, null)
           }]
         }]
       }
