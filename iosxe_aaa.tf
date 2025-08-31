@@ -83,49 +83,49 @@ resource "iosxe_aaa_accounting" "aaa_accounting" {
     group4_group    = try(e.groups[3], local.defaults.iosxe.configuration.aaa.accounting.commands.groups[3], null)
   }]
   connections = try(length(local.device_config[each.value.name].aaa.accounting.connections) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.accounting.connections : {
-    name                   = try(e.name, local.defaults.iosxe.configuration.aaa.accounting.connections.name, null)
-    default                = try(e.default, local.defaults.iosxe.configuration.aaa.accounting.connections.default, null)
-    none                   = try(e.none, local.defaults.iosxe.configuration.aaa.accounting.connections.none, null)
-    start_stop_broadcast   = try(e.start_stop_broadcast, local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_broadcast, null)
-    start_stop_logger      = try(e.start_stop_group_logger, local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_group_logger, null)
-    start_stop_group1      = try(e.start_stop_groups[0], local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_groups[0], null)
-    start_stop_group2      = try(e.start_stop_groups[1], local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_groups[1], null)
-    start_stop_group3      = try(e.start_stop_groups[2], local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_groups[2], null)
-    start_stop_group4      = try(e.start_stop_groups[3], local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_groups[3], null)
-    stop_only_broadcast    = try(e.stop_only_broadcast, local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_broadcast, null)
-    stop_only_logger       = try(e.stop_only_group_logger, local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_group_logger, null)
-    stop_only_group1       = try(e.stop_only_groups[0], local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_groups[0], null)
-    stop_only_group2       = try(e.stop_only_groups[1], local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_groups[1], null)
-    stop_only_group3       = try(e.stop_only_groups[2], local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_groups[2], null)
-    stop_only_group4       = try(e.stop_only_groups[3], local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_groups[3], null)
-    wait_start_broadcast   = try(e.wait_start_broadcast, local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_broadcast, null)
-    wait_start_logger      = try(e.wait_start_group_logger, local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_group_logger, null)
-    wait_start_group1      = try(e.wait_start_groups[0], local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_groups[0], null)
-    wait_start_group2      = try(e.wait_start_groups[1], local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_groups[1], null)
-    wait_start_group3      = try(e.wait_start_groups[2], local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_groups[2], null)
-    wait_start_group4      = try(e.wait_start_groups[3], local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_groups[3], null)
+    name                 = try(e.name, local.defaults.iosxe.configuration.aaa.accounting.connections.name, null)
+    default              = try(e.default, local.defaults.iosxe.configuration.aaa.accounting.connections.default, null)
+    none                 = try(e.none, local.defaults.iosxe.configuration.aaa.accounting.connections.none, null)
+    start_stop_broadcast = try(e.start_stop_broadcast, local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_broadcast, null)
+    start_stop_logger    = try(e.start_stop_group_logger, local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_group_logger, null)
+    start_stop_group1    = try(e.start_stop_groups[0], local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_groups[0], null)
+    start_stop_group2    = try(e.start_stop_groups[1], local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_groups[1], null)
+    start_stop_group3    = try(e.start_stop_groups[2], local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_groups[2], null)
+    start_stop_group4    = try(e.start_stop_groups[3], local.defaults.iosxe.configuration.aaa.accounting.connections.start_stop_groups[3], null)
+    stop_only_broadcast  = try(e.stop_only_broadcast, local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_broadcast, null)
+    stop_only_logger     = try(e.stop_only_group_logger, local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_group_logger, null)
+    stop_only_group1     = try(e.stop_only_groups[0], local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_groups[0], null)
+    stop_only_group2     = try(e.stop_only_groups[1], local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_groups[1], null)
+    stop_only_group3     = try(e.stop_only_groups[2], local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_groups[2], null)
+    stop_only_group4     = try(e.stop_only_groups[3], local.defaults.iosxe.configuration.aaa.accounting.connections.stop_only_groups[3], null)
+    wait_start_broadcast = try(e.wait_start_broadcast, local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_broadcast, null)
+    wait_start_logger    = try(e.wait_start_group_logger, local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_group_logger, null)
+    wait_start_group1    = try(e.wait_start_groups[0], local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_groups[0], null)
+    wait_start_group2    = try(e.wait_start_groups[1], local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_groups[1], null)
+    wait_start_group3    = try(e.wait_start_groups[2], local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_groups[2], null)
+    wait_start_group4    = try(e.wait_start_groups[3], local.defaults.iosxe.configuration.aaa.accounting.connections.wait_start_groups[3], null)
   }]
   execs = try(length(local.device_config[each.value.name].aaa.accounting.execs) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.accounting.execs : {
-    name                   = try(e.name, local.defaults.iosxe.configuration.aaa.accounting.execs.name, null)
-    none                   = try(e.none, local.defaults.iosxe.configuration.aaa.accounting.execs.none, null)
-    start_stop_broadcast   = try(e.start_stop_broadcast, local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_broadcast, null)
-    start_stop_logger      = try(e.start_stop_group_logger, local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_group_logger, null)
-    start_stop_group1      = try(e.start_stop_groups[0], local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_groups[0], null)
-    start_stop_group2      = try(e.start_stop_groups[1], local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_groups[1], null)
-    start_stop_group3      = try(e.start_stop_groups[2], local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_groups[2], null)
-    start_stop_group4      = try(e.start_stop_groups[3], local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_groups[3], null)
-    stop_only_broadcast    = try(e.stop_only_broadcast, local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_broadcast, null)
-    stop_only_logger       = try(e.stop_only_group_logger, local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_group_logger, null)
-    stop_only_group1       = try(e.stop_only_groups[0], local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_groups[0], null)
-    stop_only_group2       = try(e.stop_only_groups[1], local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_groups[1], null)
-    stop_only_group3       = try(e.stop_only_groups[2], local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_groups[2], null)
-    stop_only_group4       = try(e.stop_only_groups[3], local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_groups[3], null)
-    wait_start_broadcast   = try(e.wait_start_broadcast, local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_broadcast, null)
-    wait_start_logger      = try(e.wait_start_group_logger, local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_group_logger, null)
-    wait_start_group1      = try(e.wait_start_groups[0], local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_groups[0], null)
-    wait_start_group2      = try(e.wait_start_groups[1], local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_groups[1], null)
-    wait_start_group3      = try(e.wait_start_groups[2], local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_groups[2], null)
-    wait_start_group4      = try(e.wait_start_groups[3], local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_groups[3], null)
+    name                 = try(e.name, local.defaults.iosxe.configuration.aaa.accounting.execs.name, null)
+    none                 = try(e.none, local.defaults.iosxe.configuration.aaa.accounting.execs.none, null)
+    start_stop_broadcast = try(e.start_stop_broadcast, local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_broadcast, null)
+    start_stop_logger    = try(e.start_stop_group_logger, local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_group_logger, null)
+    start_stop_group1    = try(e.start_stop_groups[0], local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_groups[0], null)
+    start_stop_group2    = try(e.start_stop_groups[1], local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_groups[1], null)
+    start_stop_group3    = try(e.start_stop_groups[2], local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_groups[2], null)
+    start_stop_group4    = try(e.start_stop_groups[3], local.defaults.iosxe.configuration.aaa.accounting.execs.start_stop_groups[3], null)
+    stop_only_broadcast  = try(e.stop_only_broadcast, local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_broadcast, null)
+    stop_only_logger     = try(e.stop_only_group_logger, local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_group_logger, null)
+    stop_only_group1     = try(e.stop_only_groups[0], local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_groups[0], null)
+    stop_only_group2     = try(e.stop_only_groups[1], local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_groups[1], null)
+    stop_only_group3     = try(e.stop_only_groups[2], local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_groups[2], null)
+    stop_only_group4     = try(e.stop_only_groups[3], local.defaults.iosxe.configuration.aaa.accounting.execs.stop_only_groups[3], null)
+    wait_start_broadcast = try(e.wait_start_broadcast, local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_broadcast, null)
+    wait_start_logger    = try(e.wait_start_group_logger, local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_group_logger, null)
+    wait_start_group1    = try(e.wait_start_groups[0], local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_groups[0], null)
+    wait_start_group2    = try(e.wait_start_groups[1], local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_groups[1], null)
+    wait_start_group3    = try(e.wait_start_groups[2], local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_groups[2], null)
+    wait_start_group4    = try(e.wait_start_groups[3], local.defaults.iosxe.configuration.aaa.accounting.execs.wait_start_groups[3], null)
   }]
   networks = try(length(local.device_config[each.value.name].aaa.accounting.networks) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.accounting.networks : {
     id                = try(e.name, local.defaults.iosxe.configuration.aaa.accounting.networks.name, null)
@@ -195,6 +195,27 @@ resource "iosxe_aaa_authentication" "aaa_authentication" {
   dot1x_default_a3_local = try(local.device_config[each.value.name].aaa.authentication.dot1x_defaults[2], local.defaults.iosxe.configuration.aaa.authentication.dot1x_defaults[2], null) == "local" ? true : false
   dot1x_default_a4_group = try(!contains(["local"], try(local.device_config[each.value.name].aaa.authentication.dot1x_defaults[3], local.defaults.iosxe.configuration.aaa.authentication.dot1x_defaults[3])), false) ? try(local.device_config[each.value.name].aaa.authentication.dot1x_defaults[3], local.defaults.iosxe.configuration.aaa.authentication.dot1x_defaults[3]) : null
   dot1x_default_a4_local = try(local.device_config[each.value.name].aaa.authentication.dot1x_defaults[3], local.defaults.iosxe.configuration.aaa.authentication.dot1x_defaults[3], null) == "local" ? true : false
+
+  enable_default_group1_cache  = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[0].cache, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[0].cache, false) ? try(local.device_config[each.value.name].aaa.authentication.enable_defaults[0].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[0].method, null) : null
+  enable_default_group1_enable = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[0].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[0].method, null) == "enable" ? true : false
+  enable_default_group1_group  = !try(local.device_config[each.value.name].aaa.authentication.enable_defaults[0].cache, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[0].cache, false) && !contains(["enable", "line", "none"], try(local.device_config[each.value.name].aaa.authentication.enable_defaults[0].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[0].method, "")) ? try(local.device_config[each.value.name].aaa.authentication.enable_defaults[0].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[0].method, null) : null
+  enable_default_group1_line   = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[0].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[0].method, null) == "line" ? true : false
+  enable_default_group1_none   = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[0].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[0].method, null) == "none" ? true : false
+  enable_default_group2_cache  = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[1].cache, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[1].cache, false) ? try(local.device_config[each.value.name].aaa.authentication.enable_defaults[1].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[1].method, null) : null
+  enable_default_group2_enable = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[1].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[1].method, null) == "enable" ? true : false
+  enable_default_group2_group  = !try(local.device_config[each.value.name].aaa.authentication.enable_defaults[1].cache, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[1].cache, false) && !contains(["enable", "line", "none"], try(local.device_config[each.value.name].aaa.authentication.enable_defaults[1].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[1].method, "")) ? try(local.device_config[each.value.name].aaa.authentication.enable_defaults[1].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[1].method, null) : null
+  enable_default_group2_line   = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[1].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[1].method, null) == "line" ? true : false
+  enable_default_group2_none   = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[1].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[1].method, null) == "none" ? true : false
+  enable_default_group3_cache  = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[2].cache, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[2].cache, false) ? try(local.device_config[each.value.name].aaa.authentication.enable_defaults[2].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[2].method, null) : null
+  enable_default_group3_enable = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[2].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[2].method, null) == "enable" ? true : false
+  enable_default_group3_group  = !try(local.device_config[each.value.name].aaa.authentication.enable_defaults[2].cache, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[2].cache, false) && !contains(["enable", "line", "none"], try(local.device_config[each.value.name].aaa.authentication.enable_defaults[2].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[2].method, "")) ? try(local.device_config[each.value.name].aaa.authentication.enable_defaults[2].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[2].method, null) : null
+  enable_default_group3_line   = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[2].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[2].method, null) == "line" ? true : false
+  enable_default_group3_none   = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[2].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[2].method, null) == "none" ? true : false
+  enable_default_group4_cache  = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[3].cache, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[3].cache, false) ? try(local.device_config[each.value.name].aaa.authentication.enable_defaults[3].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[3].method, null) : null
+  enable_default_group4_enable = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[3].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[3].method, null) == "enable" ? true : false
+  enable_default_group4_group  = !try(local.device_config[each.value.name].aaa.authentication.enable_defaults[3].cache, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[3].cache, false) && !contains(["enable", "line", "none"], try(local.device_config[each.value.name].aaa.authentication.enable_defaults[3].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[3].method, "")) ? try(local.device_config[each.value.name].aaa.authentication.enable_defaults[3].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[3].method, null) : null
+  enable_default_group4_line   = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[3].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[3].method, null) == "line" ? true : false
+  enable_default_group4_none   = try(local.device_config[each.value.name].aaa.authentication.enable_defaults[3].method, local.defaults.iosxe.configuration.aaa.authentication.enable_defaults[3].method, null) == "none" ? true : false
 
   depends_on = [
     iosxe_aaa.aaa,
