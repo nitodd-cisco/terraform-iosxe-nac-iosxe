@@ -3,6 +3,10 @@ resource "iosxe_aaa" "aaa" {
   device                       = each.value.name
   new_model                    = try(local.device_config[each.value.name].aaa.new_model, local.defaults.iosxe.configuration.aaa.new_model, null)
   session_id                   = try(local.device_config[each.value.name].aaa.session_id, local.defaults.iosxe.configuration.aaa.session_id, null)
+  vrf                          = try(local.device_config[each.value.name].aaa.vrf, local.defaults.iosxe.configuration.aaa.vrf, null)
+  local_authentication_type    = try(local.device_config[each.value.name].aaa.local_authentication_type, local.defaults.iosxe.configuration.aaa.local_authentication_type, null)
+  local_authorization          = try(local.device_config[each.value.name].aaa.local_authorization, local.defaults.iosxe.configuration.aaa.local_authorization, null)
+  local_auth_max_fail_attempts = try(local.device_config[each.value.name].aaa.local_auth_max_fail_attempts, local.defaults.iosxe.configuration.aaa.local_auth_max_fail_attempts, null)
   server_radius_dynamic_author = try(local.device_config[each.value.name].aaa.radius_dynamic_author, local.defaults.iosxe.configuration.aaa.radius_dynamic_author, null)
   server_radius_dynamic_author_clients = try(length(local.device_config[each.value.name].aaa.radius_dynamic_author_clients) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.radius_dynamic_author_clients : {
     ip              = try(e.ip, local.defaults.iosxe.configuration.aaa.radius_dynamic_author_clients.ip, null)
