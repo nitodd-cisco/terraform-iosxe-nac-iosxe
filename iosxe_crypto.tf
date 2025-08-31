@@ -63,6 +63,7 @@ resource "iosxe_crypto_ikev2" "crypto_ikev2" {
   dpd_query          = try(local.device_config[each.value.name].crypto.ikev2.dpd_query, local.defaults.iosxe.configuration.crypto.ikev2.dpd_query, null)
   dpd_retry_interval = try(local.device_config[each.value.name].crypto.ikev2.dpd_retry, local.defaults.iosxe.configuration.crypto.ikev2.dpd_retry, null)
   nat_keepalive      = try(local.device_config[each.value.name].crypto.ikev2.nat_keepalive, local.defaults.iosxe.configuration.crypto.ikev2.nat_keepalive, null)
+  http_url_cert      = try(local.device_config[each.value.name].crypto.ikev2.http_url_certificate_lookup, local.defaults.iosxe.configuration.crypto.ikev2.http_url_certificate_lookup, null)
 }
 
 locals {
