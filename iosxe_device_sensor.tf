@@ -24,6 +24,15 @@ resource "iosxe_device_sensor" "device_sensor" {
     tlv_name_system_name         = try(lldp_filter.tlv_name_system_name, local.defaults.iosxe.configuration.device_sensor.filter_lists_lldp.tlv_name_system_name, null)
   }]
 
+  filter_lists_cdp = try(length(local.device_config[each.value.name].device_sensor.cdp_filter_lists) == 0, true) ? null : [for cdp_filter in local.device_config[each.value.name].device_sensor.cdp_filter_lists : {
+    name                       = try(cdp_filter.name, local.defaults.iosxe.configuration.device_sensor.filter_lists_cdp.name, null)
+    tlv_name_device_name       = try(cdp_filter.tlv_name_device_name, local.defaults.iosxe.configuration.device_sensor.filter_lists_cdp.tlv_name_device_name, null)
+    tlv_name_address_type      = try(cdp_filter.tlv_name_address_type, local.defaults.iosxe.configuration.device_sensor.filter_lists_cdp.tlv_name_address_type, null)
+    tlv_name_port_id_type      = try(cdp_filter.tlv_name_port_id_type, local.defaults.iosxe.configuration.device_sensor.filter_lists_cdp.tlv_name_port_id_type, null)
+    tlv_name_capabilities_type = try(cdp_filter.tlv_name_capabilities_type, local.defaults.iosxe.configuration.device_sensor.filter_lists_cdp.tlv_name_capabilities_type, null)
+    tlv_name_platform_type     = try(cdp_filter.tlv_name_platform_type, local.defaults.iosxe.configuration.device_sensor.filter_lists_cdp.tlv_name_platform_type, null)
+  }]
+
   filter_spec_cdp_includes = try(length(local.device_config[each.value.name].device_sensor.filter_spec_cdp_includes) == 0, true) ? null : [for cdp_include in local.device_config[each.value.name].device_sensor.filter_spec_cdp_includes : {
     name = try(cdp_include, null)
   }]
