@@ -226,28 +226,71 @@ resource "iosxe_aaa_authorization" "aaa_authorization" {
   for_each = { for device in local.devices : device.name => device if try(local.device_config[device.name].aaa.authorization, null) != null || try(local.defaults.iosxe.configuration.aaa.authorization, null) != null }
   device   = each.value.name
 
+  config_commands = try(local.device_config[each.value.name].aaa.authorization.config_commands, local.defaults.iosxe.configuration.aaa.authorization.config_commands, null)
+
+  config_lists = try(length(local.device_config[each.value.name].aaa.authorization.config_lists) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.authorization.config_lists : {
+    name          = try(e.name, local.defaults.iosxe.configuration.aaa.authorization.config_lists.name, null)
+    group1_cache  = try(e.groups[0].cache, local.defaults.iosxe.configuration.aaa.authorization.config_lists.groups[0].cache, false) && try(e.groups[0].method, local.defaults.iosxe.configuration.aaa.authorization.config_lists.groups[0].method, null) != null ? try(e.groups[0].method, local.defaults.iosxe.configuration.aaa.authorization.config_lists.groups[0].method, null) : null
+    group1_group  = !try(e.groups[0].cache, local.defaults.iosxe.configuration.aaa.authorization.config_lists.groups[0].cache, false) && !contains(["radius", "tacacs"], try(e.groups[0].method, local.defaults.iosxe.configuration.aaa.authorization.config_lists.groups[0].method, "")) ? try(e.groups[0].method, local.defaults.iosxe.configuration.aaa.authorization.config_lists.groups[0].method, null) : null
+    group1_radius = try(e.groups[0].method, local.defaults.iosxe.configuration.aaa.authorization.config_lists.groups[0].method, null) == "radius" ? true : false
+    group1_tacacs = try(e.groups[0].method, local.defaults.iosxe.configuration.aaa.authorization.config_lists.groups[0].method, null) == "tacacs" ? true : false
+  }]
+
+  commands = try(length(local.device_config[each.value.name].aaa.authorization.commands) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.authorization.commands : {
+    level               = try(e.level, local.defaults.iosxe.configuration.aaa.authorization.commands.level, null)
+    list_name           = try(e.list_name, local.defaults.iosxe.configuration.aaa.authorization.commands.list_name, null)
+    a1_local            = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[0], null) == "local" ? true : false
+    a1_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated", "none"], try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[0])), false) ? try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[0]) : null
+    a1_radius           = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[0], null) == "radius" ? true : false
+    a1_tacacs           = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[0], null) == "tacacs" ? true : false
+    a1_if_authenticated = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[0], null) == "if_authenticated" ? true : false
+    a1_none             = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[0], null) == "none" ? true : false
+    a2_local            = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[1], null) == "local" ? true : false
+    a2_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated", "none"], try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[1])), false) ? try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[1]) : null
+    a2_radius           = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[1], null) == "radius" ? true : false
+    a2_tacacs           = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[1], null) == "tacacs" ? true : false
+    a2_if_authenticated = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[1], null) == "if_authenticated" ? true : false
+    a2_none             = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[1], null) == "none" ? true : false
+    a3_local            = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[2], null) == "local" ? true : false
+    a3_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated", "none"], try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[2])), false) ? try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[2]) : null
+    a3_radius           = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[2], null) == "radius" ? true : false
+    a3_tacacs           = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[2], null) == "tacacs" ? true : false
+    a3_if_authenticated = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[2], null) == "if_authenticated" ? true : false
+    a3_none             = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[2], null) == "none" ? true : false
+    a4_local            = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[3], null) == "local" ? true : false
+    a4_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated", "none"], try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[3])), false) ? try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[3]) : null
+    a4_radius           = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[3], null) == "radius" ? true : false
+    a4_tacacs           = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[3], null) == "tacacs" ? true : false
+    a4_if_authenticated = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[3], null) == "if_authenticated" ? true : false
+    a4_none             = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.commands.methods[3], null) == "none" ? true : false
+  }]
+
   execs = try(length(local.device_config[each.value.name].aaa.authorization.execs) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.authorization.execs : {
     name                = try(e.name, local.defaults.iosxe.configuration.aaa.authorization.execs.name, null)
     a1_local            = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0], null) == "local" ? true : false
-    a1_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated"], try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0])), false) ? try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0]) : null
-    a2_local            = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1], null) == "local" ? true : false
-    a2_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated"], try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1])), false) ? try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1]) : null
-    a3_local            = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2], null) == "local" ? true : false
-    a3_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated"], try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2])), false) ? try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2]) : null
-    a4_local            = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3], null) == "local" ? true : false
-    a4_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated"], try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3])), false) ? try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3]) : null
+    a1_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated", "none"], try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0])), false) ? try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0]) : null
     a1_radius           = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0], null) == "radius" ? true : false
     a1_tacacs           = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0], null) == "tacacs" ? true : false
     a1_if_authenticated = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0], null) == "if_authenticated" ? true : false
+    a1_none             = try(e.methods[0], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[0], null) == "none" ? true : false
+    a2_local            = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1], null) == "local" ? true : false
+    a2_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated", "none"], try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1])), false) ? try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1]) : null
     a2_radius           = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1], null) == "radius" ? true : false
     a2_tacacs           = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1], null) == "tacacs" ? true : false
     a2_if_authenticated = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1], null) == "if_authenticated" ? true : false
+    a2_none             = try(e.methods[1], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[1], null) == "none" ? true : false
+    a3_local            = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2], null) == "local" ? true : false
+    a3_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated", "none"], try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2])), false) ? try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2]) : null
     a3_radius           = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2], null) == "radius" ? true : false
     a3_tacacs           = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2], null) == "tacacs" ? true : false
     a3_if_authenticated = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2], null) == "if_authenticated" ? true : false
+    a3_none             = try(e.methods[2], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[2], null) == "none" ? true : false
+    a4_local            = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3], null) == "local" ? true : false
+    a4_group            = try(!contains(["local", "radius", "tacacs", "if_authenticated", "none"], try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3])), false) ? try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3]) : null
     a4_radius           = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3], null) == "radius" ? true : false
     a4_tacacs           = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3], null) == "tacacs" ? true : false
     a4_if_authenticated = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3], null) == "if_authenticated" ? true : false
+    a4_none             = try(e.methods[3], local.defaults.iosxe.configuration.aaa.authorization.execs.methods[3], null) == "none" ? true : false
   }]
 
   networks = try(length(local.device_config[each.value.name].aaa.authorization.networks) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.authorization.networks : {
