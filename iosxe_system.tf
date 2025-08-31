@@ -148,6 +148,34 @@ resource "iosxe_system" "system" {
     }
   ]
 
+  ip_hosts = try(length([for host in local.device_config[each.value.name].system.ip_hosts : host if try(host.vrf, null) == null]) == 0, true) ? null : [
+    for host in local.device_config[each.value.name].system.ip_hosts : {
+      name = try(host.name, local.defaults.iosxe.configuration.system.ip_hosts.name, null)
+      ips  = try(host.ips, local.defaults.iosxe.configuration.system.ip_hosts.ips, null)
+    } if try(host.vrf, null) == null
+  ]
+
+  ip_hosts_vrf = try(length([for host in local.device_config[each.value.name].system.ip_hosts : host if try(host.vrf, null) != null]) == 0, true) ? null : [
+    for vrf in distinct([for host in local.device_config[each.value.name].system.ip_hosts : host.vrf if try(host.vrf, null) != null]) : {
+      vrf = vrf
+      hosts = [
+        for host in local.device_config[each.value.name].system.ip_hosts : {
+          name = try(host.name, local.defaults.iosxe.configuration.system.ip_hosts.name, null)
+          ips  = try(host.ips, local.defaults.iosxe.configuration.system.ip_hosts.ips, null)
+        } if try(host.vrf, null) == vrf
+      ]
+    }
+  ]
+
+  subscriber_templating                              = try(local.device_config[each.value.name].system.subscriber_templating, local.defaults.iosxe.configuration.system.subscriber_templating, null)
+  call_home_contact_email                            = try(local.device_config[each.value.name].system.call_home_contact_email, local.defaults.iosxe.configuration.system.call_home_contact_email, null)
+  call_home_cisco_tac_1_profile_active               = try(local.device_config[each.value.name].system.call_home_cisco_tac_1_profile_active, local.defaults.iosxe.configuration.system.call_home_cisco_tac_1_profile_active, null)
+  call_home_cisco_tac_1_destination_transport_method = try(local.device_config[each.value.name].system.call_home_cisco_tac_1_destination_transport_method, local.defaults.iosxe.configuration.system.call_home_cisco_tac_1_destination_transport_method, null)
+  ip_ftp_passive                                     = try(local.device_config[each.value.name].system.ip_ftp_passive, local.defaults.iosxe.configuration.system.ip_ftp_passive, null)
+  tftp_source_interface_loopback                     = try(local.device_config[each.value.name].system.tftp_source_interface_type, local.defaults.iosxe.configuration.system.tftp_source_interface_type, null) == "Loopback" ? try(local.device_config[each.value.name].system.tftp_source_interface_id, local.defaults.iosxe.configuration.system.tftp_source_interface_id, null) : null
+  tftp_source_interface_gigabit_ethernet             = try(local.device_config[each.value.name].system.tftp_source_interface_type, local.defaults.iosxe.configuration.system.tftp_source_interface_type, null) == "GigabitEthernet" ? try(local.device_config[each.value.name].system.tftp_source_interface_id, local.defaults.iosxe.configuration.system.tftp_source_interface_id, null) : null
+  multilink_ppp_bundle_name                          = try(local.device_config[each.value.name].system.multilink_ppp_bundle_name, local.defaults.iosxe.configuration.system.multilink_ppp_bundle_name, null)
+
   depends_on = [
     iosxe_vrf.vrf,
     iosxe_interface_ethernet.ethernet,
