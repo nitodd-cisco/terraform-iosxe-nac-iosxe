@@ -1,12 +1,12 @@
 resource "iosxe_aaa" "aaa" {
-  for_each                     = { for device in local.devices : device.name => device if try(local.device_config[device.name].aaa, null) != null || try(local.defaults.iosxe.configuration.aaa, null) != null }
-  device                       = each.value.name
-  new_model                    = try(local.device_config[each.value.name].aaa.new_model, local.defaults.iosxe.configuration.aaa.new_model, null)
-  session_id                   = try(local.device_config[each.value.name].aaa.session_id, local.defaults.iosxe.configuration.aaa.session_id, null)
-  local_authentication_type            = try(local.device_config[each.value.name].aaa.local_authentication_type, local.defaults.iosxe.configuration.aaa.local_authentication_type, null)
-  local_authorization                   = try(local.device_config[each.value.name].aaa.local_authorization, local.defaults.iosxe.configuration.aaa.local_authorization, null)
+  for_each                               = { for device in local.devices : device.name => device if try(local.device_config[device.name].aaa, null) != null || try(local.defaults.iosxe.configuration.aaa, null) != null }
+  device                                 = each.value.name
+  new_model                              = try(local.device_config[each.value.name].aaa.new_model, local.defaults.iosxe.configuration.aaa.new_model, null)
+  session_id                             = try(local.device_config[each.value.name].aaa.session_id, local.defaults.iosxe.configuration.aaa.session_id, null)
+  local_authentication_type              = try(local.device_config[each.value.name].aaa.local_authentication_type, local.defaults.iosxe.configuration.aaa.local_authentication_type, null)
+  local_authorization                    = try(local.device_config[each.value.name].aaa.local_authorization, local.defaults.iosxe.configuration.aaa.local_authorization, null)
   local_authentication_max_fail_attempts = try(local.device_config[each.value.name].aaa.local_authentication_max_fail_attempts, local.defaults.iosxe.configuration.aaa.local_authentication_max_fail_attempts, null)
-  server_radius_dynamic_author = try(local.device_config[each.value.name].aaa.radius_dynamic_author, local.defaults.iosxe.configuration.aaa.radius_dynamic_author, null)
+  server_radius_dynamic_author           = try(local.device_config[each.value.name].aaa.radius_dynamic_author, local.defaults.iosxe.configuration.aaa.radius_dynamic_author, null)
   server_radius_dynamic_author_clients = try(length(local.device_config[each.value.name].aaa.radius_dynamic_author_clients) == 0, true) ? null : [for e in local.device_config[each.value.name].aaa.radius_dynamic_author_clients : {
     ip              = try(e.ip, local.defaults.iosxe.configuration.aaa.radius_dynamic_author_clients.ip, null)
     server_key_type = try(e.key_type, local.defaults.iosxe.configuration.aaa.radius_dynamic_author_clients.server_key_type, null)
