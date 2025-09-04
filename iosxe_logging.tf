@@ -5,6 +5,7 @@ resource "iosxe_logging" "logging" {
   monitor_severity  = try(local.device_config[each.value.name].logging.monitor_severity, local.defaults.iosxe.configuration.logging.monitor_severity, null)
   buffered_size     = try(local.device_config[each.value.name].logging.buffered_size, local.defaults.iosxe.configuration.logging.buffered_size, null)
   buffered_severity = try(local.device_config[each.value.name].logging.buffered_severity, local.defaults.iosxe.configuration.logging.buffered_severity, null)
+  console           = try(local.device_config[each.value.name].logging.console, local.defaults.iosxe.configuration.logging.console, null)
   console_severity  = try(local.device_config[each.value.name].logging.console_severity, local.defaults.iosxe.configuration.logging.console_severity, null)
   facility          = try(local.device_config[each.value.name].logging.facility, local.defaults.iosxe.configuration.logging.facility, null)
   history_size      = try(local.device_config[each.value.name].logging.history_size, local.defaults.iosxe.configuration.logging.history_size, null)
@@ -131,7 +132,7 @@ resource "iosxe_logging" "logging" {
       port_number = t
     }]
     transport_tls_ports = [for l in try(host.transport_tls_ports, []) : {
-      port_number = try(l.port, local.defaults.iosxe.configuration.logging.hosts.transport_tls_port._port, null)
+      port_number = try(l.port, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.port, null)
       profile     = try(l.profile, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.profile, null)
     }]
     } if can(regex(":", tostring(try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, "")))) == true && try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null) != null && (
