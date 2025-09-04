@@ -21,6 +21,7 @@ resource "iosxe_service" "service" {
   timestamps_log_datetime_year            = try(local.device_config[each.value.name].service.timestamps.log_datetime_year, local.defaults.iosxe.configuration.service.timestamps.log_datetime_year, null)
   timestamps_log_uptime                   = try(local.device_config[each.value.name].service.timestamps.log_uptime, local.defaults.iosxe.configuration.service.timestamps.log_uptime, null)
   dhcp                                    = try(local.device_config[each.value.name].service.dhcp, local.defaults.iosxe.configuration.service.dhcp, null)
+  dhcp_config                             = try(local.device_config[each.value.name].service.dhcp_config, local.defaults.iosxe.configuration.service.dhcp_config, null)
   tcp_keepalives_in                       = try(local.device_config[each.value.name].service.tcp_keepalives_in, local.defaults.iosxe.configuration.service.tcp_keepalives_in, null)
   tcp_keepalives_out                      = try(local.device_config[each.value.name].service.tcp_keepalives_out, local.defaults.iosxe.configuration.service.tcp_keepalives_out, null)
   compress_config                         = try(local.device_config[each.value.name].service.compress_config, local.defaults.iosxe.configuration.service.compress_config, null)
