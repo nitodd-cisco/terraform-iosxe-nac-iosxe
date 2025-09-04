@@ -3,8 +3,11 @@ resource "iosxe_dot1x" "dot1x" {
   device   = each.value.name
 
   auth_fail_eapol                 = try(local.device_config[each.value.name].dot1x.auth_fail_eapol, local.defaults.iosxe.configuration.dot1x.auth_fail_eapol, null)
+  critical_eapol                  = try(local.device_config[each.value.name].dot1x.critical_eapol, local.defaults.iosxe.configuration.dot1x.critical_eapol, null)
+  critical_eapol_block            = try(local.device_config[each.value.name].dot1x.critical_eapol_block, local.defaults.iosxe.configuration.dot1x.critical_eapol_block, null)
   critical_eapol_config_block     = try(local.device_config[each.value.name].dot1x.critical_eapol_config_block, local.defaults.iosxe.configuration.dot1x.critical_eapol_config_block, null)
   critical_recovery_delay         = try(local.device_config[each.value.name].dot1x.critical_recovery_delay, local.defaults.iosxe.configuration.dot1x.critical_recovery_delay, null)
+  guest_vlan_supplicant           = try(local.device_config[each.value.name].dot1x.guest_vlan_supplicant, local.defaults.iosxe.configuration.dot1x.guest_vlan_supplicant, null)
   test_timeout                    = try(local.device_config[each.value.name].dot1x.test_timeout, local.defaults.iosxe.configuration.dot1x.test_timeout, null)
   logging_verbose                 = try(local.device_config[each.value.name].dot1x.logging_verbose, local.defaults.iosxe.configuration.dot1x.logging_verbose, null)
   supplicant_controlled_transient = try(local.device_config[each.value.name].dot1x.supplicant_controlled_transient, local.defaults.iosxe.configuration.dot1x.supplicant_controlled_transient, null)
