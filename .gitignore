@@ -1,4 +1,5 @@
 *.log
+logs
 .terraform
 .terraform.lock.hcl
 terraform.tfstate

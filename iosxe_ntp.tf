@@ -36,6 +36,9 @@ resource "iosxe_ntp" "ntp" {
     key        = try(e.key, local.defaults.iosxe.configuration.ntp.ntp_servers.key, null)
     prefer     = try(e.prefer, local.defaults.iosxe.configuration.ntp.ntp_servers.prefer, null)
     version    = try(e.version, local.defaults.iosxe.configuration.ntp.ntp_servers.version, null)
+    burst      = try(e.burst, local.defaults.iosxe.configuration.ntp.ntp_servers.burst, null)
+    iburst     = try(e.iburst, local.defaults.iosxe.configuration.ntp.ntp_servers.iburst, null)
+    periodic   = try(e.periodic, local.defaults.iosxe.configuration.ntp.ntp_servers.periodic, null)
   } if try(e.vrf, null) == null]
   server_vrfs = try(length(distinct([for s in try(local.device_config[each.value.name].ntp.servers, []) : s.vrf if try(s.vrf, null) != null])) == 0, true) ? null : [for vrf_name in distinct([for s in local.device_config[each.value.name].ntp.servers : s.vrf if try(s.vrf, null) != null]) : {
     name = vrf_name
@@ -44,6 +47,9 @@ resource "iosxe_ntp" "ntp" {
       key        = try(s.key, local.defaults.iosxe.configuration.ntp.ntp_servers.key, null)
       prefer     = try(s.prefer, local.defaults.iosxe.configuration.ntp.ntp_servers.prefer, null)
       version    = try(s.version, local.defaults.iosxe.configuration.ntp.ntp_servers.version, null)
+      burst      = try(s.burst, local.defaults.iosxe.configuration.ntp.ntp_servers.burst, null)
+      iburst     = try(s.iburst, local.defaults.iosxe.configuration.ntp.ntp_servers.iburst, null)
+      periodic   = try(s.periodic, local.defaults.iosxe.configuration.ntp.ntp_servers.periodic, null)
     } if try(s.vrf, null) == vrf_name]
   }]
   peers = try(length(local.device_config[each.value.name].ntp.peers) == 0, true) ? null : [for e in local.device_config[each.value.name].ntp.peers : {
