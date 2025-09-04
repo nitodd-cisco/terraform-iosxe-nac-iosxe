@@ -176,6 +176,26 @@ resource "iosxe_system" "system" {
   tftp_source_interface_gigabit_ethernet             = try(local.device_config[each.value.name].system.tftp_source_interface_type, local.defaults.iosxe.configuration.system.tftp_source_interface_type, null) == "GigabitEthernet" ? try(local.device_config[each.value.name].system.tftp_source_interface_id, local.defaults.iosxe.configuration.system.tftp_source_interface_id, null) : null
   multilink_ppp_bundle_name                          = try(local.device_config[each.value.name].system.multilink_ppp_bundle_name, local.defaults.iosxe.configuration.system.multilink_ppp_bundle_name, null)
 
+  ip_nbar_classification_dns_classify_by_domain = try(local.device_config[each.value.name].system.ip_nbar_classification_dns_classify_by_domain, local.defaults.iosxe.configuration.system.ip_nbar_classification_dns_classify_by_domain, null)
+  ip_multicast_route_limit                      = try(local.device_config[each.value.name].system.ip_multicast_route_limit, local.defaults.iosxe.configuration.system.ip_multicast_route_limit, null)
+  security_passwords_min_length                 = try(local.device_config[each.value.name].system.security_passwords_min_length, local.defaults.iosxe.configuration.system.security_passwords_min_length, null)
+  ip_domain_list_names                          = try(local.device_config[each.value.name].system.ip_domain_list_names, local.defaults.iosxe.configuration.system.ip_domain_list_names, null)
+  ip_domain_list_vrf_domain                     = try(local.device_config[each.value.name].system.ip_domain_list_vrf_domain, local.defaults.iosxe.configuration.system.ip_domain_list_vrf_domain, null)
+  ip_domain_list_vrf                            = try(local.device_config[each.value.name].system.ip_domain_list_vrf, local.defaults.iosxe.configuration.system.ip_domain_list_vrf, null)
+  ethernet_cfm_alarm_config_delay               = try(local.device_config[each.value.name].system.ethernet_cfm_alarm_config_delay, local.defaults.iosxe.configuration.system.ethernet_cfm_alarm_config_delay, null)
+  ethernet_cfm_alarm_config_reset               = try(local.device_config[each.value.name].system.ethernet_cfm_alarm_config_reset, local.defaults.iosxe.configuration.system.ethernet_cfm_alarm_config_reset, null)
+
+  standby_redirects                = try(local.device_config[each.value.name].system.standby_redirects, local.defaults.iosxe.configuration.system.standby_redirects, null) == "none" ? true : null
+  standby_redirects_enable_disable = contains(["enable", "disable"], try(local.device_config[each.value.name].system.standby_redirects, local.defaults.iosxe.configuration.system.standby_redirects, "")) ? try(local.device_config[each.value.name].system.standby_redirects, local.defaults.iosxe.configuration.system.standby_redirects, null) : null
+
+  track_objects = try(length(local.device_config[each.value.name].system.track_objects) == 0, true) ? null : [
+    for track_obj in local.device_config[each.value.name].system.track_objects : {
+      number              = try(track_obj.number, local.defaults.iosxe.configuration.system.track_objects.number, null)
+      ip_sla_number       = try(track_obj.ip_sla_number, local.defaults.iosxe.configuration.system.track_objects.ip_sla_number, null)
+      ip_sla_reachability = try(track_obj.ip_sla_reachability, local.defaults.iosxe.configuration.system.track_objects.ip_sla_reachability, null)
+    }
+  ]
+
   depends_on = [
     iosxe_vrf.vrf,
     iosxe_interface_ethernet.ethernet,
