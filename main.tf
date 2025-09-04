@@ -128,6 +128,7 @@ resource "iosxe_cli" "cli" {
     iosxe_logging.logging,
     iosxe_mdt_subscription.mdt_subscription,
     iosxe_msdp.msdp,
+    iosxe_nat.nat,
     iosxe_ntp.ntp,
     iosxe_ospf.ospf,
     iosxe_ospf_vrf.ospf_vrf,
