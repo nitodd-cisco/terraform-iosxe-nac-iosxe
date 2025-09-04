@@ -141,6 +141,7 @@ resource "iosxe_cli" "cli" {
     iosxe_route_map.route_map,
     iosxe_service.service,
     iosxe_service_template.service_template,
+    iosxe_sla.sla,
     iosxe_snmp_server.snmp_server,
     iosxe_spanning_tree.spanning_tree,
     iosxe_static_route.static_route,

@@ -161,6 +161,7 @@ module "iosxe" {
 | [iosxe_save_config.save_config](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/save_config) | resource |
 | [iosxe_service.service](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/service) | resource |
 | [iosxe_service_template.service_template](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/service_template) | resource |
+| [iosxe_sla.sla](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/sla) | resource |
 | [iosxe_snmp_server.snmp_server](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/snmp_server) | resource |
 | [iosxe_spanning_tree.spanning_tree](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/spanning_tree) | resource |
 | [iosxe_static_route.static_route](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/static_route) | resource |

@@ -206,3 +206,34 @@ resource "iosxe_system" "system" {
     iosxe_policy_map.policy_map
   ]
 }
+
+resource "iosxe_sla" "sla" {
+  for_each = { for device in local.devices : device.name => device if try(local.device_config[device.name].system.ip_sla, null) != null || try(local.defaults.iosxe.configuration.system.ip_sla, null) != null }
+  device   = each.value.name
+
+  entries = try(length(local.device_config[each.value.name].system.ip_sla.entries) == 0, true) ? null : [
+    for entry in local.device_config[each.value.name].system.ip_sla.entries : {
+      number                = try(entry.number, local.defaults.iosxe.configuration.system.ip_sla.entries.number, null)
+      icmp_echo_destination = try(entry.icmp_echo_destination, local.defaults.iosxe.configuration.system.ip_sla.entries.icmp_echo_destination, null)
+      icmp_echo_source_ip   = try(entry.icmp_echo_source_ip, local.defaults.iosxe.configuration.system.ip_sla.entries.icmp_echo_source_ip, null)
+    }
+  ]
+
+  schedules = try(length(local.device_config[each.value.name].system.ip_sla.schedules) == 0, true) ? null : [
+    for schedule in local.device_config[each.value.name].system.ip_sla.schedules : {
+      entry_number   = try(schedule.entry_number, local.defaults.iosxe.configuration.system.ip_sla.schedules.entry_number, null)
+      life           = try(schedule.life, local.defaults.iosxe.configuration.system.ip_sla.schedules.life, null)
+      start_time_now = try(schedule.start_time_now, local.defaults.iosxe.configuration.system.ip_sla.schedules.start_time_now, null)
+    }
+  ]
+
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_interface_ethernet.ethernet,
+    iosxe_interface_loopback.loopback,
+    iosxe_interface_vlan.vlan,
+    iosxe_interface_port_channel.port_channel,
+    iosxe_interface_port_channel_subinterface.port_channel_subinterface,
+    iosxe_policy_map.policy_map
+  ]
+}
