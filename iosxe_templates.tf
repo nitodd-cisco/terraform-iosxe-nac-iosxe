@@ -34,40 +34,51 @@ locals {
         switchport_voice_vlan                                    = try(template.switchport.voice_vlan, local.defaults.iosxe.configuration.templates.switchport.voice_vlan, null)
         switchport_private_vlan_host_association_primary_range   = try(template.switchport.private_vlan_host_association_primary_range, local.defaults.iosxe.configuration.templates.switchport.private_vlan_host_association_primary_range, null)
         switchport_private_vlan_host_association_secondary_range = try(template.switchport.private_vlan_host_association_secondary_range, local.defaults.iosxe.configuration.templates.switchport.private_vlan_host_association_secondary_range, null)
-        switchport_trunk_allowed_vlans                           = try(template.switchport.trunk_allowed_vlans, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans, null)
-        switchport_trunk_allowed_vlans_none                      = try(template.switchport.trunk_allowed_vlans_none, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans_none, null)
-        switchport_trunk_allowed_vlans_all                       = try(template.switchport.trunk_allowed_vlans_all, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans_all, null)
-        switchport_trunk_native_vlan_tag                         = try(template.switchport.trunk_native_vlan_tag, local.defaults.iosxe.configuration.templates.switchport.trunk_native_vlan_tag, null)
-        switchport_trunk_native_vlan_vlan_id                     = try(template.switchport.trunk_native_vlan_id, local.defaults.iosxe.configuration.templates.switchport.trunk_native_vlan, null)
-        mab                                                      = try(template.network_access_control.mab, local.defaults.iosxe.configuration.templates.network_access_control.mab, null)
-        mab_eap                                                  = try(template.network_access_control.mab_eap, local.defaults.iosxe.configuration.templates.network_access_control.mab_eap, null)
-        access_session_closed                                    = try(template.network_access_control.access_session_closed, local.defaults.iosxe.configuration.templates.network_access_control.access_session_closed, null)
-        access_session_monitor                                   = try(template.network_access_control.access_session_monitor, local.defaults.iosxe.configuration.templates.network_access_control.access_session_monitor, null)
-        access_session_port_control                              = try(template.network_access_control.access_session_port_control, local.defaults.iosxe.configuration.templates.network_access_control.access_session_port_control, null)
-        access_session_control_direction                         = try(template.network_access_control.access_session_control_direction, local.defaults.iosxe.configuration.templates.network_access_control.access_session_control_direction, null)
-        access_session_host_mode                                 = try(template.network_access_control.access_session_host_mode, local.defaults.iosxe.configuration.templates.network_access_control.access_session_host_mode, null)
-        access_session_interface_template_sticky                 = try(template.network_access_control.access_session_interface_template_sticky, local.defaults.iosxe.configuration.templates.network_access_control.access_session_interface_template_sticky, null)
-        access_session_interface_template_sticky_timer           = try(template.network_access_control.access_session_interface_template_sticky_timer, local.defaults.iosxe.configuration.templates.network_access_control.access_session_interface_template_sticky_timer, null)
-        authentication_periodic                                  = try(template.network_access_control.authentication_periodic, local.defaults.iosxe.configuration.templates.network_access_control.authentication_periodic, null)
-        authentication_timer_reauthenticate_server               = try(template.network_access_control.authentication_timer_reauthenticate_server, local.defaults.iosxe.configuration.templates.network_access_control.authentication_timer_reauthenticate_server, null)
-        authentication_timer_reauthenticate_range                = try(template.network_access_control.authentication_timer_reauthenticate_range, local.defaults.iosxe.configuration.templates.network_access_control.authentication_timer_reauthenticate_range, null)
-        spanning_tree_bpduguard_enable                           = try(template.spanning_tree.bpduguard, local.defaults.iosxe.configuration.templates.spanning_tree.bpduguard, null)
-        spanning_tree_service_policy                             = try(template.spanning_tree.service_policy, local.defaults.iosxe.configuration.templates.spanning_tree.service_policy, null)
-        spanning_tree_portfast                                   = try(template.spanning_tree.portfast, local.defaults.iosxe.configuration.templates.spanning_tree.portfast, null)
-        spanning_tree_portfast_disable                           = try(template.spanning_tree.portfast_disable, local.defaults.iosxe.configuration.templates.spanning_tree.portfast_disable, null)
-        spanning_tree_portfast_edge                              = try(template.spanning_tree.portfast_edge, local.defaults.iosxe.configuration.templates.spanning_tree.portfast_edge, null)
-        spanning_tree_portfast_network                           = try(template.spanning_tree.portfast_network, local.defaults.iosxe.configuration.templates.spanning_tree.portfast_network, null)
-        storm_control_broadcast_level_pps_threshold              = try(template.storm_control.broadcast_level_pps_threshold, local.defaults.iosxe.configuration.templates.storm_control.broadcast_level_pps_threshold, null)
-        storm_control_broadcast_level_bps_threshold              = try(template.storm_control.broadcast_level_bps_threshold, local.defaults.iosxe.configuration.templates.storm_control.broadcast_level_bps_threshold, null)
-        storm_control_broadcast_level_threshold                  = try(template.storm_control.broadcast_level_threshold, local.defaults.iosxe.configuration.templates.storm_control.broadcast_level_threshold, null)
-        storm_control_multicast_level_pps_threshold              = try(template.storm_control.multicast_level_pps_threshold, local.defaults.iosxe.configuration.templates.storm_control.multicast_level_pps_threshold, null)
-        storm_control_multicast_level_bps_threshold              = try(template.storm_control.multicast_level_bps_threshold, local.defaults.iosxe.configuration.templates.storm_control.multicast_level_bps_threshold, null)
-        storm_control_multicast_level_threshold                  = try(template.storm_control.multicast_level_threshold, local.defaults.iosxe.configuration.templates.storm_control.multicast_level_threshold, null)
-        storm_control_action_shutdown                            = try(template.storm_control.action_shutdown, local.defaults.iosxe.configuration.templates.storm_control.action_shutdown, null)
-        storm_control_action_trap                                = try(template.storm_control.action_trap, local.defaults.iosxe.configuration.templates.storm_control.action_trap, null)
-        load_interval                                            = try(template.load_interval, local.defaults.iosxe.configuration.templates.load_interval, null)
-        ip_dhcp_snooping_limit_rate                              = try(template.ipv4.dhcp_snooping_limit_rate, local.defaults.iosxe.configuration.templates.ipv4.dhcp_snooping_limit_rate, null)
-        ip_dhcp_snooping_trust                                   = try(template.ipv4.dhcp_snooping_trust, local.defaults.iosxe.configuration.templates.ipv4.dhcp_snooping_trust, null)
+        switchport_trunk_allowed_vlans = try(
+          provider::utils::normalize_vlans(
+            try(template.switchport.trunk_allowed_vlans, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans, {}),
+            "string"
+          ),
+          null
+        )
+        switchport_trunk_allowed_vlans_none = length(try(
+          provider::utils::normalize_vlans(
+            try(template.switchport.trunk_allowed_vlans, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans, {}),
+            "list"
+          ),
+          []
+        )) == 0 ? true : null
+        switchport_trunk_native_vlan_tag               = try(template.switchport.trunk_native_vlan_tag, local.defaults.iosxe.configuration.templates.switchport.trunk_native_vlan_tag, null)
+        switchport_trunk_native_vlan_vlan_id           = try(template.switchport.trunk_native_vlan_id, local.defaults.iosxe.configuration.templates.switchport.trunk_native_vlan, null)
+        mab                                            = try(template.network_access_control.mab, local.defaults.iosxe.configuration.templates.network_access_control.mab, null)
+        mab_eap                                        = try(template.network_access_control.mab_eap, local.defaults.iosxe.configuration.templates.network_access_control.mab_eap, null)
+        access_session_closed                          = try(template.network_access_control.access_session_closed, local.defaults.iosxe.configuration.templates.network_access_control.access_session_closed, null)
+        access_session_monitor                         = try(template.network_access_control.access_session_monitor, local.defaults.iosxe.configuration.templates.network_access_control.access_session_monitor, null)
+        access_session_port_control                    = try(template.network_access_control.access_session_port_control, local.defaults.iosxe.configuration.templates.network_access_control.access_session_port_control, null)
+        access_session_control_direction               = try(template.network_access_control.access_session_control_direction, local.defaults.iosxe.configuration.templates.network_access_control.access_session_control_direction, null)
+        access_session_host_mode                       = try(template.network_access_control.access_session_host_mode, local.defaults.iosxe.configuration.templates.network_access_control.access_session_host_mode, null)
+        access_session_interface_template_sticky       = try(template.network_access_control.access_session_interface_template_sticky, local.defaults.iosxe.configuration.templates.network_access_control.access_session_interface_template_sticky, null)
+        access_session_interface_template_sticky_timer = try(template.network_access_control.access_session_interface_template_sticky_timer, local.defaults.iosxe.configuration.templates.network_access_control.access_session_interface_template_sticky_timer, null)
+        authentication_periodic                        = try(template.network_access_control.authentication_periodic, local.defaults.iosxe.configuration.templates.network_access_control.authentication_periodic, null)
+        authentication_timer_reauthenticate_server     = try(template.network_access_control.authentication_timer_reauthenticate_server, local.defaults.iosxe.configuration.templates.network_access_control.authentication_timer_reauthenticate_server, null)
+        authentication_timer_reauthenticate_range      = try(template.network_access_control.authentication_timer_reauthenticate_range, local.defaults.iosxe.configuration.templates.network_access_control.authentication_timer_reauthenticate_range, null)
+        spanning_tree_bpduguard_enable                 = try(template.spanning_tree.bpduguard, local.defaults.iosxe.configuration.templates.spanning_tree.bpduguard, null)
+        spanning_tree_service_policy                   = try(template.spanning_tree.service_policy, local.defaults.iosxe.configuration.templates.spanning_tree.service_policy, null)
+        spanning_tree_portfast                         = try(template.spanning_tree.portfast, local.defaults.iosxe.configuration.templates.spanning_tree.portfast, null)
+        spanning_tree_portfast_disable                 = try(template.spanning_tree.portfast_disable, local.defaults.iosxe.configuration.templates.spanning_tree.portfast_disable, null)
+        spanning_tree_portfast_edge                    = try(template.spanning_tree.portfast_edge, local.defaults.iosxe.configuration.templates.spanning_tree.portfast_edge, null)
+        spanning_tree_portfast_network                 = try(template.spanning_tree.portfast_network, local.defaults.iosxe.configuration.templates.spanning_tree.portfast_network, null)
+        storm_control_broadcast_level_pps_threshold    = try(template.storm_control.broadcast_level_pps_threshold, local.defaults.iosxe.configuration.templates.storm_control.broadcast_level_pps_threshold, null)
+        storm_control_broadcast_level_bps_threshold    = try(template.storm_control.broadcast_level_bps_threshold, local.defaults.iosxe.configuration.templates.storm_control.broadcast_level_bps_threshold, null)
+        storm_control_broadcast_level_threshold        = try(template.storm_control.broadcast_level_threshold, local.defaults.iosxe.configuration.templates.storm_control.broadcast_level_threshold, null)
+        storm_control_multicast_level_pps_threshold    = try(template.storm_control.multicast_level_pps_threshold, local.defaults.iosxe.configuration.templates.storm_control.multicast_level_pps_threshold, null)
+        storm_control_multicast_level_bps_threshold    = try(template.storm_control.multicast_level_bps_threshold, local.defaults.iosxe.configuration.templates.storm_control.multicast_level_bps_threshold, null)
+        storm_control_multicast_level_threshold        = try(template.storm_control.multicast_level_threshold, local.defaults.iosxe.configuration.templates.storm_control.multicast_level_threshold, null)
+        storm_control_action_shutdown                  = try(template.storm_control.action_shutdown, local.defaults.iosxe.configuration.templates.storm_control.action_shutdown, null)
+        storm_control_action_trap                      = try(template.storm_control.action_trap, local.defaults.iosxe.configuration.templates.storm_control.action_trap, null)
+        load_interval                                  = try(template.load_interval, local.defaults.iosxe.configuration.templates.load_interval, null)
+        ip_dhcp_snooping_limit_rate                    = try(template.ipv4.dhcp_snooping_limit_rate, local.defaults.iosxe.configuration.templates.ipv4.dhcp_snooping_limit_rate, null)
+        ip_dhcp_snooping_trust                         = try(template.ipv4.dhcp_snooping_trust, local.defaults.iosxe.configuration.templates.ipv4.dhcp_snooping_trust, null)
         ip_access_group = concat(
           try(template.ipv4.access_group_in, local.defaults.iosxe.configuration.templates.ipv4.access_group_in, null) != null ? [{
             direction   = "in"
@@ -128,7 +139,6 @@ resource "iosxe_template" "template" {
   switchport_private_vlan_host_association_secondary_range = each.value.switchport_private_vlan_host_association_secondary_range
   switchport_trunk_allowed_vlans                           = each.value.switchport_trunk_allowed_vlans
   switchport_trunk_allowed_vlans_none                      = each.value.switchport_trunk_allowed_vlans_none
-  switchport_trunk_allowed_vlans_all                       = each.value.switchport_trunk_allowed_vlans_all
   switchport_trunk_native_vlan_tag                         = each.value.switchport_trunk_native_vlan_tag
   switchport_trunk_native_vlan_vlan_id                     = each.value.switchport_trunk_native_vlan_vlan_id
   mab                                                      = each.value.mab

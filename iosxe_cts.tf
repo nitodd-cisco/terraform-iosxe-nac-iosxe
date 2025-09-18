@@ -4,7 +4,13 @@ resource "iosxe_cts" "cts" {
 
   authorization_list                      = try(local.device_config[each.value.name].cts.authorization_list, local.defaults.iosxe.configuration.cts.authorization_list, null)
   role_based_enforcement_logging_interval = try(local.device_config[each.value.name].cts.role_based_enforcement_logging_interval, local.defaults.iosxe.configuration.cts.role_based_enforcement_logging_interval, null)
-  role_based_enforcement_vlan_lists       = try(local.device_config[each.value.name].cts.role_based_enforcement_vlans, local.defaults.iosxe.configuration.cts.role_based_enforcement_vlans, null)
+  role_based_enforcement_vlan_lists = try(
+    provider::utils::normalize_vlans(
+      try(local.device_config[each.value.name].cts.role_based_enforcement_vlans, local.defaults.iosxe.configuration.cts.role_based_enforcement_vlans, {}),
+      "string"
+    ),
+    null
+  )
   role_based_permissions_default_acl_name = try(local.device_config[each.value.name].cts.role_based_permissions_default_acl_name, local.defaults.iosxe.configuration.cts.role_based_permissions_default_acl_name, null)
   sgt                                     = try(local.device_config[each.value.name].cts.sgt, local.defaults.iosxe.configuration.cts.sgt, null)
   sxp_default_password                    = try(local.device_config[each.value.name].cts.sxp_default_password, local.defaults.iosxe.configuration.cts.sxp_default_password, null)
