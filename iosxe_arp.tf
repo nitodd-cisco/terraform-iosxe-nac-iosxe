@@ -9,8 +9,17 @@ resource "iosxe_arp" "arp" {
   inspection_filters = try(length(local.device_config[each.value.name].arp.inspection_filters) == 0, true) ? null : [for e in local.device_config[each.value.name].arp.inspection_filters : {
     name = try(e.name, local.defaults.iosxe.configuration.arp.inspection_filters.name, null)
     vlans = try(length(e.vlans) == 0, true) ? null : [for v in e.vlans : {
-      vlan_range = try(v.vlan_range, local.defaults.iosxe.configuration.arp.inspection_filters.vlans.vlan_range, null)
-      static     = try(v.static, local.defaults.iosxe.configuration.arp.inspection_filters.vlans.static, null)
+      vlan_range = try(
+        provider::utils::normalize_vlans(
+          {
+            ids    = try(v.ids, local.defaults.iosxe.configuration.arp.inspection_filters.vlans.ids, [])
+            ranges = try(v.ranges, local.defaults.iosxe.configuration.arp.inspection_filters.vlans.ranges, [])
+          },
+          "string"
+        ),
+        null
+      )
+      static = try(v.static, local.defaults.iosxe.configuration.arp.inspection_filters.vlans.static, null)
     }]
   }]
 
