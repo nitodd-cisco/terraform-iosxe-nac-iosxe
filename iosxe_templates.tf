@@ -36,14 +36,14 @@ locals {
         switchport_private_vlan_host_association_secondary_range = try(template.switchport.private_vlan_host_association_secondary_range, local.defaults.iosxe.configuration.templates.switchport.private_vlan_host_association_secondary_range, null)
         switchport_trunk_allowed_vlans = try(
           provider::utils::normalize_vlans(
-            try(template.switchport.trunk_allowed_vlans, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans, {}),
+            try(template.switchport.trunk_allowed_vlans, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans),
             "string"
           ),
           null
         )
         switchport_trunk_allowed_vlans_none = length(try(
           provider::utils::normalize_vlans(
-            try(template.switchport.trunk_allowed_vlans, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans, {}),
+            try(template.switchport.trunk_allowed_vlans, local.defaults.iosxe.configuration.templates.switchport.trunk_allowed_vlans),
             "list"
           ),
           []

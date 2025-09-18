@@ -11,7 +11,7 @@ resource "iosxe_dhcp" "dhcp" {
   snooping_information_option_format_remote_id_hostname = try(local.device_config[each.value.name].dhcp.snooping_information_option_format_remote_id_hostname, local.defaults.iosxe.configuration.dhcp.snooping_information_option_format_remote_id_hostname, null)
   snooping_vlans = [for vlan_id in try(
     provider::utils::normalize_vlans(
-      try(local.device_config[each.value.name].dhcp.snooping_vlans, local.defaults.iosxe.configuration.dhcp.snooping_vlans, {}),
+      try(local.device_config[each.value.name].dhcp.snooping_vlans, local.defaults.iosxe.configuration.dhcp.snooping_vlans),
       "list"
     ),
     []

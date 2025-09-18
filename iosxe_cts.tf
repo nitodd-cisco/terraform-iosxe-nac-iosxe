@@ -6,7 +6,7 @@ resource "iosxe_cts" "cts" {
   role_based_enforcement_logging_interval = try(local.device_config[each.value.name].cts.role_based_enforcement_logging_interval, local.defaults.iosxe.configuration.cts.role_based_enforcement_logging_interval, null)
   role_based_enforcement_vlan_lists = try(
     provider::utils::normalize_vlans(
-      try(local.device_config[each.value.name].cts.role_based_enforcement_vlans, local.defaults.iosxe.configuration.cts.role_based_enforcement_vlans, {}),
+      try(local.device_config[each.value.name].cts.role_based_enforcement_vlans, local.defaults.iosxe.configuration.cts.role_based_enforcement_vlans),
       "list"
     ),
     null

@@ -12,7 +12,7 @@ resource "iosxe_spanning_tree" "spanning_tree" {
     id = try(e.id, local.defaults.iosxe.configuration.spanning_tree.mst_instances.id, null)
     vlan_ids = try(
       provider::utils::normalize_vlans(
-        try(e.vlans, local.defaults.iosxe.configuration.spanning_tree.mst_instances.vlans, {}),
+        try(e.vlans, local.defaults.iosxe.configuration.spanning_tree.mst_instances.vlans),
         "list"
       ),
       concat(range(1, 1025), range(1025, 2049), range(2049, 3073), range(3073, 4094))

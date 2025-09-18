@@ -104,14 +104,14 @@ locals {
         switchport_nonegotiate                   = try(int.switchport.nonegotiate, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.nonegotiate, null)
         switchport_trunk_allowed_vlans = try(
           provider::utils::normalize_vlans(
-            try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.trunk_allowed_vlans, {}),
+            try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.trunk_allowed_vlans),
             "string"
           ),
           null
         )
         switchport_trunk_allowed_vlans_none = length(try(
           provider::utils::normalize_vlans(
-            try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.trunk_allowed_vlans, {}),
+            try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.trunk_allowed_vlans),
             "list"
           ),
           []
@@ -907,14 +907,14 @@ locals {
         switchport_nonegotiate                   = try(int.switchport.nonegotiate, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.nonegotiate, null)
         switchport_trunk_allowed_vlans = try(
           provider::utils::normalize_vlans(
-            try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_allowed_vlans, {}),
+            try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_allowed_vlans),
             "string"
           ),
           null
         )
         switchport_trunk_allowed_vlans_none = length(try(
           provider::utils::normalize_vlans(
-            try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_allowed_vlans, {}),
+            try(int.switchport.trunk_allowed_vlans, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_allowed_vlans),
             "list"
           ),
           []
