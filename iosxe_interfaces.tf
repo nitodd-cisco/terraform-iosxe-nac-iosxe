@@ -6,7 +6,7 @@ locals {
       for int in try(local.device_config[device.name].interfaces.ethernets, []) : {
         key                            = format("%s/%s%s", device.name, try(int.type, local.defaults.iosxe.devices.configuration.interfaces.ethernets.type, null), int.id)
         device                         = device.name
-        id                             = int.id
+        id                             = trimprefix(int.id, "$string ")
         type                           = try(int.type, local.defaults.iosxe.devices.configuration.interfaces.ethernets.type, null)
         media_type                     = try(int.media_type, local.defaults.iosxe.devices.configuration.interfaces.ethernets.media_type, null)
         bandwidth                      = try(int.bandwidth, local.defaults.iosxe.devices.configuration.interfaces.ethernets.bandwidth, null)
