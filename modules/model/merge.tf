@@ -1,15 +1,18 @@
 locals {
-  data_directories = flatten([
+  yaml_strings_directories = flatten([
     for dir in var.yaml_directories : [
-      for file in fileset(".", "${dir}/*.{yml,yaml}") : yamldecode(file(file))
+      for file in fileset(".", "${dir}/*.{yml,yaml}") : file(file)
     ]
   ])
-  data_files = [
-    for file in var.yaml_files : yamldecode(file(file))
+  yaml_strings_files = [
+    for file in var.yaml_files : file(file)
   ]
-  model         = provider::utils::merge(concat(local.data_directories, local.data_files, [var.model]))
-  user_defaults = { "defaults" : try(local.model["defaults"], {}) }
-  defaults      = provider::utils::merge([yamldecode(file("${path.module}/../../defaults/defaults.yaml")), local.user_defaults])["defaults"]
+  model_strings   = length(keys(var.model)) != 0 ? [yamlencode(var.model)] : []
+  model_string    = provider::utils::yaml_merge(concat(local.yaml_strings_directories, local.yaml_strings_files, local.model_strings))
+  model           = yamldecode(local.model_string)
+  user_defaults   = { "defaults" : try(local.model["defaults"], {}) }
+  defaults_string = provider::utils::yaml_merge([file("${path.module}/../../defaults/defaults.yaml"), yamlencode(local.user_defaults)])
+  defaults        = yamldecode(local.defaults_string)["defaults"]
 }
 
 resource "terraform_data" "validation" {
@@ -29,6 +32,6 @@ resource "local_sensitive_file" "model" {
 
 resource "local_sensitive_file" "defaults" {
   count    = var.write_default_values_file != "" ? 1 : 0
-  content  = yamlencode(local.defaults)
+  content  = local.defaults_string
   filename = var.write_default_values_file
 }
