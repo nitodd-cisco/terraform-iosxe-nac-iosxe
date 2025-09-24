@@ -266,77 +266,77 @@ resource "iosxe_snmp_server" "snmp_server" {
 
     # AES privacy settings
     v3_auth_priv_aes_algorithm = try(
-      user.v3_authentication.privacy.aes.enabled ? user.v3_authentication.privacy.aes.algorithm : null,
+      user.v3_authentication.privacy.aes.enable ? user.v3_authentication.privacy.aes.algorithm : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.aes.algorithm,
       null
     )
     v3_auth_priv_aes_password = try(
-      user.v3_authentication.privacy.aes.enabled ? user.v3_authentication.privacy.aes.password : null,
+      user.v3_authentication.privacy.aes.enable ? user.v3_authentication.privacy.aes.password : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.aes.password,
       null
     )
 
     # AES access settings
     v3_auth_priv_aes_access_ipv6_acl = try(
-      user.v3_authentication.privacy.aes.enabled ? user.v3_authentication.privacy.aes.access.ipv6_acl : null,
+      user.v3_authentication.privacy.aes.enable ? user.v3_authentication.privacy.aes.access.ipv6_acl : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.aes.access.ipv6_acl,
       null
     )
     v3_auth_priv_aes_access_standard_acl = try(
-      user.v3_authentication.privacy.aes.enabled ? user.v3_authentication.privacy.aes.access.standard_acl : null,
+      user.v3_authentication.privacy.aes.enable ? user.v3_authentication.privacy.aes.access.standard_acl : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.aes.access.standard_acl,
       null
     )
     v3_auth_priv_aes_access_acl_name = try(
-      user.v3_authentication.privacy.aes.enabled ? user.v3_authentication.privacy.aes.access.acl_name : null,
+      user.v3_authentication.privacy.aes.enable ? user.v3_authentication.privacy.aes.access.acl_name : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.aes.access.acl_name,
       null
     )
 
     # DES privacy settings
     v3_auth_priv_des_password = try(
-      user.v3_authentication.privacy.des.enabled ? user.v3_authentication.privacy.des.password : null,
+      user.v3_authentication.privacy.des.enable ? user.v3_authentication.privacy.des.password : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.des.password,
       null
     )
 
     # DES access settings
     v3_auth_priv_des_access_ipv6_acl = try(
-      user.v3_authentication.privacy.des.enabled ? user.v3_authentication.privacy.des.access.ipv6_acl : null,
+      user.v3_authentication.privacy.des.enable ? user.v3_authentication.privacy.des.access.ipv6_acl : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.des.access.ipv6_acl,
       null
     )
     v3_auth_priv_des_access_standard_acl = try(
-      user.v3_authentication.privacy.des.enabled ? user.v3_authentication.privacy.des.access.standard_acl : null,
+      user.v3_authentication.privacy.des.enable ? user.v3_authentication.privacy.des.access.standard_acl : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.des.access.standard_acl,
       null
     )
     v3_auth_priv_des_access_acl_name = try(
-      user.v3_authentication.privacy.des.enabled ? user.v3_authentication.privacy.des.access.acl_name : null,
+      user.v3_authentication.privacy.des.enable ? user.v3_authentication.privacy.des.access.acl_name : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.des.access.acl_name,
       null
     )
 
     # 3DES privacy settings
     v3_auth_priv_des3_password = try(
-      user.v3_authentication.privacy.des3.enabled ? user.v3_authentication.privacy.des3.password : null,
+      user.v3_authentication.privacy.des3.enable ? user.v3_authentication.privacy.des3.password : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.des3.password,
       null
     )
 
     # 3DES access settings
     v3_auth_priv_des3_access_ipv6_acl = try(
-      user.v3_authentication.privacy.des3.enabled ? user.v3_authentication.privacy.des3.access.ipv6_acl : null,
+      user.v3_authentication.privacy.des3.enable ? user.v3_authentication.privacy.des3.access.ipv6_acl : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.des3.access.ipv6_acl,
       null
     )
     v3_auth_priv_des3_access_standard_acl = try(
-      user.v3_authentication.privacy.des3.enabled ? user.v3_authentication.privacy.des3.access.standard_acl : null,
+      user.v3_authentication.privacy.des3.enable ? user.v3_authentication.privacy.des3.access.standard_acl : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.des3.access.standard_acl,
       null
     )
     v3_auth_priv_des3_access_acl_name = try(
-      user.v3_authentication.privacy.des3.enabled ? user.v3_authentication.privacy.des3.access.acl_name : null,
+      user.v3_authentication.privacy.des3.enable ? user.v3_authentication.privacy.des3.access.acl_name : null,
       local.defaults.iosxe.configuration.snmp_server.users.v3_authentication.privacy.des3.access.acl_name,
       null
     )

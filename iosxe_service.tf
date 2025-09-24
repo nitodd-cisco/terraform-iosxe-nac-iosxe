@@ -5,7 +5,7 @@ resource "iosxe_service" "service" {
   pad                                     = try(local.device_config[each.value.name].service.pad, local.defaults.iosxe.configuration.service.pad, null)
   password_encryption                     = try(local.device_config[each.value.name].service.password_encryption, local.defaults.iosxe.configuration.service.password_encryption, null)
   password_recovery                       = try(local.device_config[each.value.name].service.password_recovery, local.defaults.iosxe.configuration.service.password_recovery, null)
-  timestamps                              = try(local.device_config[each.value.name].service.timestamps.enabled, local.defaults.iosxe.configuration.service.timestamps.enabled, null)
+  timestamps                              = try(local.device_config[each.value.name].service.timestamps.enable, local.defaults.iosxe.configuration.service.timestamps.enable, null)
   timestamps_debug                        = try(local.device_config[each.value.name].service.timestamps.debug, local.defaults.iosxe.configuration.service.timestamps.debug, null)
   timestamps_debug_datetime               = try(local.device_config[each.value.name].service.timestamps.debug_datetime, local.defaults.iosxe.configuration.service.timestamps.debug_datetime, null)
   timestamps_debug_datetime_msec          = try(local.device_config[each.value.name].service.timestamps.debug_datetime_msec, local.defaults.iosxe.configuration.service.timestamps.debug_datetime_msec, null)
