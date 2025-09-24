@@ -93,7 +93,8 @@ locals {
           name = policy
         }]
         encapsulation_dot1q_vlan_id              = try(int.encapsulation_dot1q_vlan_id, local.defaults.iosxe.devices.configuration.interfaces.ethernets.encapsulation_dot1q_vlan_id, null)
-        switchport                               = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.mode, null) != null ? true : null
+        switchport                               = try(int.switchport.enable, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.enable, null)
+        switchport_mode                          = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.mode, null)
         switchport_access_vlan                   = try(int.switchport.access_vlan, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.access_vlan, null)
         switchport_mode_access                   = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.mode, null) == "access" ? true : null
         switchport_mode_trunk                    = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.mode, null) == "trunk" ? true : null
@@ -313,7 +314,7 @@ resource "iosxe_interface_ethernet" "ethernet" {
 }
 
 resource "iosxe_interface_switchport" "ethernet_switchport" {
-  for_each = { for v in local.interfaces_ethernets : v.key => v if v.switchport == true }
+  for_each = { for v in local.interfaces_ethernets : v.key => v if v.switchport == true || v.switchport_mode != null }
 
   device                        = each.value.device
   type                          = each.value.type
@@ -896,7 +897,8 @@ locals {
         device_tracking_attached_policies = [for policy in try(int.device_tracking_attached_policies, []) : {
           name = policy
         }]
-        switchport                               = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) != null ? true : false
+        switchport                               = try(int.switchport.enable, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.enable, null)
+        switchport_mode                          = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null)
         switchport_access_vlan                   = try(int.switchport.access_vlan, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.access_vlan, null)
         switchport_mode_access                   = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) == "access" ? true : null
         switchport_mode_trunk                    = try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null) == "trunk" ? true : null
@@ -1041,7 +1043,7 @@ resource "iosxe_interface_port_channel" "port_channel" {
 }
 
 resource "iosxe_interface_switchport" "port_channel_switchport" {
-  for_each = { for v in local.interfaces_port_channels : v.key => v if v.switchport == true }
+  for_each = { for v in local.interfaces_port_channels : v.key => v if v.switchport == true || v.switchport_mode != null }
 
   device                        = each.value.device
   type                          = "Port-channel"
