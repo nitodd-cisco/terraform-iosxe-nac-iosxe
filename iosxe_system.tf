@@ -237,3 +237,13 @@ resource "iosxe_sla" "sla" {
     iosxe_policy_map.policy_map
   ]
 }
+
+resource "iosxe_platform" "platform" {
+  for_each = { for device in local.devices : device.name => device if try(local.device_config[device.name].system.platform, null) != null || try(local.defaults.iosxe.configuration.system.platform, null) != null }
+  device   = each.value.name
+
+  punt_keepalive_disable_kernel_core        = try(local.device_config[each.value.name].system.platform.punt_keepalive_disable_kernel_core, local.defaults.iosxe.configuration.system.platform.punt_keepalive_disable_kernel_core, null)
+  punt_keepalive_settings_fatal_count       = try(local.device_config[each.value.name].system.platform.punt_keepalive_settings_fatal_count, local.defaults.iosxe.configuration.system.platform.punt_keepalive_settings_fatal_count, null)
+  punt_keepalive_settings_transmit_interval = try(local.device_config[each.value.name].system.platform.punt_keepalive_settings_transmit_interval, local.defaults.iosxe.configuration.system.platform.punt_keepalive_settings_transmit_interval, null)
+  punt_keepalive_settings_warning_count     = try(local.device_config[each.value.name].system.platform.punt_keepalive_settings_warning_count, local.defaults.iosxe.configuration.system.platform.punt_keepalive_settings_warning_count, null)
+}

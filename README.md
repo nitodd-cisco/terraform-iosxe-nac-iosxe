@@ -152,6 +152,7 @@ module "iosxe" {
 | [iosxe_ospf.ospf](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/ospf) | resource |
 | [iosxe_ospf_vrf.ospf_vrf](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/ospf_vrf) | resource |
 | [iosxe_pim.pim](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/pim) | resource |
+| [iosxe_platform.platform](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/platform) | resource |
 | [iosxe_policy_map.policy_map](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/policy_map) | resource |
 | [iosxe_policy_map_event.policy_map_event](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/policy_map_event) | resource |
 | [iosxe_prefix_list.prefix_list](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.8.1/docs/resources/prefix_list) | resource |
