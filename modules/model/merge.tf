@@ -15,15 +15,6 @@ locals {
   defaults        = yamldecode(local.defaults_string)["defaults"]
 }
 
-resource "terraform_data" "validation" {
-  lifecycle {
-    precondition {
-      condition     = length(var.yaml_directories) != 0 || length(var.yaml_files) != 0 || length(keys(var.model)) != 0
-      error_message = "Either `yaml_directories`,`yaml_files` or a non-empty `model` value must be provided."
-    }
-  }
-}
-
 resource "local_sensitive_file" "model" {
   count    = var.write_model_file != "" ? 1 : 0
   content  = yamlencode(local.iosxe_devices)

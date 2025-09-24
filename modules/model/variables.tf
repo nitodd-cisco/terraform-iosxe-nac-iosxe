@@ -14,6 +14,10 @@ variable "model" {
   description = "As an alternative to YAML files, a native Terraform data structure can be provided as well."
   type        = map(any)
   default     = {}
+  validation {
+    condition     = length(var.yaml_directories) != 0 || length(var.yaml_files) != 0 || length(keys(var.model)) != 0
+    error_message = "Either `yaml_directories`,`yaml_files` or a non-empty `model` value must be provided."
+  }
 }
 
 variable "managed_device_groups" {
