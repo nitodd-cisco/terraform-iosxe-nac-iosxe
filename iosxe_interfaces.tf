@@ -30,7 +30,7 @@ locals {
         ip_access_group_in_enable  = try(int.ipv4.access_group_in, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.access_group_in, null) != null ? true : false
         ip_access_group_out        = try(int.ipv4.access_group_out, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.access_group_out, null)
         ip_access_group_out_enable = try(int.ipv4.access_group_out, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.access_group_out, null) != null ? true : false
-        ip_flow_monitors = [for fm in try(int.ipv4.flow_monitors, []) : {
+        ip_flow_monitors = try(length(int.ipv4.flow_monitors) == 0, true) ? null : [for fm in int.ipv4.flow_monitors : {
           name      = try(fm.name, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.flow_monitors.name, null)
           direction = try(fm.direction, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.flow_monitors.direction, null)
         }]
@@ -40,11 +40,11 @@ locals {
         unnumbered                 = try(int.ipv4.unnumbered, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv4.unnumbered, null)
         source_template            = try(int.source_template, local.defaults.iosxe.devices.configuration.interfaces.ethernets.source_template, [])
         ipv6_enable                = try(int.ipv6.enable, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.enable, null)
-        ipv6_addresses = [for addr in try(int.ipv6.addresses, []) : {
+        ipv6_addresses = try(length(int.ipv6.addresses) == 0, true) ? null : [for addr in int.ipv6.addresses : {
           prefix = "${try(addr.prefix, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.addresses.prefix, null)}/${try(addr.prefix_length, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.addresses.prefix_length, null)}"
           eui64  = try(addr.eui64, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.addresses.eui64, null)
         }]
-        ipv6_link_local_addresses = [for addr in try(int.ipv6.link_local_addresses, []) : {
+        ipv6_link_local_addresses = try(length(int.ipv6.link_local_addresses) == 0, true) ? null : [for addr in int.ipv6.link_local_addresses : {
           address    = addr
           link_local = true
         }]
@@ -52,7 +52,7 @@ locals {
         ipv6_address_dhcp               = try(int.ipv6.address_dhcp, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.address_dhcp, null)
         ipv6_mtu                        = try(int.ipv6.mtu, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.mtu, null)
         ipv6_nd_ra_suppress_all         = try(int.ipv6.nd_ra_suppress_all, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.nd_ra_suppress_all, null)
-        ipv6_flow_monitors = [for fm in try(int.ipv6.flow_monitors, []) : {
+        ipv6_flow_monitors = try(length(int.ipv6.flow_monitors) == 0, true) ? null : [for fm in int.ipv6.flow_monitors : {
           name      = try(fm.name, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.flow_monitors.name, null)
           direction = try(fm.direction, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ipv6.flow_monitors.direction, null)
         }]
@@ -77,7 +77,7 @@ locals {
         speed_nonegotiate            = try(int.speed_nonegotiate, local.defaults.iosxe.devices.configuration.interfaces.ethernets.speed_nonegotiate, null)
         channel_group_number         = try(int.port_channel_id, local.defaults.iosxe.devices.configuration.interfaces.ethernets.port_channel_id, null)
         channel_group_mode           = try(int.port_channel_mode, local.defaults.iosxe.devices.configuration.interfaces.ethernets.port_channel_mode, null)
-        source_templates = [for st in try(int.source_templates, []) : {
+        source_templates = try(length(int.source_templates) == 0, true) ? null : [for st in int.source_templates : {
           template_name = try(st.name, local.defaults.iosxe.devices.configuration.interfaces.ethernets.source_templates.name, null)
           merge         = try(st.merge, local.defaults.iosxe.devices.configuration.interfaces.ethernets.source_templates.merge, null)
         }]
@@ -89,7 +89,7 @@ locals {
         snmp_trap_link_status            = try(int.snmp_trap_link_status, local.defaults.iosxe.devices.configuration.interfaces.ethernets.snmp_trap_link_status, null)
         logging_event_link_status_enable = try(int.logging_event_link_status, local.defaults.iosxe.devices.configuration.interfaces.ethernets.logging_event_link_status, null)
         device_tracking                  = try(int.device_tracking, local.defaults.iosxe.devices.configuration.interfaces.ethernets.device_tracking, null)
-        device_tracking_attached_policies = [for policy in try(int.device_tracking_attached_policies, []) : {
+        device_tracking_attached_policies = try(length(int.device_tracking_attached_policies) == 0, true) ? null : [for policy in int.device_tracking_attached_policies : {
           name = policy
         }]
         encapsulation_dot1q_vlan_id              = try(int.encapsulation_dot1q_vlan_id, local.defaults.iosxe.devices.configuration.interfaces.ethernets.encapsulation_dot1q_vlan_id, null)
@@ -146,13 +146,13 @@ locals {
         ospf_network_type_point_to_point      = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ospf.network_type, null) == "point-to-point" ? true : null
         ospf_priority                         = try(int.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ospf.priority, null)
         ospf_ttl_security_hops                = try(int.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ospf.ttl_security_hops, null)
-        ospf_process_ids = [for pid in try(int.ospf.process_ids, []) : {
+        ospf_process_ids = try(length(int.ospf.process_ids) == 0, true) ? null : [for pid in int.ospf.process_ids : {
           id = try(pid.id, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ospf.process_ids.id, null)
-          areas = [for area in try(pid.areas, []) : {
+          areas = try(length(pid.areas) == 0, true) ? null : [for area in pid.areas : {
             area_id = area
           }]
         }]
-        ospf_message_digest_keys = [for key in try(int.ospf.message_digest_keys, []) : {
+        ospf_message_digest_keys = try(length(int.ospf.message_digest_keys) == 0, true) ? null : [for key in int.ospf.message_digest_keys : {
           id            = try(key.id, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ospf.message_digest_keys.id, null)
           md5_auth_key  = try(key.md5_auth_key, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ospf.message_digest_keys.md5_auth_key, null)
           md5_auth_type = try(key.md5_auth_type, local.defaults.iosxe.devices.configuration.interfaces.ethernets.ospf.message_digest_keys.md5_auth_type, null)
@@ -440,11 +440,11 @@ locals {
         ip_unreachables            = try(int.ipv4.unreachables, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ipv4.unreachables, null)
         source_template            = try(int.source_template, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.source_template, [])
         ipv6_enable                = try(int.ipv6.enable, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ipv6.enable, null)
-        ipv6_addresses = [for addr in try(int.ipv6.addresses, []) : {
+        ipv6_addresses = try(length(int.ipv6.addresses) == 0, true) ? null : [for addr in int.ipv6.addresses : {
           prefix = "${try(addr.prefix, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ipv6.addresses.prefix, null)}/${try(addr.prefix_length, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ipv6.addresses.prefix_length, null)}"
           eui64  = try(addr.eui64, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ipv6.addresses.eui64, null)
         }]
-        ipv6_link_local_addresses = [for addr in try(int.ipv6.link_local_addresses, []) : {
+        ipv6_link_local_addresses = try(length(int.ipv6.link_local_addresses) == 0, true) ? null : [for addr in int.ipv6.link_local_addresses : {
           address    = addr
           link_local = true
         }]
@@ -452,7 +452,7 @@ locals {
         ipv6_address_dhcp               = try(int.ipv6.address_dhcp, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ipv6.address_dhcp, null)
         ipv6_mtu                        = try(int.ipv6.mtu, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ipv6.mtu, null)
         ipv6_nd_ra_suppress_all         = try(int.ipv6.nd_ra_suppress_all, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ipv6.nd_ra_suppress_all, null)
-        source_templates = [for st in try(int.source_templates, []) : {
+        source_templates = try(length(int.source_templates) == 0, true) ? null : [for st in int.source_templates : {
           template_name = try(st.name, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.source_templates.name, null)
           merge         = try(st.merge, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.source_templates.merge, null)
         }]
@@ -471,13 +471,13 @@ locals {
         ospf_network_type_point_to_point      = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ospf.network_type, null) == "point-to-point" ? true : null
         ospf_priority                         = try(int.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ospf.priority, null)
         ospf_ttl_security_hops                = try(int.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ospf.ttl_security_hops, null)
-        ospf_process_ids = [for pid in try(int.ospf.process_ids, []) : {
+        ospf_process_ids = try(length(int.ospf.process_ids) == 0, true) ? null : [for pid in int.ospf.process_ids : {
           id = try(pid.id, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ospf.process_ids.id, null)
-          areas = [for area in try(pid.areas, []) : {
+          areas = try(length(pid.areas) == 0, true) ? null : [for area in pid.areas : {
             area_id = area
           }]
         }]
-        ospf_message_digest_keys = [for key in try(int.ospf.message_digest_keys, []) : {
+        ospf_message_digest_keys = try(length(int.ospf.message_digest_keys) == 0, true) ? null : [for key in int.ospf.message_digest_keys : {
           id            = try(key.id, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ospf.message_digest_keys.id, null)
           md5_auth_key  = try(key.md5_auth_key, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ospf.message_digest_keys.md5_auth_key, null)
           md5_auth_type = try(key.md5_auth_type, local.defaults.iosxe.devices.configuration.interfaces.loopbacks.ospf.message_digest_keys.md5_auth_type, null)
@@ -633,7 +633,7 @@ locals {
         ipv4_address_mask              = try(int.ipv4.address_mask, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.address_mask, null)
         ip_proxy_arp                   = try(int.ipv4.proxy_arp, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.proxy_arp, null)
         ip_dhcp_relay_source_interface = try("${try(int.ipv4.dhcp_relay_source_interface_type, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.dhcp_relay_source_interface_type)}${try(int.ipv4.dhcp_relay_source_interface_id, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.dhcp_relay_source_interface_id)}", null)
-        helper_addresses = [for ha in try(int.ipv4.helper_addresses, []) : {
+        helper_addresses = try(length(int.ipv4.helper_addresses) == 0, true) ? null : [for ha in int.ipv4.helper_addresses : {
           address = try(ha.address, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.helper_addresses.address, null)
           global  = try(ha.global, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.helper_addresses.global, null)
           vrf     = try(ha.vrf, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.helper_addresses.vrf, null)
@@ -646,11 +646,11 @@ locals {
         ip_unreachables            = try(int.ipv4.unreachables, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.unreachables, null)
         unnumbered                 = try(int.ipv4.unnumbered, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv4.unnumbered, null)
         ipv6_enable                = try(int.ipv6.enable, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv6.enable, null)
-        ipv6_addresses = [for addr in try(int.ipv6.addresses, []) : {
+        ipv6_addresses = try(length(int.ipv6.addresses) == 0, true) ? null : [for addr in int.ipv6.addresses : {
           prefix = "${try(addr.prefix, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv6.addresses.prefix, null)}/${try(addr.prefix_length, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv6.addresses.prefix_length, null)}"
           eui64  = try(addr.eui64, local.defaults.iosxe.devices.configuration.interfaces.vlans.ipv6.addresses.eui64, null)
         }]
-        ipv6_link_local_addresses = [for addr in try(int.ipv6.link_local_addresses, []) : {
+        ipv6_link_local_addresses = try(length(int.ipv6.link_local_addresses) == 0, true) ? null : [for addr in int.ipv6.link_local_addresses : {
           address    = addr
           link_local = true
         }]
@@ -681,13 +681,13 @@ locals {
         ospf_network_type_point_to_point      = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.vlans.ospf.network_type, null) == "point-to-point" ? true : null
         ospf_priority                         = try(int.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.vlans.ospf.priority, null)
         ospf_ttl_security_hops                = try(int.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.vlans.ospf.ttl_security_hops, null)
-        ospf_process_ids = [for pid in try(int.ospf.process_ids, []) : {
+        ospf_process_ids = try(length(int.ospf.process_ids) == 0, true) ? null : [for pid in int.ospf.process_ids : {
           id = try(pid.id, local.defaults.iosxe.devices.configuration.interfaces.vlans.ospf.process_ids.id, null)
-          areas = [for area in try(pid.areas, []) : {
+          areas = try(length(pid.areas) == 0, true) ? null : [for area in pid.areas : {
             area_id = area
           }]
         }]
-        ospf_message_digest_keys = [for key in try(int.ospf.message_digest_keys, []) : {
+        ospf_message_digest_keys = try(length(int.ospf.message_digest_keys) == 0, true) ? null : [for key in int.ospf.message_digest_keys : {
           id            = try(key.id, local.defaults.iosxe.devices.configuration.interfaces.vlans.ospf.message_digest_keys.id, null)
           md5_auth_key  = try(key.md5_auth_key, local.defaults.iosxe.devices.configuration.interfaces.vlans.ospf.message_digest_keys.md5_auth_key, null)
           md5_auth_type = try(key.md5_auth_type, local.defaults.iosxe.devices.configuration.interfaces.vlans.ospf.message_digest_keys.md5_auth_type, null)
@@ -861,7 +861,7 @@ locals {
         ip_arp_inspection_trust        = try(int.ipv4.arp_inspection_trust, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv4.arp_inspection_trust, null)
         ip_arp_inspection_limit_rate   = try(int.ipv4.arp_inspection_limit_rate, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv4.arp_inspection_limit_rate, null)
         ip_dhcp_snooping_trust         = try(int.ipv4.dhcp_snooping_trust, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv4.dhcp_snooping_trust, null)
-        helper_addresses = [for addr in try(int.ipv4.helper_addresses, []) : {
+        helper_addresses = try(length(int.ipv4.helper_addresses) == 0, true) ? null : [for addr in int.ipv4.helper_addresses : {
           address = try(addr.address, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv4.helper_addresses.address, null)
           global  = try(addr.global, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv4.helper_addresses.global, false)
           vrf     = try(addr.vrf, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv4.helper_addresses.vrf, null)
@@ -870,11 +870,11 @@ locals {
         ipv6_mtu                = try(int.ipv6.mtu, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv6.mtu, null)
         ipv6_nd_ra_suppress_all = try(int.ipv6.nd_ra_suppress_all, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv6.nd_ra_suppress_all, null)
         ipv6_address_dhcp       = try(int.ipv6.address_dhcp, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv6.address_dhcp, null)
-        ipv6_addresses = [for addr in try(int.ipv6.addresses, []) : {
+        ipv6_addresses = try(length(int.ipv6.addresses) == 0, true) ? null : [for addr in int.ipv6.addresses : {
           prefix = try(addr.prefix, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv6.addresses.prefix, null)
           eui_64 = try(addr.eui_64, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ipv6.addresses.eui_64, null)
         }]
-        ipv6_link_local_addresses = [for addr in try(int.ipv6.link_local_addresses, []) : {
+        ipv6_link_local_addresses = try(length(int.ipv6.link_local_addresses) == 0, true) ? null : [for addr in int.ipv6.link_local_addresses : {
           address    = addr
           link_local = true
         }]
@@ -894,7 +894,7 @@ locals {
         snmp_trap_link_status            = try(int.snmp_trap_link_status, local.defaults.iosxe.devices.configuration.interfaces.port_channels.snmp_trap_link_status, null)
         logging_event_link_status_enable = try(int.logging_event_link_status, local.defaults.iosxe.devices.configuration.interfaces.port_channels.logging_event_link_status, null)
         device_tracking                  = try(int.device_tracking, local.defaults.iosxe.devices.configuration.interfaces.port_channels.device_tracking, null)
-        device_tracking_attached_policies = [for policy in try(int.device_tracking_attached_policies, []) : {
+        device_tracking_attached_policies = try(length(int.device_tracking_attached_policies) == 0, true) ? null : [for policy in int.device_tracking_attached_policies : {
           name = policy
         }]
         switchport                               = try(int.switchport.enable, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.enable, null)
@@ -939,11 +939,11 @@ locals {
         ospf_network_type_point_to_point      = try(int.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.network_type, null) == "point-to-point" ? true : false
         ospf_priority                         = try(int.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.priority, null)
         ospf_ttl_security_hops                = try(int.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.ttl_security_hops, null)
-        ospf_process_ids = [for pid in try(int.ospf.process_ids, []) : {
+        ospf_process_ids = try(length(int.ospf.process_ids) == 0, true) ? null : [for pid in int.ospf.process_ids : {
           id    = try(pid.id, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.process_ids.id, null)
           areas = try(pid.areas, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.process_ids.areas, null)
         }]
-        ospf_message_digest_keys = [for key in try(int.ospf.message_digest_keys, []) : {
+        ospf_message_digest_keys = try(length(int.ospf.message_digest_keys) == 0, true) ? null : [for key in int.ospf.message_digest_keys : {
           id            = try(key.id, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.message_digest_keys.id, null)
           md5_auth_key  = try(key.md5_auth_key, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.message_digest_keys.md5_auth_key, null)
           md5_auth_type = try(key.md5_auth_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.ospf.message_digest_keys.md5_auth_type, null)
@@ -1162,7 +1162,7 @@ locals {
           ip_proxy_arp                 = try(sub.ipv4.proxy_arp, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv4.proxy_arp, null)
           ip_arp_inspection_trust      = try(sub.ipv4.arp_inspection_trust, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv4.arp_inspection_trust, null)
           ip_arp_inspection_limit_rate = try(sub.ipv4.arp_inspection_limit_rate, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv4.arp_inspection_limit_rate, null)
-          helper_addresses = [for ha in try(sub.ipv4.helper_addresses, []) : {
+          helper_addresses = try(length(sub.ipv4.helper_addresses) == 0, true) ? null : [for ha in sub.ipv4.helper_addresses : {
             address = try(ha.address, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv4.helper_addresses.address, null)
             global  = try(ha.global, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv4.helper_addresses.global, null)
             vrf     = try(ha.vrf, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv4.helper_addresses.vrf, null)
@@ -1174,11 +1174,11 @@ locals {
           ip_redirects               = try(sub.ipv4.redirects, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv4.redirects, null)
           ip_unreachables            = try(sub.ipv4.unreachables, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv4.unreachables, null)
           ipv6_enable                = try(sub.ipv6.enable, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv6.enable, null)
-          ipv6_addresses = [for addr in try(sub.ipv6.addresses, []) : {
+          ipv6_addresses = try(length(sub.ipv6.addresses) == 0, true) ? null : [for addr in sub.ipv6.addresses : {
             prefix = "${try(addr.prefix, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv6.addresses.prefix, null)}/${try(addr.prefix_length, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv6.addresses.prefix_length, null)}"
             eui_64 = try(addr.eui_64, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ipv6.addresses.eui_64, null)
           }]
-          ipv6_link_local_addresses = [for addr in try(sub.ipv6.link_local_addresses, []) : {
+          ipv6_link_local_addresses = try(length(sub.ipv6.link_local_addresses) == 0, true) ? null : [for addr in sub.ipv6.link_local_addresses : {
             address    = addr
             link_local = true
           }]
@@ -1221,13 +1221,13 @@ locals {
           ospf_network_type_point_to_point      = try(sub.ospf.network_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ospf.network_type, null) == "point-to-point" ? true : null
           ospf_priority                         = try(sub.ospf.priority, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ospf.priority, null)
           ospf_ttl_security_hops                = try(sub.ospf.ttl_security_hops, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ospf.ttl_security_hops, null)
-          ospf_process_ids = [for pid in try(sub.ospf.process_ids, []) : {
+          ospf_process_ids = try(length(sub.ospf.process_ids) == 0, true) ? null : [for pid in sub.ospf.process_ids : {
             id = try(pid.id, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ospf.process_ids.id, null)
-            areas = [for area in try(pid.areas, []) : {
+            areas = try(length(pid.areas) == 0, true) ? null : [for area in pid.areas : {
               area_id = area
             }]
           }]
-          ospf_message_digest_keys = [for key in try(sub.ospf.message_digest_keys, []) : {
+          ospf_message_digest_keys = try(length(sub.ospf.message_digest_keys) == 0, true) ? null : [for key in sub.ospf.message_digest_keys : {
             id            = try(key.id, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ospf.message_digest_keys.id, null)
             md5_auth_key  = try(key.md5_auth_key, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ospf.message_digest_keys.md5_auth_key, null)
             md5_auth_type = try(key.md5_auth_type, local.defaults.iosxe.devices.configuration.interfaces.port_channels.subinterfaces.ospf.message_digest_keys.md5_auth_type, null)
@@ -1406,13 +1406,13 @@ locals {
         source_interface_loopback      = try(nve.source_interface_type, local.defaults.iosxe.configuration.interfaces.nves.name.source_interface_type, null) == "Loopback" ? try(nve.source_interface_id, local.defaults.iosxe.configuration.interfaces.nves.name.source_interface_id, null) : null
 
         # Lists
-        vni_vrfs = [for vni_vrf in try(nve.vni_vrfs, []) : {
+        vni_vrfs = try(length(nve.vni_vrfs) == 0, true) ? null : [for vni_vrf in nve.vni_vrfs : {
           vni_range = "${vni_vrf.vni_from}-${try(vni_vrf.vni_to, vni_vrf.vni_from)}"
           vrf       = try(vni_vrf.vrf, local.defaults.iosxe.configuration.interfaces.nves.vni_vrfs.vrf, null)
           }
         ]
 
-        vnis = [for vni in try(nve.vnis, []) : {
+        vnis = try(length(nve.vnis) == 0, true) ? null : [for vni in nve.vnis : {
           vni_range            = "${vni.vni_from}-${try(vni.vni_to, vni.vni_from)}"
           ipv4_multicast_group = try(vni.ipv4_multicast_group, local.defaults.iosxe.configuration.interfaces.nves.vnis.ipv4_multicast_group, null)
           ingress_replication  = try(vni.ingress_replication, local.defaults.iosxe.configuration.interfaces.nves.vnis.ingress_replication, null)
