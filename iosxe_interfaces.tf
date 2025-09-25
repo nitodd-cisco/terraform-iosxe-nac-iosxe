@@ -116,7 +116,7 @@ locals {
             "list"
           ),
           []
-        )) == 0 ? true : null
+        )) == 0 && contains(["trunk", "private-vlan-trunk"], try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.mode, null)) ? true : null
         switchport_trunk_native_vlan_tag      = try(int.switchport.trunk_native_vlan_tag, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.trunk_native_vlan_tag, null)
         switchport_trunk_native_vlan          = try(int.switchport.trunk_native_vlan_id, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.trunk_native_vlan_id, null)
         switchport_host                       = try(int.switchport.host, local.defaults.iosxe.devices.configuration.interfaces.ethernets.switchport.host, null)
@@ -920,7 +920,7 @@ locals {
             "list"
           ),
           []
-        )) == 0 ? true : null
+        )) == 0 && contains(["trunk", "private-vlan-trunk"], try(int.switchport.mode, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.mode, null)) ? true : null
         switchport_trunk_native_vlan_tag      = try(int.switchport.trunk_native_vlan_tag, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_native_vlan_tag, null)
         switchport_trunk_native_vlan          = try(int.switchport.trunk_native_vlan_id, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.trunk_native_vlan_id, null)
         switchport_host                       = try(int.switchport.host, local.defaults.iosxe.devices.configuration.interfaces.port_channels.switchport.host, null)
