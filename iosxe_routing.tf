@@ -20,7 +20,7 @@ locals {
           name          = try(hop.name, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.name, null)
           permanent     = try(hop.permanent, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.permanent, null)
           tag           = try(hop.tag, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.tag, null)
-          track_id_name = try(hop.track_id_name, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.track_id_name, null)
+          track_id_name = try(hop.track_id, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.track_id, null)
         } if try(hop.track_id, local.defaults.iosxe.configuration.routing.static_routes.next_hops.track_id, null) != null]
         key = format("%s/%s/%s", device.name,
           try(static_route.prefix, local.defaults.iosxe.configuration.routing.static_routes.prefix, null),
@@ -56,7 +56,7 @@ locals {
             name          = try(hop.name, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.name, null)
             permanent     = try(hop.permanent, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.permanent, null)
             tag           = try(hop.tag, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.tag, null)
-            track_id_name = try(hop.track_id_name, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.track_id_name, null)
+            track_id_name = try(hop.track_id, local.defaults.iosxe.configuration.routing.static_routes.next_hops_with_track.track_id, null)
           } if try(hop.track_id, local.defaults.iosxe.configuration.routing.static_routes.next_hops.track_id, null) != null]
         }]
         key = format("%s/%s", device.name, vrf_name)
