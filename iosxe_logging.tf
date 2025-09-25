@@ -26,7 +26,7 @@ resource "iosxe_logging" "logging" {
   }]
 
   # IPv4 hosts without VRF and without transport
-  ipv4_hosts = [for host in try(local.device_config[each.value.name].logging.hosts, []) : {
+  ipv4_hosts = try(length(local.device_config[each.value.name].logging.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].logging.hosts : {
     ipv4_host = try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, null)
     } if can(regex(":", tostring(try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, "")))) == false && try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null) == null && (
     length(try(host.transport_udp_ports, local.defaults.iosxe.configuration.logging.hosts.transport_udp_ports, [])) == 0 &&
@@ -35,15 +35,15 @@ resource "iosxe_logging" "logging" {
   )]
 
   # IPv4 hosts without VRF but with transport
-  ipv4_hosts_transport = [for host in try(local.device_config[each.value.name].logging.hosts, []) : {
+  ipv4_hosts_transport = try(length(local.device_config[each.value.name].logging.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].logging.hosts : {
     ipv4_host = try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, null)
-    transport_udp_ports = [for u in try(host.transport_udp_ports, []) : {
+    transport_udp_ports = try(length(host.transport_udp_ports) == 0, true) ? null : [for u in host.transport_udp_ports : {
       port_number = u
     }]
-    transport_tcp_ports = [for t in try(host.transport_tcp_ports, []) : {
+    transport_tcp_ports = try(length(host.transport_tcp_ports) == 0, true) ? null : [for t in host.transport_tcp_ports : {
       port_number = t
     }]
-    transport_tls_ports = [for l in try(host.transport_tls_ports, []) : {
+    transport_tls_ports = try(length(host.transport_tls_ports) == 0, true) ? null : [for l in host.transport_tls_ports : {
       port_number = try(l.port, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.port, null)
       profile     = try(l.profile, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.profile, null)
     }]
@@ -54,7 +54,7 @@ resource "iosxe_logging" "logging" {
   )]
 
   # IPv4 VRF hosts without transport
-  ipv4_vrf_hosts = [for host in try(local.device_config[each.value.name].logging.hosts, []) : {
+  ipv4_vrf_hosts = try(length(local.device_config[each.value.name].logging.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].logging.hosts : {
     ipv4_host = try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, null)
     vrf       = try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null)
     } if can(regex(":", tostring(try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, "")))) == false && try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null) != null && (
@@ -64,16 +64,16 @@ resource "iosxe_logging" "logging" {
   )]
 
   # IPv4 VRF hosts with transport
-  ipv4_vrf_hosts_transport = [for host in try(local.device_config[each.value.name].logging.hosts, []) : {
+  ipv4_vrf_hosts_transport = try(length(local.device_config[each.value.name].logging.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].logging.hosts : {
     ipv4_host = try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, null)
     vrf       = try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null)
-    transport_udp_ports = [for u in try(host.transport_udp_ports, []) : {
+    transport_udp_ports = try(length(host.transport_udp_ports) == 0, true) ? null : [for u in host.transport_udp_ports : {
       port_number = u
     }]
-    transport_tcp_ports = [for t in try(host.transport_tcp_ports, []) : {
+    transport_tcp_ports = try(length(host.transport_tcp_ports) == 0, true) ? null : [for t in host.transport_tcp_ports : {
       port_number = t
     }]
-    transport_tls_ports = [for l in try(host.transport_tls_ports, []) : {
+    transport_tls_ports = try(length(host.transport_tls_ports) == 0, true) ? null : [for l in host.transport_tls_ports : {
       port_number = try(l.port, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.port, null)
       profile     = try(l.profile, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.profile, null)
     }]
@@ -84,7 +84,7 @@ resource "iosxe_logging" "logging" {
   )]
 
   # IPv6 hosts without VRF and without transport
-  ipv6_hosts = [for host in try(local.device_config[each.value.name].logging.hosts, []) : {
+  ipv6_hosts = try(length(local.device_config[each.value.name].logging.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].logging.hosts : {
     ipv6_host = try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, null)
     } if can(regex(":", tostring(try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, "")))) == true && try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null) == null && (
     length(try(host.transport_udp_ports, local.defaults.iosxe.configuration.logging.hosts.transport_udp_ports, [])) == 0 &&
@@ -93,15 +93,15 @@ resource "iosxe_logging" "logging" {
   )]
 
   # IPv6 hosts without VRF but with transport
-  ipv6_hosts_transport = [for host in try(local.device_config[each.value.name].logging.hosts, []) : {
+  ipv6_hosts_transport = try(length(local.device_config[each.value.name].logging.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].logging.hosts : {
     ipv6_host = try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, null)
-    transport_udp_ports = [for u in try(host.transport_udp_ports, []) : {
+    transport_udp_ports = try(length(host.transport_udp_ports) == 0, true) ? null : [for u in host.transport_udp_ports : {
       port_number = u
     }]
-    transport_tcp_ports = [for t in try(host.transport_tcp_ports, []) : {
+    transport_tcp_ports = try(length(host.transport_tcp_ports) == 0, true) ? null : [for t in host.transport_tcp_ports : {
       port_number = t
     }]
-    transport_tls_ports = [for l in try(host.transport_tls_ports, []) : {
+    transport_tls_ports = try(length(host.transport_tls_ports) == 0, true) ? null : [for l in host.transport_tls_ports : {
       port_number = try(l.port, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.port, null)
       profile     = try(l.profile, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.profile, null)
     }]
@@ -112,7 +112,7 @@ resource "iosxe_logging" "logging" {
   )]
 
   # IPv6 VRF hosts without transport
-  ipv6_vrf_hosts = [for host in try(local.device_config[each.value.name].logging.hosts, []) : {
+  ipv6_vrf_hosts = try(length(local.device_config[each.value.name].logging.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].logging.hosts : {
     ipv6_host = try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, null)
     vrf       = try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null)
     } if can(regex(":", tostring(try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, "")))) == true && try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null) != null && (
@@ -122,16 +122,16 @@ resource "iosxe_logging" "logging" {
   )]
 
   # IPv6 VRF hosts with transport
-  ipv6_vrf_hosts_transport = [for host in try(local.device_config[each.value.name].logging.hosts, []) : {
+  ipv6_vrf_hosts_transport = try(length(local.device_config[each.value.name].logging.hosts) == 0, true) ? null : [for host in local.device_config[each.value.name].logging.hosts : {
     ipv6_host = try(host.ip, local.defaults.iosxe.configuration.logging.hosts.ip, null)
     vrf       = try(host.vrf, local.defaults.iosxe.configuration.logging.hosts.vrf, null)
-    transport_udp_ports = [for u in try(host.transport_udp_ports, []) : {
+    transport_udp_ports = try(length(host.transport_udp_ports) == 0, true) ? null : [for u in host.transport_udp_ports : {
       port_number = u
     }]
-    transport_tcp_ports = [for t in try(host.transport_tcp_ports, []) : {
+    transport_tcp_ports = try(length(host.transport_tcp_ports) == 0, true) ? null : [for t in host.transport_tcp_ports : {
       port_number = t
     }]
-    transport_tls_ports = [for l in try(host.transport_tls_ports, []) : {
+    transport_tls_ports = try(length(host.transport_tls_ports) == 0, true) ? null : [for l in host.transport_tls_ports : {
       port_number = try(l.port, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.port, null)
       profile     = try(l.profile, local.defaults.iosxe.configuration.logging.hosts.transport_tls_ports.profile, null)
     }]

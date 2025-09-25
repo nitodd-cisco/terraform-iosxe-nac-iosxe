@@ -231,7 +231,7 @@ resource "iosxe_snmp_server" "snmp_server" {
     mib     = try(e.mib, local.defaults.iosxe.configuration.snmp_server.views.mib, null)
     inc_exl = try(e.scope, local.defaults.iosxe.configuration.snmp_server.views.scope, null)
   }]
-  groups = try(length(local.device_config[each.value.name].snmp_server.groups) == 0, true) ? null : [for group in try(local.device_config[each.value.name].snmp_server.groups, []) : {
+  groups = try(length(local.device_config[each.value.name].snmp_server.groups) == 0, true) ? null : [for group in local.device_config[each.value.name].snmp_server.groups : {
     name = group.name
     v3_security = try(length(group.v3_security_levels) == 0, true) ? null : [for e in group.v3_security_levels : {
       security_level      = try(e.security_level, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.security_level, null)
@@ -245,7 +245,7 @@ resource "iosxe_snmp_server" "snmp_server" {
       access_acl_name     = try(e.access_acl_name, local.defaults.iosxe.configuration.snmp_server.groups.v3_securities.access_acl_name, null)
     }]
   }]
-  users = try(length(local.device_config[each.value.name].snmp_server.users) == 0, true) ? null : [for user in try(local.device_config[each.value.name].snmp_server.users, []) : {
+  users = try(length(local.device_config[each.value.name].snmp_server.users) == 0, true) ? null : [for user in local.device_config[each.value.name].snmp_server.users : {
     username = try(user.name, local.defaults.iosxe.configuration.snmp_server.users.name, null)
     grpname  = try(user.group, local.defaults.iosxe.configuration.snmp_server.users.group, null)
 

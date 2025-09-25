@@ -40,7 +40,7 @@ resource "iosxe_ntp" "ntp" {
     iburst     = try(e.iburst, local.defaults.iosxe.configuration.ntp.ntp_servers.iburst, null)
     periodic   = try(e.periodic, local.defaults.iosxe.configuration.ntp.ntp_servers.periodic, null)
   } if try(e.vrf, null) == null]
-  server_vrfs = try(length(distinct([for s in try(local.device_config[each.value.name].ntp.servers, []) : s.vrf if try(s.vrf, null) != null])) == 0, true) ? null : [for vrf_name in distinct([for s in local.device_config[each.value.name].ntp.servers : s.vrf if try(s.vrf, null) != null]) : {
+  server_vrfs = try(length(distinct([for s in local.device_config[each.value.name].ntp.servers : s.vrf if try(s.vrf, null) != null])) == 0, true) ? null : [for vrf_name in distinct([for s in local.device_config[each.value.name].ntp.servers : s.vrf if try(s.vrf, null) != null]) : {
     name = vrf_name
     servers = try(length([for s in local.device_config[each.value.name].ntp.servers : s if try(s.vrf, null) == vrf_name]) == 0, true) ? null : [for s in local.device_config[each.value.name].ntp.servers : {
       ip_address = try(s.ip, local.defaults.iosxe.configuration.ntp.ntp_servers.ip, null)
@@ -59,7 +59,7 @@ resource "iosxe_ntp" "ntp" {
     prefer     = try(e.prefer, local.defaults.iosxe.configuration.ntp.ntp_peers.prefer, null)
     version    = try(e.version, local.defaults.iosxe.configuration.ntp.ntp_peers.version, null)
   } if try(e.vrf, null) == null]
-  peer_vrfs = try(length(distinct([for p in try(local.device_config[each.value.name].ntp.peers, []) : p.vrf if try(p.vrf, null) != null])) == 0, true) ? null : [for vrf_name in distinct([for p in local.device_config[each.value.name].ntp.peers : p.vrf if try(p.vrf, null) != null]) : {
+  peer_vrfs = try(length(distinct([for p in local.device_config[each.value.name].ntp.peers : p.vrf if try(p.vrf, null) != null])) == 0, true) ? null : [for vrf_name in distinct([for p in local.device_config[each.value.name].ntp.peers : p.vrf if try(p.vrf, null) != null]) : {
     name = vrf_name
     peers = try(length([for p in local.device_config[each.value.name].ntp.peers : p if try(p.vrf, null) == vrf_name]) == 0, true) ? null : [for p in local.device_config[each.value.name].ntp.peers : {
       ip_address = try(p.ip, local.defaults.iosxe.configuration.ntp.ntp_peers.ip, null)
