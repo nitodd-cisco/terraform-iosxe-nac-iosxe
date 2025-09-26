@@ -291,6 +291,8 @@ resource "iosxe_bgp_ipv6_unicast_neighbor" "bgp_ipv6_unicast_neighbor" {
   default_originate           = each.value.default_originate
   default_originate_route_map = each.value.default_originate_route_map
   route_maps                  = each.value.route_maps
+
+  depends_on = [iosxe_bgp_neighbor.bgp_neighbor]
 }
 
 locals {
@@ -320,6 +322,8 @@ resource "iosxe_bgp_l2vpn_evpn_neighbor" "bgp_l2vpn_evpn_neighbor" {
   send_community         = each.value.send_community
   route_reflector_client = each.value.route_reflector_client
   soft_reconfiguration   = each.value.soft_reconfiguration
+
+  depends_on = [iosxe_bgp_neighbor.bgp_neighbor]
 }
 
 locals {
@@ -422,4 +426,6 @@ resource "iosxe_bgp_ipv4_unicast_vrf_neighbor" "bgp_ipv4_unicast_vrf_neighbor" {
   next_hop_self                             = each.value.next_hop_self
   next_hop_self_all                         = each.value.next_hop_self_all
   advertisement_interval                    = each.value.advertisement_interval
+
+  depends_on = [iosxe_bgp_address_family_ipv4_vrf.bgp_address_family_ipv4_vrf]
 }
