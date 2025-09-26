@@ -8,7 +8,8 @@ resource "iosxe_bgp" "bgp" {
   router_id_loopback   = try(local.device_config[each.value.name].routing.bgp.router_id_loopback, local.defaults.iosxe.configuration.routing.bgp.router_id_loopback, null)
 
   depends_on = [
-    iosxe_interface_loopback.loopback
+    iosxe_interface_loopback.loopback,
+    iosxe_system.system
   ]
 }
 
@@ -190,6 +191,7 @@ resource "iosxe_bgp_address_family_ipv4_vrf" "bgp_address_family_ipv4_vrf" {
   }]
 
   depends_on = [
+    iosxe_vrf.vrf,
     iosxe_access_list_standard.access_list_standard,
     iosxe_access_list_extended.access_list_extended
   ]
@@ -213,6 +215,10 @@ resource "iosxe_bgp_address_family_ipv6_vrf" "bgp_address_family_ipv6_vrf" {
       evpn      = try(net.evpn, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv6_unicast.vrfs.networks.evpn, null)
     }]
   }]
+
+  depends_on = [
+    iosxe_vrf.vrf
+  ]
 }
 
 locals {
@@ -427,5 +433,8 @@ resource "iosxe_bgp_ipv4_unicast_vrf_neighbor" "bgp_ipv4_unicast_vrf_neighbor" {
   next_hop_self_all                         = each.value.next_hop_self_all
   advertisement_interval                    = each.value.advertisement_interval
 
-  depends_on = [iosxe_bgp_address_family_ipv4_vrf.bgp_address_family_ipv4_vrf]
+  depends_on = [
+    iosxe_vrf.vrf,
+    iosxe_bgp_address_family_ipv4_vrf.bgp_address_family_ipv4_vrf
+  ]
 }
