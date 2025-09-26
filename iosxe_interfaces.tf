@@ -1407,13 +1407,13 @@ locals {
 
         # Lists
         vni_vrfs = try(length(nve.vni_vrfs) == 0, true) ? null : [for vni_vrf in nve.vni_vrfs : {
-          vni_range = "${vni_vrf.vni_from}-${try(vni_vrf.vni_to, vni_vrf.vni_from)}"
+          vni_range = "${vni_vrf.vni_from}${try(format("-%s", vni_vrf.nvi_to))}"
           vrf       = try(vni_vrf.vrf, local.defaults.iosxe.configuration.interfaces.nves.vni_vrfs.vrf, null)
           }
         ]
 
         vnis = try(length(nve.vnis) == 0, true) ? null : [for vni in nve.vnis : {
-          vni_range            = "${vni.vni_from}-${try(vni.vni_to, vni.vni_from)}"
+          vni_range            = "${vni.vni_from}${try(format("-%s", vni_vrf.nvi_to))}"
           ipv4_multicast_group = try(vni.ipv4_multicast_group, local.defaults.iosxe.configuration.interfaces.nves.vnis.ipv4_multicast_group, null)
           ingress_replication  = try(vni.ingress_replication, local.defaults.iosxe.configuration.interfaces.nves.vnis.ingress_replication, null)
           }
