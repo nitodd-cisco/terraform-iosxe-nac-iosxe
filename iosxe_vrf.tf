@@ -31,49 +31,49 @@ locals {
           }
         ]
 
-        ipv4_route_target_import = try(length(vrf.ipv4_route_target_imports) == 0, true) ? null : [
+        ipv4_route_target_import = try(length([for rt in vrf.ipv4_route_target_imports : rt if try(rt.stitching, false) == false]) == 0, true) ? null : [
           for rt in vrf.ipv4_route_target_imports : {
             value = try(rt.value, local.defaults.iosxe.configuration.vrfs.ipv4_route_target_imports.value, null)
           } if try(rt.stitching, false) == false
         ]
 
-        ipv4_route_target_import_stitching = try(length(vrf.ipv4_route_target_imports) == 0, true) ? null : [
+        ipv4_route_target_import_stitching = try(length([for rt in vrf.ipv4_route_target_imports : rt if try(rt.stitching, false) == true]) == 0, true) ? null : [
           for rt in vrf.ipv4_route_target_imports : {
             value = try(rt.value, local.defaults.iosxe.configuration.vrfs.ipv4_route_target_imports.value, null)
           } if try(rt.stitching, false) == true
         ]
 
-        ipv4_route_target_export = try(length(vrf.ipv4_route_target_exports) == 0, true) ? null : [
+        ipv4_route_target_export = try(length([for rt in vrf.ipv4_route_target_exports : rt if try(rt.stitching, false) == false]) == 0, true) ? null : [
           for rt in vrf.ipv4_route_target_exports : {
             value = try(rt.value, local.defaults.iosxe.configuration.vrfs.ipv4_route_target_exports.value, null)
           } if try(rt.stitching, false) == false
         ]
 
-        ipv4_route_target_export_stitching = try(length(vrf.ipv4_route_target_exports) == 0, true) ? null : [
+        ipv4_route_target_export_stitching = try(length([for rt in vrf.ipv4_route_target_exports : rt if try(rt.stitching, false) == true]) == 0, true) ? null : [
           for rt in vrf.ipv4_route_target_exports : {
             value = try(rt.value, local.defaults.iosxe.configuration.vrfs.ipv4_route_target_exports.value, null)
           } if try(rt.stitching, false) == true
         ]
 
-        ipv6_route_target_import = try(length(vrf.ipv6_route_target_imports) == 0, true) ? null : [
+        ipv6_route_target_import = try(length([for rt in vrf.ipv6_route_target_imports : rt if try(rt.stitching, false) == false]) == 0, true) ? null : [
           for rt in vrf.ipv6_route_target_imports : {
             value = try(rt.value, local.defaults.iosxe.configuration.vrfs.ipv6_route_target_imports.value, null)
           } if try(rt.stitching, false) == false
         ]
 
-        ipv6_route_target_import_stitching = try(length(vrf.ipv6_route_target_imports) == 0, true) ? null : [
+        ipv6_route_target_import_stitching = try(length([for rt in vrf.ipv6_route_target_imports : rt if try(rt.stitching, false) == true]) == 0, true) ? null : [
           for rt in vrf.ipv6_route_target_imports : {
             value = try(rt.value, local.defaults.iosxe.configuration.vrfs.ipv6_route_target_imports.value, null)
           } if try(rt.stitching, false) == true
         ]
 
-        ipv6_route_target_export = try(length(vrf.ipv6_route_target_exports) == 0, true) ? null : [
+        ipv6_route_target_export = try(length([for rt in vrf.ipv6_route_target_exports : rt if try(rt.stitching, false) == false]) == 0, true) ? null : [
           for rt in vrf.ipv6_route_target_exports : {
             value = try(rt.value, local.defaults.iosxe.configuration.vrfs.ipv6_route_target_exports.value, null)
           } if try(rt.stitching, false) == false
         ]
 
-        ipv6_route_target_export_stitching = try(length(vrf.ipv6_route_target_exports) == 0, true) ? null : [
+        ipv6_route_target_export_stitching = try(length([for rt in vrf.ipv6_route_target_exports : rt if try(rt.stitching, false) == true]) == 0, true) ? null : [
           for rt in vrf.ipv6_route_target_exports : {
             value = try(rt.value, local.defaults.iosxe.configuration.vrfs.ipv6_route_target_exports.value, null)
           } if try(rt.stitching, false) == true
