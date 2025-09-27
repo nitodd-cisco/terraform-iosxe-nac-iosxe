@@ -1435,4 +1435,6 @@ resource "iosxe_interface_nve" "nve" {
   # Lists
   vnis     = each.value.vnis
   vni_vrfs = each.value.vni_vrfs
+
+  depends_on = [iosxe_vrf.vrf]
 }
