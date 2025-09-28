@@ -3,6 +3,8 @@ module "model" {
 
   yaml_directories          = var.yaml_directories
   yaml_files                = var.yaml_files
+  template_directories      = var.template_directories
+  template_files            = var.template_files
   model                     = var.model
   managed_device_groups     = var.managed_device_groups
   managed_devices           = var.managed_devices
