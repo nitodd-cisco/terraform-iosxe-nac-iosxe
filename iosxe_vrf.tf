@@ -79,9 +79,6 @@ resource "iosxe_vrf" "vrf" {
 
   vpn_id = each.value.vpn_id
 
-  route_target_import = each.value.route_target_import
-  route_target_export = each.value.route_target_export
-
   ipv4_route_target_import           = each.value.ipv4_route_target_import
   ipv4_route_target_import_stitching = each.value.ipv4_route_target_import_stitching
   ipv4_route_target_export           = each.value.ipv4_route_target_export
