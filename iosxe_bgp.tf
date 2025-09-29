@@ -46,7 +46,7 @@ locals {
         timers_holdtime                           = try(neighbor.timers_holdtime, local.defaults.iosxe.configuration.routing.bgp.neighbors.timers_holdtime, null)
         timers_minimum_neighbor_hold              = try(neighbor.timers_minimum_neighbor_holdtime, local.defaults.iosxe.configuration.routing.bgp.neighbors.timers_minimum_neighbor_holdtime, null)
         ttl_security_hops                         = try(neighbor.ttl_security_hops, local.defaults.iosxe.configuration.routing.bgp.neighbors.ttl_security_hops, null)
-        update_source_loopback                    = try(neighbor.update_source_loopback, local.defaults.iosxe.configuration.routing.bgp.neighbors.update_source_loopback, null)
+        update_source_loopback                    = try(neighbor.update_source_interface_type, local.defaults.iosxe.configuration.routing.bgp.neighbors.update_source_interface_type, null) == "Loopback" ? try(neighbor.update_source_interface_id, local.defaults.iosxe.configuration.routing.bgp.neighbors.update_source_interface_id, null) : null
         ebgp_multihop                             = try(neighbor.ebgp_multihop, local.defaults.iosxe.configuration.routing.bgp.neighbors.ebgp_multihop, null)
         ebgp_multihop_max_hop                     = try(neighbor.ebgp_multihop_max_hop, local.defaults.iosxe.configuration.routing.bgp.neighbors.ebgp_multihop_max_hop, null)
       }
@@ -365,7 +365,7 @@ locals {
           local_as_no_prepend                       = try(neighbor.local_as_no_prepend, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.local_as_no_prepend, null)
           local_as_replace_as                       = try(neighbor.local_as_replace_as, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.local_as_replace_as, null)
           local_as_dual_as                          = try(neighbor.local_as_dual_as, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.local_as_dual_as, null)
-          update_source_loopback                    = try(neighbor.update_source_loopback, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.update_source_loopback, null)
+          update_source_loopback                    = try(neighbor.update_source_interface_type, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.update_source_interface_type, null) == "Loopback" ? try(neighbor.update_source_interface_id, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.update_source_interface_id, null) : null
           activate                                  = try(neighbor.activate, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.activate, true)
           send_community                            = try(neighbor.send_community, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.send_community, null)
           route_reflector_client                    = try(neighbor.route_reflector_client, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.neighbors.route_reflector_client, null)
