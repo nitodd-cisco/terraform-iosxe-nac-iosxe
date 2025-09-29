@@ -10,18 +10,6 @@ variable "yaml_files" {
   default     = []
 }
 
-variable "template_directories" {
-  description = "List of paths to template directories."
-  type        = list(string)
-  default     = []
-}
-
-variable "template_files" {
-  description = "List of paths to template files."
-  type        = list(string)
-  default     = []
-}
-
 variable "model" {
   description = "As an alternative to YAML files, a native Terraform data structure can be provided as well."
   type        = map(any)
