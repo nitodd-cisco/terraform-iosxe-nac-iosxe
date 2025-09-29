@@ -9,7 +9,7 @@ resource "iosxe_evpn" "evpn" {
   mac_duplication_time      = try(local.device_config[each.value.name].evpn.mac_duplication_time, local.defaults.iosxe.configuration.evpn.mac_duplication_time, null)
   ip_duplication_limit      = try(local.device_config[each.value.name].evpn.ip_duplication_limit, local.defaults.iosxe.configuration.evpn.ip_duplication_limit, null)
   ip_duplication_time       = try(local.device_config[each.value.name].evpn.ip_duplication_time, local.defaults.iosxe.configuration.evpn.ip_duplication_time, null)
-  router_id_loopback        = try(local.device_config[each.value.name].evpn.router_id_loopback, local.defaults.iosxe.configuration.evpn.router_id_loopback, null)
+  router_id_loopback        = try(local.device_config[each.value.name].evpn.router_id_interface_type, local.defaults.iosxe.configuration.evpn.router_id_interface_type, null) == "Loopback" ? try(local.device_config[each.value.name].evpn.router_id_interface_id, local.defaults.iosxe.configuration.evpn.router_id_interface_id, null) : null
   default_gateway_advertise = try(local.device_config[each.value.name].evpn.default_gateway_advertise, local.defaults.iosxe.configuration.evpn.default_gateway_advertise, null)
   logging_peer_state        = try(local.device_config[each.value.name].evpn.logging_peer_state, local.defaults.iosxe.configuration.evpn.logging_peer_state, null)
   route_target_auto_vni     = try(local.device_config[each.value.name].evpn.route_target_auto_vni, local.defaults.iosxe.configuration.evpn.route_target_auto_vni, null)
