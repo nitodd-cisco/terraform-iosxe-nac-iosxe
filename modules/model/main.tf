@@ -23,26 +23,26 @@ locals {
     )...)
   }
 
-  global_config_templates = [
+  global_config_templates = compact([
     for t in try(local.global.configuration_templates, []) :
-    [for path in local.template_paths : templatefile(path, try(local.global.variables, {})) if split(".", basename(path))[0] == t][0]
-  ]
+    try([for path in local.template_paths : templatefile(path, try(local.global.variables, {})) if split(".", basename(path))[0] == t][0], null)
+  ])
 
   group_config_templates = { for device in local.managed_devices :
     device.name => flatten([
-      for dg in local.device_groups : [
+      for dg in local.device_groups : compact([
         for t in try(dg.configuration_templates, []) :
-        [for path in local.template_paths : templatefile(path, merge(local.device_variables[device.name], try(dg.variables, {}))) if split(".", basename(path))[0] == t][0]
-      ]
+        try([for path in local.template_paths : templatefile(path, merge(local.device_variables[device.name], try(dg.variables, {}))) if split(".", basename(path))[0] == t][0], null)
+      ])
       if contains(try(device.device_groups, []), dg.name) || contains(try(dg.devices, []), device.name)
     ])
   }
 
   device_config_templates = { for device in local.managed_devices :
-    device.name => [
+    device.name => compact([
       for t in try(device.configuration_templates, []) :
-      [for path in local.template_paths : templatefile(path, local.device_variables[device.name]) if split(".", basename(path))[0] == t][0]
-    ]
+      try([for path in local.template_paths : templatefile(path, local.device_variables[device.name]) if split(".", basename(path))[0] == t][0], null)
+    ])
   }
 
   devices_raw_config = { for device in local.managed_devices :
