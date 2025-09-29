@@ -1,7 +1,7 @@
 locals {
   yaml_strings_directories = flatten([
     for dir in var.yaml_directories : [
-      for file in fileset(".", "${dir}/*.{yml,yaml}") : file(file)
+      for file in fileset(".", "${dir}/**/*.{yml,yaml}") : file(file)
     ]
   ])
   yaml_strings_files = [
@@ -9,7 +9,7 @@ locals {
   ]
   template_paths = concat(var.yaml_directories, flatten([
     for dir in var.yaml_directories : [
-      fileset(".", "${dir}/*.{tmpl}")
+      fileset(".", "${dir}/**/*.{tmpl}")
     ]
   ]))
   model_strings   = length(keys(var.model)) != 0 ? [yamlencode(var.model)] : []
