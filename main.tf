@@ -27,22 +27,9 @@ provider "iosxe" {
   devices = local.provider_devices
 }
 
-locals {
-  cli_snippets = flatten([
-    for device in local.devices : [
-      for cli in try(local.device_config[device.name].extensions.cli_snippets, []) : {
-        key    = format("%s/%s", device.name, try(cli.name, null))
-        device = device.name
-        name   = try(cli.name, local.defaults.iosxe.configuration.extensions.cli_snippets.name, null)
-        cli    = cli.content
-      }
-    ]
-  ])
-}
-
 resource "iosxe_cli" "cli" {
-  for_each = { for e in local.cli_snippets : e.key => e }
-  device   = each.value.device
+  for_each = { for device in local.devices : device.name => device if length(device.cli) > 0 }
+  device   = each.key
 
   cli = each.value.cli
 

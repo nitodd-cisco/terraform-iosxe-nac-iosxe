@@ -1,10 +1,9 @@
 locals {
-  iosxe                   = try(local.model.iosxe, {})
-  global                  = try(local.iosxe.global, [])
-  devices                 = try(local.iosxe.devices, [])
-  device_groups           = try(local.iosxe.device_groups, [])
-  interface_groups        = try(local.iosxe.interface_groups, [])
-  configuration_templates = try(local.iosxe.configuration_templates, [])
+  iosxe            = try(local.model.iosxe, {})
+  global           = try(local.iosxe.global, [])
+  devices          = try(local.iosxe.devices, [])
+  device_groups    = try(local.iosxe.device_groups, [])
+  interface_groups = try(local.iosxe.interface_groups, [])
 
   all_devices = [for device in local.devices : {
     name    = device.name
@@ -25,54 +24,51 @@ locals {
     )...)
   }
 
-  global_file_config_templates = { for device in local.managed_devices :
+  templates = { for template in try(local.iosxe.templates, []) : template.name => template }
+
+  global_file_templates = { for device in local.managed_devices :
     device.name => compact([
-      for t in try(local.global.configuration_templates, []) :
-      try([for path in local.template_paths : templatefile(path, local.device_variables[device.name]) if split(".", basename(path))[0] == t][0], null)
+      for t in try(local.global.templates, []) : templatefile(local.templates[t].file, local.device_variables[device.name]) if local.templates[t].type == "file"
     ])
   }
 
-  group_file_config_templates = { for device in local.managed_devices :
+  group_file_templates = { for device in local.managed_devices :
     device.name => flatten([
       for dg in local.device_groups : compact([
-        for t in try(dg.configuration_templates, []) :
-        try([for path in local.template_paths : templatefile(path, merge(local.device_variables[device.name], try(dg.variables, {}))) if split(".", basename(path))[0] == t][0], null)
+        for t in try(dg.templates, []) : templatefile(local.templates[t].file, merge(local.device_variables[device.name], try(dg.variables, {}))) if local.templates[t].type == "file"
       ])
       if contains(try(device.device_groups, []), dg.name) || contains(try(dg.devices, []), device.name)
     ])
   }
 
-  device_file_config_templates = { for device in local.managed_devices :
+  device_file_templates = { for device in local.managed_devices :
     device.name => compact([
-      for t in try(device.configuration_templates, []) :
-      try([for path in local.template_paths : templatefile(path, local.device_variables[device.name]) if split(".", basename(path))[0] == t][0], null)
+      for t in try(device.templates, []) : templatefile(local.templates[t].file, local.device_variables[device.name]) if local.templates[t].type == "file"
     ])
   }
 
-  global_model_config_templates_raw = { for device in local.managed_devices :
+  global_model_templates_raw = { for device in local.managed_devices :
     device.name => [
-      for t in try(local.global.configuration_templates, []) :
-      yamlencode(try([for ct in local.configuration_templates : try(ct.configuration, {}) if ct.name == t][0], {}))
+      for t in try(local.global.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if local.templates[t].type == "model"
     ]
   }
 
-  global_model_config_templates = { for device, configs in local.global_model_config_templates_raw :
+  global_model_templates = { for device, configs in local.global_model_templates_raw :
     device => provider::utils::yaml_merge(
-      [for config in configs : templatestring(config, merge(local.device_variables[device]))]
+      [for config in configs : templatestring(config, local.device_variables[device])]
     )
   }
 
-  group_model_config_templates_raw = { for device in local.managed_devices :
+  group_model_templates_raw = { for device in local.managed_devices :
     device.name => {
       for dg in local.device_groups : dg.name => [
-        for t in try(dg.configuration_templates, []) :
-        yamlencode(try([for ct in local.configuration_templates : try(ct.configuration, {}) if ct.name == t][0], {}))
+        for t in try(dg.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if local.templates[t].type == "model"
       ]
       if contains(try(device.device_groups, []), dg.name) || contains(try(dg.devices, []), device.name)
     }
   }
 
-  group_model_config_templates = { for device, groups in local.group_model_config_templates_raw :
+  group_model_templates = { for device, groups in local.group_model_templates_raw :
     device => provider::utils::yaml_merge([
       for group_name, group_configs in groups : provider::utils::yaml_merge(
         [for config in group_configs : templatestring(config, merge(local.device_variables[device], [for dg in local.device_groups : try(dg.variables, {}) if group_name == dg.name][0]))]
@@ -80,29 +76,28 @@ locals {
     ])
   }
 
-  device_model_config_templates_raw = { for device in local.managed_devices :
+  device_model_templates_raw = { for device in local.managed_devices :
     device.name => [
-      for t in try(device.configuration_templates, []) :
-      yamlencode(try([for ct in local.configuration_templates : try(ct.configuration, {}) if ct.name == t][0], {}))
+      for t in try(device.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if local.templates[t].type == "model"
     ]
   }
 
-  device_model_config_templates = { for device, configs in local.device_model_config_templates_raw :
+  device_model_templates = { for device, configs in local.device_model_templates_raw :
     device => provider::utils::yaml_merge(
-      [for config in configs : templatestring(config, merge(local.device_variables[device]))]
+      [for config in configs : templatestring(config, local.device_variables[device])]
     )
   }
 
   devices_raw_config = { for device in local.managed_devices :
     device.name => try(provider::utils::yaml_merge(concat(
-      local.global_file_config_templates[device.name],
-      [local.global_model_config_templates[device.name]],
+      local.global_file_templates[device.name],
+      [local.global_model_templates[device.name]],
       [yamlencode(try(local.global.configuration, {}))],
-      local.group_file_config_templates[device.name],
-      [local.group_model_config_templates[device.name]],
+      local.group_file_templates[device.name],
+      [local.group_model_templates[device.name]],
       [for dg in local.device_groups : yamlencode(try(dg.configuration, {})) if contains(try(device.device_groups, []), dg.name) || contains(try(dg.devices, []), device.name)],
-      local.device_file_config_templates[device.name],
-      [local.device_model_config_templates[device.name]],
+      local.device_file_templates[device.name],
+      [local.device_model_templates[device.name]],
       [yamlencode(try(device.configuration, {}))]
     )), "")
   }
@@ -124,6 +119,47 @@ locals {
         configuration = yamldecode(templatestring(local.interface_groups_raw_config[device.name][ig.name], local.device_variables[device.name]))
       }
     ]
+  }
+
+  global_cli_templates_raw = { for device in local.managed_devices :
+    device.name => compact([
+      for t in try(local.global.templates, []) : try(local.templates[t].content, "") if local.templates[t].type == "cli"
+    ])
+  }
+
+  global_cli_templates = { for device, configs in local.global_cli_templates_raw :
+    device => [for config in configs : templatestring(config, local.device_variables[device])]
+  }
+
+  group_cli_templates_raw = { for device in local.managed_devices :
+    device.name => {
+      for dg in local.device_groups : dg.name => compact([
+        for t in try(dg.templates, []) : try(local.templates[t].content, "") if local.templates[t].type == "cli"
+      ])
+      if contains(try(device.device_groups, []), dg.name) || contains(try(dg.devices, []), device.name)
+    }
+  }
+
+  group_cli_templates = { for device, groups in local.group_cli_templates_raw :
+    device => flatten([
+      for group_name, group_configs in groups : [
+        [for config in group_configs : templatestring(config, merge(local.device_variables[device], [for dg in local.device_groups : try(dg.variables, {}) if group_name == dg.name][0]))]
+      ]
+    ])
+  }
+
+  device_cli_templates_raw = { for device in local.managed_devices :
+    device.name => compact([
+      for t in try(device.templates, []) : try(local.templates[t].content, "") if local.templates[t].type == "cli"
+    ])
+  }
+
+  device_cli_templates = { for device, configs in local.device_cli_templates_raw :
+    device => [for config in configs : templatestring(config, local.device_variables[device])]
+  }
+
+  all_cli_templates = { for device in local.managed_devices :
+    device.name => concat(local.global_cli_templates[device.name], local.group_cli_templates[device.name], local.device_cli_templates[device.name])
   }
 
   iosxe_devices = {
@@ -171,6 +207,7 @@ locals {
               )
             }
           )
+          cli = local.all_cli_templates[device.name]
         }
       ]
     }
