@@ -159,7 +159,7 @@ locals {
   }
 
   all_cli_templates = { for device in local.managed_devices :
-    device.name => concat(local.global_cli_templates[device.name], local.group_cli_templates[device.name], local.device_cli_templates[device.name])
+    device.name => join("\n", concat(local.global_cli_templates[device.name], local.group_cli_templates[device.name], local.device_cli_templates[device.name]))
   }
 
   iosxe_devices = {
