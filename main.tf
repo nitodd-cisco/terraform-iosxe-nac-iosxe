@@ -27,11 +27,23 @@ provider "iosxe" {
   devices = local.provider_devices
 }
 
-resource "iosxe_cli" "cli" {
-  for_each = { for device in local.devices : device.name => device if length(device.cli) > 0 }
-  device   = each.key
+locals {
+  cli_templates = flatten([
+    for device in local.devices : [
+      for template in try(device.cli_templates, []) : {
+        key     = format("%s/%s", device.name, template.name)
+        device  = device.name
+        content = template.content
+      }
+    ]
+  ])
+}
 
-  cli = each.value.cli
+resource "iosxe_cli" "cli" {
+  for_each = { for e in local.cli_templates : e.key => e }
+  device   = each.value.device
+
+  cli = each.value.content
 
   depends_on = [
     iosxe_aaa.aaa,

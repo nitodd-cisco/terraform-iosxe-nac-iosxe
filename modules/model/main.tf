@@ -28,14 +28,14 @@ locals {
 
   global_file_templates = { for device in local.managed_devices :
     device.name => compact([
-      for t in try(local.global.templates, []) : templatefile(local.templates[t].file, local.device_variables[device.name]) if local.templates[t].type == "file"
+      for t in try(local.global.templates, []) : templatefile(local.templates[t].file, local.device_variables[device.name]) if try(local.templates[t].type, null) == "file"
     ])
   }
 
   group_file_templates = { for device in local.managed_devices :
     device.name => flatten([
       for dg in local.device_groups : compact([
-        for t in try(dg.templates, []) : templatefile(local.templates[t].file, merge(local.device_variables[device.name], try(dg.variables, {}))) if local.templates[t].type == "file"
+        for t in try(dg.templates, []) : templatefile(local.templates[t].file, merge(local.device_variables[device.name], try(dg.variables, {}))) if try(local.templates[t].type, null) == "file"
       ])
       if contains(try(device.device_groups, []), dg.name) || contains(try(dg.devices, []), device.name)
     ])
@@ -43,13 +43,13 @@ locals {
 
   device_file_templates = { for device in local.managed_devices :
     device.name => compact([
-      for t in try(device.templates, []) : templatefile(local.templates[t].file, local.device_variables[device.name]) if local.templates[t].type == "file"
+      for t in try(device.templates, []) : templatefile(local.templates[t].file, local.device_variables[device.name]) if try(local.templates[t].type, null) == "file"
     ])
   }
 
   global_model_templates_raw = { for device in local.managed_devices :
     device.name => [
-      for t in try(local.global.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if local.templates[t].type == "model"
+      for t in try(local.global.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if try(local.templates[t].type, null) == "model"
     ]
   }
 
@@ -62,7 +62,7 @@ locals {
   group_model_templates_raw = { for device in local.managed_devices :
     device.name => {
       for dg in local.device_groups : dg.name => [
-        for t in try(dg.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if local.templates[t].type == "model"
+        for t in try(dg.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if try(local.templates[t].type, null) == "model"
       ]
       if contains(try(device.device_groups, []), dg.name) || contains(try(dg.devices, []), device.name)
     }
@@ -78,7 +78,7 @@ locals {
 
   device_model_templates_raw = { for device in local.managed_devices :
     device.name => [
-      for t in try(device.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if local.templates[t].type == "model"
+      for t in try(device.templates, []) : yamlencode(try(local.templates[t].configuration, {})) if try(local.templates[t].type, null) == "model"
     ]
   }
 
@@ -122,44 +122,49 @@ locals {
   }
 
   global_cli_templates_raw = { for device in local.managed_devices :
-    device.name => compact([
-      for t in try(local.global.templates, []) : try(local.templates[t].content, "") if local.templates[t].type == "cli"
-    ])
+    device.name => {
+      for t in try(local.global.templates, []) : local.templates[t].name => local.templates[t].content if try(local.templates[t].type, null) == "cli" && try(local.templates[t].content, "") != ""
+    }
   }
 
-  global_cli_templates = { for device, configs in local.global_cli_templates_raw :
-    device => [for config in configs : templatestring(config, local.device_variables[device])]
+  global_cli_templates = { for device, templates in local.global_cli_templates_raw :
+    device => { for name, content in templates : name => templatestring(content, local.device_variables[device]) }
   }
 
   group_cli_templates_raw = { for device in local.managed_devices :
     device.name => {
-      for dg in local.device_groups : dg.name => compact([
-        for t in try(dg.templates, []) : try(local.templates[t].content, "") if local.templates[t].type == "cli"
-      ])
+      for dg in local.device_groups : dg.name => {
+        for t in try(dg.templates, []) : "${local.templates[t].name}/${dg.name}" => local.templates[t].content if try(local.templates[t].type, null) == "cli" && try(local.templates[t].content, "") != ""
+      }
       if contains(try(device.device_groups, []), dg.name) || contains(try(dg.devices, []), device.name)
     }
   }
 
   group_cli_templates = { for device, groups in local.group_cli_templates_raw :
-    device => flatten([
-      for group_name, group_configs in groups : [
-        [for config in group_configs : templatestring(config, merge(local.device_variables[device], [for dg in local.device_groups : try(dg.variables, {}) if group_name == dg.name][0]))]
-      ]
-    ])
+    device => merge([
+      for group_name, group_configs in groups : {
+        for name, content in group_configs : name => templatestring(content, merge(local.device_variables[device], [for dg in local.device_groups : try(dg.variables, {}) if group_name == dg.name][0]))
+      }
+    ]...)
   }
 
   device_cli_templates_raw = { for device in local.managed_devices :
-    device.name => compact([
-      for t in try(device.templates, []) : try(local.templates[t].content, "") if local.templates[t].type == "cli"
-    ])
+    device.name => {
+      for t in try(device.templates, []) : local.templates[t].name => local.templates[t].content if try(local.templates[t].type, null) == "cli" && try(local.templates[t].content, "") != ""
+    }
   }
 
   device_cli_templates = { for device, configs in local.device_cli_templates_raw :
-    device => [for config in configs : templatestring(config, local.device_variables[device])]
+    device => { for name, content in configs : name => templatestring(content, local.device_variables[device]) }
   }
 
   all_cli_templates = { for device in local.managed_devices :
-    device.name => join("\n", concat(local.global_cli_templates[device.name], local.group_cli_templates[device.name], local.device_cli_templates[device.name]))
+    device.name => concat(
+      [for name, content in local.global_cli_templates[device.name] : { "name" = name, "content" = content }],
+      [for name, content in local.group_cli_templates[device.name] : { "name" = name, "content" = content }],
+      [for name, content in local.device_cli_templates[device.name] : { "name" = name, "content" = content }],
+      try(device.cli_templates, [])
+    )
   }
 
   iosxe_devices = {
@@ -207,7 +212,7 @@ locals {
               )
             }
           )
-          cli = local.all_cli_templates[device.name]
+          cli_templates = local.all_cli_templates[device.name]
         }
       ]
     }
