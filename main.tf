@@ -44,6 +44,7 @@ resource "iosxe_cli" "cli" {
   device   = each.value.device
 
   cli = each.value.content
+  raw = true
 
   depends_on = [
     iosxe_aaa.aaa,
