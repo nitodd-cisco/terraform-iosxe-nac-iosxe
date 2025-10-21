@@ -95,6 +95,11 @@ module "iosxe" {
 | [iosxe_cli.cli_2](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/cli) | resource |
 | [iosxe_cli.cli_3](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/cli) | resource |
 | [iosxe_cli.cli_4](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/cli) | resource |
+| [iosxe_cli.cli_5](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/cli) | resource |
+| [iosxe_cli.cli_6](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/cli) | resource |
+| [iosxe_cli.cli_7](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/cli) | resource |
+| [iosxe_cli.cli_8](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/cli) | resource |
+| [iosxe_cli.cli_9](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/cli) | resource |
 | [iosxe_clock.clock](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/clock) | resource |
 | [iosxe_community_list_expanded.community_list_expanded](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/community_list_expanded) | resource |
 | [iosxe_community_list_standard.community_list_standard](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.9.3/docs/resources/community_list_standard) | resource |
