@@ -191,8 +191,8 @@ locals {
       devices = [
         for device in try(local.managed_devices, []) : {
           name    = device.name
-          url     = device.url
-          host    = device.host
+          url     = try(device.url, null)
+          host    = try(device.host, null)
           managed = try(device.managed, local.defaults.iosxe.devices.managed, true)
           configuration = merge(
             { for k, v in try(local.devices_config[device.name], {}) : k => v if k != "interfaces" },
