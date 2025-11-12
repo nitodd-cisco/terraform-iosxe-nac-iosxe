@@ -7,8 +7,8 @@ locals {
 
   all_devices = [for device in local.devices : {
     name    = device.name
-    url     = device.url
-    host    = device.host
+    url     = try(device.url, null)
+    host    = try(device.host, null)
     managed = try(device.managed, local.defaults.iosxe.devices.managed, true)
   }]
 
