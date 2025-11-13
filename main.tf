@@ -351,9 +351,10 @@ resource "iosxe_cli" "cli_9" {
 }
 
 resource "iosxe_commit" "commit" {
-  for_each = { for device in local.devices : device.name => device }
+  for_each = { for device in local.devices : device.name => device if var.device_transaction || var.save_config }
   device   = each.key
 
+  commit      = var.device_transaction
   save_config = var.save_config
 
   depends_on = [
