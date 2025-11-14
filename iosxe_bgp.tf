@@ -329,7 +329,10 @@ resource "iosxe_bgp_l2vpn_evpn_neighbor" "bgp_l2vpn_evpn_neighbor" {
   route_reflector_client = each.value.route_reflector_client
   soft_reconfiguration   = each.value.soft_reconfiguration
 
-  depends_on = [iosxe_bgp_neighbor.bgp_neighbor]
+  depends_on = [
+    iosxe_bgp_neighbor.bgp_neighbor,
+    iosxe_bgp_address_family_l2vpn.bgp_address_family_l2vpn
+  ]
 }
 
 locals {
