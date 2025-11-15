@@ -7,7 +7,6 @@ resource "iosxe_bgp" "bgp" {
   log_neighbor_changes = try(local.device_config[each.value.name].routing.bgp.log_neighbor_changes, local.defaults.iosxe.configuration.routing.bgp.log_neighbor_changes, null)
   router_id_ip         = try(local.device_config[each.value.name].routing.bgp.router_id, local.defaults.iosxe.configuration.routing.bgp.router_id, null)
   router_id_loopback   = try(local.device_config[each.value.name].routing.bgp.router_id_interface_type, local.defaults.iosxe.configuration.routing.bgp.router_id_interface_type, null) == "Loopback" ? try(local.device_config[each.value.name].routing.bgp.router_id_interface_id, local.defaults.iosxe.configuration.routing.bgp.router_id_interface_id, null) : null
-
   depends_on = [
     iosxe_interface_loopback.loopback,
     iosxe_system.system
@@ -95,6 +94,42 @@ resource "iosxe_bgp_neighbor" "bgp_neighbor" {
   ]
 }
 
+locals {
+  template_peer_policies = flatten([
+    for device in local.devices : [
+      for peer_policy in try(local.device_config[device.name].routing.bgp.template_peer_policies, []) : {
+        key                       = format("%s/%s", device.name, peer_policy.name)
+        device                    = device.name
+        asn                       = iosxe_bgp.bgp[device.name].asn
+        name                      = try(peer_policy.name, null)
+        send_community            = try(peer_policy.send_community, null)
+        route_reflector_client    = try(peer_policy.route_reflector_client, null)
+        allowas_in_as_number      = try(peer_policy.allowas_in_as_number, null)
+        as_override_split_horizon = try(peer_policy.as_override_split_horizon, null)
+        route_maps = try(length(peer_policy.route_maps) == 0, true) ? null : [for route_map in peer_policy.route_maps : {
+          in_out         = try(route_map.in_out, null)
+          route_map_name = try(route_map.route_map_name, null)
+        }]
+      }
+    ]
+  ])
+}
+
+resource "iosxe_bgp_peer_policy_template" "bgp_peer_policy_template" {
+  for_each = { for e in local.template_peer_policies : e.key => e }
+  device   = each.value.device
+
+  asn                       = each.value.asn
+  name                      = each.value.name
+  send_community            = each.value.send_community
+  route_reflector_client    = each.value.route_reflector_client
+  allowas_in_as_number      = each.value.allowas_in_as_number
+  as_override_split_horizon = each.value.as_override_split_horizon
+  route_maps                = each.value.route_maps
+
+  depends_on = [iosxe_route_map.route_map]
+}
+
 resource "iosxe_bgp_address_family_ipv4" "bgp_address_family_ipv4" {
   for_each = { for device in local.devices : device.name => device if try(local.device_config[device.name].routing.bgp.address_family.ipv4_unicast, null) != null }
   device   = each.value.name
@@ -147,6 +182,8 @@ resource "iosxe_bgp_address_family_ipv6" "bgp_address_family_ipv6" {
     route_map = try(net.route_map, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv6_unicast.networks.route_map, null)
     backdoor  = try(net.backdoor, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv6_unicast.networks.backdoor, null)
   }]
+
+
 }
 
 resource "iosxe_bgp_address_family_l2vpn" "bgp_address_family_l2vpn" {
