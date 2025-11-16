@@ -90,6 +90,7 @@ module "iosxe" {
 | [iosxe_bgp_l2vpn_evpn_neighbor.bgp_l2vpn_evpn_neighbor](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.10.2/docs/resources/bgp_l2vpn_evpn_neighbor) | resource |
 | [iosxe_bgp_neighbor.bgp_neighbor](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.10.2/docs/resources/bgp_neighbor) | resource |
 | [iosxe_bgp_peer_policy_template.bgp_peer_policy_template](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.10.2/docs/resources/bgp_peer_policy_template) | resource |
+| [iosxe_bgp_peer_session_template.bgp_peer_session_template](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.10.2/docs/resources/bgp_peer_session_template) | resource |
 | [iosxe_cdp.cdp](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.10.2/docs/resources/cdp) | resource |
 | [iosxe_class_map.class_map](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.10.2/docs/resources/class_map) | resource |
 | [iosxe_cli.cli_0](https://registry.terraform.io/providers/CiscoDevNet/iosxe/0.10.2/docs/resources/cli) | resource |
