@@ -5,8 +5,11 @@ resource "iosxe_bgp" "bgp" {
   asn                  = try(local.device_config[each.value.name].routing.bgp.as_number, local.defaults.iosxe.configuration.routing.bgp.as_number, null)
   default_ipv4_unicast = try(local.device_config[each.value.name].routing.bgp.default_ipv4_unicast, local.defaults.iosxe.configuration.routing.bgp.default_ipv4_unicast, null)
   log_neighbor_changes = try(local.device_config[each.value.name].routing.bgp.log_neighbor_changes, local.defaults.iosxe.configuration.routing.bgp.log_neighbor_changes, null)
-  router_id_ip         = try(local.device_config[each.value.name].routing.bgp.router_id, local.defaults.iosxe.configuration.routing.bgp.router_id, null)
   router_id_loopback   = try(local.device_config[each.value.name].routing.bgp.router_id_interface_type, local.defaults.iosxe.configuration.routing.bgp.router_id_interface_type, null) == "Loopback" ? try(local.device_config[each.value.name].routing.bgp.router_id_interface_id, local.defaults.iosxe.configuration.routing.bgp.router_id_interface_id, null) : null
+  router_id_ip         = try(local.device_config[each.value.name].routing.bgp.router_id_ip, local.defaults.iosxe.configuration.routing.bgp.router_id_ip, null)
+  bgp_graceful_restart = try(local.device_config[each.value.name].routing.bgp.bgp_graceful_restart, local.defaults.iosxe.configuration.routing.bgp.bgp_graceful_restart, null)
+  bgp_update_delay     = try(local.device_config[each.value.name].routing.bgp.bgp_update_delay, local.defaults.iosxe.configuration.routing.bgp.bgp_update_delay, null)
+
   depends_on = [
     iosxe_interface_loopback.loopback,
     iosxe_system.system
@@ -206,6 +209,8 @@ resource "iosxe_bgp_address_family_ipv4" "bgp_address_family_ipv4" {
     wildcard  = try(ad.wildcard, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.admin_distances.wildcard, null)
     acl       = try(ad.acl, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.admin_distances.acl, null)
   }]
+  ipv4_unicast_maximum_paths_ebgp = try(local.device_config[each.value.name].routing.bgp.address_family.ipv4_unicast.ipv4_unicast_maximum_paths_ebgp, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.ipv4_unicast_maximum_paths_ebgp, null)
+  ipv4_unicast_maximum_paths_ibgp = try(local.device_config[each.value.name].routing.bgp.address_family.ipv4_unicast.ipv4_unicast_maximum_paths_ibgp, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.ipv4_unicast_maximum_paths_ibgp, null)
 
   depends_on = [
     iosxe_access_list_standard.access_list_standard,
@@ -277,6 +282,8 @@ resource "iosxe_bgp_address_family_ipv4_vrf" "bgp_address_family_ipv4_vrf" {
       route_map = try(net.route_map, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.networks.route_map, null)
       backdoor  = try(net.backdoor, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.networks.backdoor, null)
     } if try(net.mask, null) == null]
+    ipv4_unicast_maximum_paths_ebgp = try(vrf.ipv4_unicast_maximum_paths_ebgp, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.ipv4_unicast_maximum_paths_ebgp, null)
+    ipv4_unicast_maximum_paths_ibgp = try(vrf.ipv4_unicast_maximum_paths_ibgp, local.defaults.iosxe.configuration.routing.bgp.address_family.ipv4_unicast.vrfs.ipv4_unicast_maximum_paths_ibgp, null)
   }]
 
   depends_on = [
